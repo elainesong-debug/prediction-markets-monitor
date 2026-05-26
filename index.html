@@ -385,7 +385,7 @@
 let DUNE_API_KEY = "";
 const DUNE_BASE = "https://api.dune.com/api/v1";
 const POLL_INTERVAL_MS = 3000;
-const MAX_POLL_SECONDS = 120;
+const MAX_POLL_SECONDS = 240;
 
 const SQL = {
   kalshiVolume: `
@@ -418,6 +418,7 @@ SELECT
   SUM(amount) AS notional_volume_usd
 FROM polymarket_polygon.market_trades
 WHERE block_time >= NOW() - INTERVAL '30' DAY
+  AND block_month >= DATE_TRUNC('month', CURRENT_DATE - INTERVAL '30' DAY)
 GROUP BY 1
 ORDER BY 1 DESC`,
 
@@ -429,6 +430,7 @@ SELECT
   COUNT(*) AS trade_count
 FROM polymarket_polygon.market_trades
 WHERE block_time >= NOW() - INTERVAL '30' DAY
+  AND block_month >= DATE_TRUNC('month', CURRENT_DATE - INTERVAL '30' DAY)
   AND event_market_name IS NOT NULL
 GROUP BY 1
 ORDER BY 3 DESC
