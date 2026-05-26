@@ -498,7 +498,10 @@ async function runDuneQuery(sql, statusEl) {
 
     const status = await duneGet(`/execution/${execId}/status`);
     if (status.state === "QUERY_STATE_COMPLETED") break;
-    if (status.state === "QUERY_STATE_FAILED") throw new Error(`Query failed: ${status.error || "unknown"}`);
+    if (status.state === "QUERY_STATE_FAILED") {
+      const msg = status.error ? (typeof status.error === "object" ? JSON.stringify(status.error) : status.error) : "unknown";
+      throw new Error(`Query failed: ${msg}`);
+    }
   }
 
   const res = await duneGet(`/execution/${execId}/results`);
@@ -762,12 +765,15 @@ async function loadAllData() {
 
   const statusEl = document.getElementById("trend-status");
 
-  const [r1, r2, r3, r4, r5] = await Promise.allSettled([
+  // Dune free tier allows max 3 parallel executions — run in two batches
+  const [r1, r2, r3] = await Promise.allSettled([
     runDuneQuery(SQL.kalshiVolume,  statusEl),
     runDuneQuery(SQL.kalshiMarkets, statusEl),
     runDuneQuery(SQL.polyVolume,    statusEl),
-    runDuneQuery(SQL.polyCats,      statusEl),
-    runDuneQuery(SQL.kalshiCats,    statusEl),
+  ]);
+  const [r4, r5] = await Promise.allSettled([
+    runDuneQuery(SQL.polyCats,   statusEl),
+    runDuneQuery(SQL.kalshiCats, statusEl),
   ]);
 
   const kalshiVol  = r1.status === "fulfilled" ? r1.value : null;
