@@ -485,7 +485,7 @@ async function duneGet(path) {
 }
 
 async function runDuneQuery(sql, statusEl) {
-  const exec = await dunePost("/sql/execute", { sql: sql, performance: "medium" });
+  const exec = await dunePost("/sql/execute", { sql: sql, performance: "free" });
   const execId = exec.execution_id;
   if (!execId) throw new Error("No execution_id returned");
 
