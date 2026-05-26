@@ -1,0 +1,872 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Prediction Markets Monitor</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #0f0f0f;
+    --surface: #1a1a1a;
+    --border: #2a2a2a;
+    --text: #e5e5e5;
+    --muted: #888;
+    --kalshi: #00d4aa;
+    --polymarket: #8b5cf6;
+    --gemini: #3b82f6;
+    --error: #ef4444;
+    --radius: 8px;
+  }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    font-size: 14px;
+    line-height: 1.5;
+    min-height: 100vh;
+  }
+
+  .header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px 24px;
+    border-bottom: 1px solid var(--border);
+    position: sticky;
+    top: 0;
+    background: var(--bg);
+    z-index: 10;
+  }
+  .header h1 { font-size: 18px; font-weight: 600; letter-spacing: -0.3px; }
+  .header-right { display: flex; align-items: center; gap: 16px; }
+  #last-updated { color: var(--muted); font-size: 12px; }
+  .refresh-btn {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    color: var(--text);
+    padding: 6px 14px;
+    border-radius: var(--radius);
+    cursor: pointer;
+    font-size: 13px;
+    transition: border-color 0.15s;
+  }
+  .refresh-btn:hover { border-color: #555; }
+  .refresh-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+  .main { padding: 20px 24px; display: flex; flex-direction: column; gap: 20px; }
+
+  #api-key-banner {
+    display: none;
+    background: #2a1a00;
+    border: 1px solid #f59e0b;
+    color: #fcd34d;
+    padding: 12px 16px;
+    border-radius: var(--radius);
+    font-size: 13px;
+  }
+  #api-key-banner.visible { display: flex; align-items: center; gap: 10px; }
+
+  .platform-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 16px;
+  }
+
+  .platform-panel {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 16px;
+  }
+
+  .platform-label {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.8px;
+    text-transform: uppercase;
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .platform-label::before {
+    content: '';
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+  }
+  .platform-label.kalshi { color: var(--kalshi); }
+  .platform-label.kalshi::before { background: var(--kalshi); }
+  .platform-label.polymarket { color: var(--polymarket); }
+  .platform-label.polymarket::before { background: var(--polymarket); }
+  .platform-label.gemini { color: var(--gemini); }
+  .platform-label.gemini::before { background: var(--gemini); }
+
+  .kpi-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+
+  .kpi-card {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 10px 12px;
+  }
+  .kpi-label { color: var(--muted); font-size: 11px; margin-bottom: 4px; }
+  .kpi-value { font-size: 20px; font-weight: 600; letter-spacing: -0.5px; }
+  .kpi-trend { font-size: 11px; margin-top: 2px; }
+  .kpi-trend.up { color: #22c55e; }
+  .kpi-trend.down { color: var(--error); }
+  .kpi-trend.neutral { color: var(--muted); }
+
+  .skeleton {
+    background: linear-gradient(90deg, var(--border) 25%, #333 50%, var(--border) 75%);
+    background-size: 200% 100%;
+    animation: shimmer 1.5s infinite;
+    border-radius: 4px;
+    height: 20px;
+    width: 80%;
+    margin-top: 4px;
+  }
+  @keyframes shimmer {
+    0% { background-position: 200% 0; }
+    100% { background-position: -200% 0; }
+  }
+
+  .error-card {
+    background: #1a0a0a;
+    border: 1px solid #3f1515;
+    color: #f87171;
+    border-radius: var(--radius);
+    padding: 12px;
+    font-size: 12px;
+    display: flex;
+    gap: 8px;
+    align-items: flex-start;
+  }
+
+  .spinner-wrap {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--muted);
+    font-size: 12px;
+    padding: 4px 0;
+  }
+  .spinner {
+    width: 14px;
+    height: 14px;
+    border: 2px solid var(--border);
+    border-top-color: var(--kalshi);
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+    flex-shrink: 0;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  .gemini-placeholder {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    padding: 20px 12px;
+    color: var(--muted);
+    font-size: 13px;
+    text-align: center;
+  }
+  .gemini-placeholder .icon {
+    width: 36px;
+    height: 36px;
+    border: 2px dashed #3b82f6;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #3b82f6;
+    font-size: 18px;
+  }
+  .gemini-placeholder strong { color: var(--text); font-size: 14px; }
+
+  .chart-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 16px;
+  }
+  .chart-title { font-size: 13px; font-weight: 600; color: var(--text); margin-bottom: 14px; }
+  .chart-container { position: relative; width: 100%; }
+  .chart-container canvas { max-width: 100%; }
+
+  .chart-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+
+  .table-wrap { overflow-x: auto; }
+  table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  thead th {
+    text-align: left;
+    padding: 8px 12px;
+    border-bottom: 1px solid var(--border);
+    color: var(--muted);
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    cursor: pointer;
+    user-select: none;
+    white-space: nowrap;
+  }
+  thead th:hover { color: var(--text); }
+  thead th.sort-asc::after { content: ' ↑'; color: var(--kalshi); }
+  thead th.sort-desc::after { content: ' ↓'; color: var(--kalshi); }
+  tbody tr { border-bottom: 1px solid var(--border); transition: background 0.1s; }
+  tbody tr:hover { background: #222; }
+  tbody td { padding: 8px 12px; white-space: nowrap; }
+  tbody td.num { font-variant-numeric: tabular-nums; text-align: right; }
+  tbody td.date { color: var(--muted); font-size: 12px; }
+
+  @media (max-width: 900px) {
+    .platform-row { grid-template-columns: 1fr; }
+    .chart-row { grid-template-columns: 1fr; }
+  }
+  @media (max-width: 600px) {
+    .main { padding: 12px; }
+    .header { padding: 12px; }
+  }
+
+  /* API KEY GATE */
+  #key-gate {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: var(--bg);
+    z-index: 100;
+    align-items: center;
+    justify-content: center;
+  }
+  #key-gate.visible { display: flex; }
+  .key-gate-box {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 32px;
+    width: 100%;
+    max-width: 420px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+  .key-gate-box h2 { font-size: 16px; font-weight: 600; }
+  .key-gate-box p { color: var(--muted); font-size: 13px; line-height: 1.6; }
+  .key-gate-box a { color: var(--kalshi); text-decoration: none; }
+  .key-gate-box a:hover { text-decoration: underline; }
+  .key-input-row { display: flex; gap: 8px; }
+  .key-input {
+    flex: 1;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    color: var(--text);
+    font-size: 13px;
+    padding: 8px 12px;
+    font-family: monospace;
+    outline: none;
+    transition: border-color 0.15s;
+  }
+  .key-input:focus { border-color: var(--kalshi); }
+  .key-input.error { border-color: var(--error); }
+  .key-submit {
+    background: var(--kalshi);
+    border: none;
+    border-radius: var(--radius);
+    color: #000;
+    font-size: 13px;
+    font-weight: 600;
+    padding: 8px 16px;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: opacity 0.15s;
+  }
+  .key-submit:hover { opacity: 0.85; }
+  .key-error { color: var(--error); font-size: 12px; display: none; }
+  .key-error.visible { display: block; }
+</style>
+</head>
+<body>
+
+<div id="key-gate" class="visible">
+  <div class="key-gate-box">
+    <h2>Prediction Markets Monitor</h2>
+    <p>Enter your <a href="https://dune.com/settings/api" target="_blank">Dune API key</a> to load live data. The key is stored in memory for this session only and never sent anywhere except Dune.</p>
+    <div class="key-input-row">
+      <input id="key-input" class="key-input" type="password" placeholder="Paste API key..." autocomplete="off" />
+      <button class="key-submit" onclick="submitKey()">Load</button>
+    </div>
+    <div id="key-error" class="key-error">Invalid key — please check and try again.</div>
+  </div>
+</div>
+
+<header class="header">
+  <h1>Prediction Markets Monitor</h1>
+  <div class="header-right">
+    <span id="last-updated"></span>
+    <button class="refresh-btn" id="refresh-btn" onclick="refresh()">&#8635; Refresh</button>
+  </div>
+</header>
+
+<main class="main">
+  <div id="api-key-banner">
+    <span>&#9888;</span>
+    <span>Add your Dune API key to <code style="background:#111;padding:1px 4px;border-radius:3px;">const DUNE_API_KEY</code> at the top of the script to load data.</span>
+  </div>
+
+  <div class="platform-row">
+    <div class="platform-panel">
+      <div class="platform-label kalshi">Kalshi</div>
+      <div id="kalshi-kpis" class="kpi-grid">
+        <div class="kpi-card"><div class="kpi-label">Daily Volume</div><div class="skeleton"></div></div>
+        <div class="kpi-card"><div class="kpi-label">Trade Count</div><div class="skeleton"></div></div>
+        <div class="kpi-card"><div class="kpi-label">Active Markets</div><div class="skeleton"></div></div>
+        <div class="kpi-card"><div class="kpi-label">7d Trend</div><div class="skeleton"></div></div>
+      </div>
+    </div>
+    <div class="platform-panel">
+      <div class="platform-label polymarket">Polymarket</div>
+      <div id="polymarket-kpis" class="kpi-grid">
+        <div class="kpi-card"><div class="kpi-label">Daily Volume</div><div class="skeleton"></div></div>
+        <div class="kpi-card"><div class="kpi-label">Trade Count</div><div class="skeleton"></div></div>
+        <div class="kpi-card"><div class="kpi-label">Active Markets</div><div class="skeleton"></div></div>
+        <div class="kpi-card"><div class="kpi-label">7d Trend</div><div class="skeleton"></div></div>
+      </div>
+    </div>
+    <div class="platform-panel">
+      <div class="platform-label gemini">Gemini</div>
+      <div class="gemini-placeholder">
+        <div class="icon">+</div>
+        <strong>Internal Data</strong>
+        <span>Connect internal data source to populate Gemini metrics</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="chart-card">
+    <div class="chart-title">30-Day Volume Trend</div>
+    <div id="trend-wrap">
+      <div class="spinner-wrap"><div class="spinner"></div><span id="trend-status">Fetching data...</span></div>
+    </div>
+  </div>
+
+  <div class="chart-row">
+    <div class="chart-card">
+      <div class="chart-title">Kalshi &#8212; Category Mix (30d)</div>
+      <div id="kalshi-cat-wrap">
+        <div class="spinner-wrap"><div class="spinner"></div><span>Fetching data...</span></div>
+      </div>
+    </div>
+    <div class="chart-card">
+      <div class="chart-title">Polymarket &#8212; Category Mix (30d)</div>
+      <div id="poly-cat-wrap">
+        <div class="spinner-wrap"><div class="spinner"></div><span>Fetching data...</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="chart-card">
+    <div class="chart-title">Daily Summary &#8212; Last 30 Days</div>
+    <div id="table-wrap">
+      <div class="spinner-wrap"><div class="spinner"></div><span>Fetching data...</span></div>
+    </div>
+  </div>
+</main>
+
+<script>
+let DUNE_API_KEY = "";
+const DUNE_BASE = "https://api.dune.com/api/v1";
+const POLL_INTERVAL_MS = 3000;
+const MAX_POLL_SECONDS = 120;
+
+const SQL = {
+  kalshiVolume: `
+SELECT
+  date_trunc('day', created_time) AS day,
+  COUNT(*) AS trade_count,
+  SUM(count) AS contracts_traded,
+  SUM(count * price) / 100.0 AS notional_volume_usd
+FROM kalshi.trade_report
+WHERE created_time >= NOW() - INTERVAL '30' DAY
+GROUP BY 1
+ORDER BY 1 DESC`,
+
+  kalshiMarkets: `
+SELECT
+  date_trunc('day', date) AS day,
+  COUNT(DISTINCT market_id) AS active_markets,
+  SUM(volume) AS daily_volume,
+  AVG(open_interest) AS avg_open_interest
+FROM kalshi.market_report
+WHERE date >= NOW() - INTERVAL '30' DAY
+GROUP BY 1
+ORDER BY 1 DESC`,
+
+  polyVolume: `
+SELECT
+  date_trunc('day', evt_block_time) AS day,
+  COUNT(*) AS trade_count,
+  COUNT(DISTINCT maker) + COUNT(DISTINCT taker) AS unique_traders,
+  SUM(usd_amount) AS notional_volume_usd
+FROM polymarket_polygon.market_trades
+WHERE evt_block_time >= NOW() - INTERVAL '30' DAY
+GROUP BY 1
+ORDER BY 1 DESC`,
+
+  polyCats: `
+SELECT
+  md.category,
+  COUNT(DISTINCT mt.market_id) AS markets,
+  SUM(mt.usd_amount) AS volume_usd,
+  COUNT(*) AS trade_count
+FROM polymarket_polygon.market_trades mt
+JOIN polymarket_polygon.market_details md ON mt.market_id = md.market_id
+WHERE mt.evt_block_time >= NOW() - INTERVAL '30' DAY
+  AND md.category IS NOT NULL
+GROUP BY 1
+ORDER BY 2 DESC
+LIMIT 10`,
+
+  kalshiCats: `
+SELECT
+  mr.category,
+  COUNT(DISTINCT mr.market_id) AS markets,
+  SUM(mr.volume) AS volume,
+  AVG(mr.open_interest) AS avg_open_interest
+FROM kalshi.market_report mr
+WHERE mr.date >= NOW() - INTERVAL '30' DAY
+  AND mr.category IS NOT NULL
+GROUP BY 1
+ORDER BY 2 DESC
+LIMIT 10`,
+};
+
+const INTROSPECT = {
+  kalshiTrade:  "SELECT * FROM kalshi.trade_report LIMIT 1",
+  kalshiMarket: "SELECT * FROM kalshi.market_report LIMIT 1",
+  polyTrades:   "SELECT * FROM polymarket_polygon.market_trades LIMIT 1",
+  polyDetails:  "SELECT * FROM polymarket_polygon.market_details LIMIT 1",
+};
+
+let trendChart = null;
+let kalshiCatChart = null;
+let polyCatChart = null;
+
+async function dunePost(path, body) {
+  const r = await fetch(`${DUNE_BASE}${path}`, {
+    method: "POST",
+    headers: { "X-DUNE-API-KEY": DUNE_API_KEY, "Content-Type": "application/json" },
+    body: JSON.stringify(body),
+  });
+  if (!r.ok) {
+    const txt = await r.text().catch(() => r.statusText);
+    throw new Error(`Dune POST ${path} ${r.status}: ${txt}`);
+  }
+  return r.json();
+}
+
+async function duneGet(path) {
+  const r = await fetch(`${DUNE_BASE}${path}`, {
+    headers: { "X-DUNE-API-KEY": DUNE_API_KEY },
+  });
+  if (!r.ok) {
+    const txt = await r.text().catch(() => r.statusText);
+    throw new Error(`Dune GET ${path} ${r.status}: ${txt}`);
+  }
+  return r.json();
+}
+
+async function runDuneQuery(sql, statusEl) {
+  const exec = await dunePost("/sql/execute", { sql: sql, performance: "medium" });
+  const execId = exec.execution_id;
+  if (!execId) throw new Error("No execution_id returned");
+
+  const start = Date.now();
+  while (true) {
+    await sleep(POLL_INTERVAL_MS);
+    const elapsed = Math.round((Date.now() - start) / 1000);
+    if (statusEl) statusEl.textContent = `Fetching data... ${elapsed}s`;
+    if (elapsed > MAX_POLL_SECONDS) throw new Error(`Query timed out after ${elapsed}s`);
+
+    const status = await duneGet(`/execution/${execId}/status`);
+    if (status.state === "QUERY_STATE_COMPLETED") break;
+    if (status.state === "QUERY_STATE_FAILED") throw new Error(`Query failed: ${status.error || "unknown"}`);
+  }
+
+  const res = await duneGet(`/execution/${execId}/results`);
+  return res.result?.rows ?? [];
+}
+
+function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
+
+async function introspectSchemas() {
+  console.group("Dune schema introspection");
+  for (const [name, sql] of Object.entries(INTROSPECT)) {
+    try {
+      const rows = await runDuneQuery(sql, null);
+      console.log(`${name} columns:`, rows.length > 0 ? Object.keys(rows[0]) : "(no rows)");
+    } catch (e) {
+      console.warn(`${name} failed:`, e.message);
+    }
+  }
+  console.groupEnd();
+}
+
+function fmtUSD(n) {
+  if (n == null || isNaN(n)) return "—";
+  n = Number(n);
+  if (n >= 1e9) return "$" + (n / 1e9).toFixed(2) + "B";
+  if (n >= 1e6) return "$" + (n / 1e6).toFixed(2) + "M";
+  if (n >= 1e3) return "$" + (n / 1e3).toFixed(1) + "K";
+  return "$" + n.toFixed(2);
+}
+
+function fmtNum(n) {
+  if (n == null || isNaN(n)) return "—";
+  n = Number(n);
+  if (n >= 1e6) return (n / 1e6).toFixed(2) + "M";
+  if (n >= 1e3) return (n / 1e3).toFixed(1) + "K";
+  return n.toLocaleString();
+}
+
+function fmtDate(d) {
+  if (!d) return "—";
+  return new Date(d).toLocaleDateString("en-US", { month: "short", day: "numeric" });
+}
+
+function fmtDateFull(d) {
+  if (!d) return "—";
+  return new Date(d).toLocaleDateString("en-US", { year: "numeric", month: "short", day: "numeric" });
+}
+
+function renderKPIs(containerId, kpis) {
+  document.getElementById(containerId).innerHTML = kpis.map(k => `
+    <div class="kpi-card">
+      <div class="kpi-label">${k.label}</div>
+      <div class="kpi-value">${k.value}</div>
+      ${k.trend != null ? `<div class="kpi-trend ${k.trendClass}">${k.trend}</div>` : ""}
+    </div>`).join("");
+}
+
+function renderKPIError(containerId, msg) {
+  document.getElementById(containerId).innerHTML =
+    `<div class="error-card" style="grid-column:1/-1">&#9888; ${msg}</div>`;
+}
+
+function calcTrend(rows, field, latestDays = 7, priorDays = 7) {
+  if (!rows || rows.length < 2) return null;
+  const sorted = [...rows].sort((a, b) => new Date(b.day) - new Date(a.day));
+  const recentSum = sorted.slice(0, latestDays).reduce((s, r) => s + Number(r[field] || 0), 0);
+  const priorSum  = sorted.slice(latestDays, latestDays + priorDays).reduce((s, r) => s + Number(r[field] || 0), 0);
+  if (!priorSum) return null;
+  return ((recentSum - priorSum) / priorSum) * 100;
+}
+
+function chartDefaults() {
+  return {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: {
+      legend: { labels: { color: "#aaa", font: { size: 12 } } },
+      tooltip: {
+        backgroundColor: "#1a1a1a",
+        borderColor: "#2a2a2a",
+        borderWidth: 1,
+        titleColor: "#e5e5e5",
+        bodyColor: "#aaa",
+      },
+    },
+    scales: {
+      x: { grid: { color: "#222" }, ticks: { color: "#888", font: { size: 11 } } },
+      y: { grid: { color: "#222" }, ticks: { color: "#888", font: { size: 11 } } },
+    },
+  };
+}
+
+function destroyChart(ref) {
+  if (ref) ref.destroy();
+  return null;
+}
+
+function renderTrendChart(kalshiRows, polyRows) {
+  const wrap = document.getElementById("trend-wrap");
+  wrap.innerHTML = `<div class="chart-container" style="height:260px"><canvas id="trend-canvas"></canvas></div>`;
+  trendChart = destroyChart(trendChart);
+
+  const days = new Set();
+  (kalshiRows || []).forEach(r => r.day && days.add(r.day.substring(0, 10)));
+  (polyRows || []).forEach(r => r.day && days.add(r.day.substring(0, 10)));
+  const sortedDays = [...days].sort().slice(-30);
+
+  const kalshiMap = Object.fromEntries((kalshiRows || []).map(r => [r.day?.substring(0, 10), r]));
+  const polyMap   = Object.fromEntries((polyRows || []).map(r => [r.day?.substring(0, 10), r]));
+
+  const labels = sortedDays.map(d => fmtDate(d));
+  const kalshiVols = sortedDays.map(d => Number(kalshiMap[d]?.notional_volume_usd || 0));
+  const polyVols   = sortedDays.map(d => Number(polyMap[d]?.notional_volume_usd || 0));
+
+  const ctx = document.getElementById("trend-canvas").getContext("2d");
+  const defs = chartDefaults();
+  trendChart = new Chart(ctx, {
+    type: "line",
+    data: {
+      labels,
+      datasets: [
+        { label: "Kalshi", data: kalshiVols, borderColor: "#00d4aa", backgroundColor: "rgba(0,212,170,0.08)", fill: true, tension: 0.3, pointRadius: 2 },
+        { label: "Polymarket", data: polyVols, borderColor: "#8b5cf6", backgroundColor: "rgba(139,92,246,0.08)", fill: true, tension: 0.3, pointRadius: 2 },
+      ],
+    },
+    options: {
+      ...defs,
+      plugins: { ...defs.plugins, tooltip: { ...defs.plugins.tooltip, callbacks: { label: ctx => ` ${ctx.dataset.label}: ${fmtUSD(ctx.parsed.y)}` } } },
+      scales: { ...defs.scales, y: { ...defs.scales.y, ticks: { ...defs.scales.y.ticks, callback: v => fmtUSD(v) } } },
+    },
+  });
+}
+
+function renderCatChart(wrapId, rows, volumeField, color, chartRef) {
+  const wrap = document.getElementById(wrapId);
+  if (!rows || rows.length === 0) {
+    wrap.innerHTML = `<div class="error-card">No category data available.</div>`;
+    return null;
+  }
+
+  const top8 = [...rows].sort((a, b) => Number(b[volumeField] || 0) - Number(a[volumeField] || 0)).slice(0, 8);
+  const total = top8.reduce((s, r) => s + Number(r[volumeField] || 0), 0);
+  const labels = top8.map(r => r.category || "Unknown");
+  const values = top8.map(r => Number(r[volumeField] || 0));
+  const pcts   = values.map(v => total > 0 ? ((v / total) * 100).toFixed(1) : 0);
+
+  wrap.innerHTML = `<div class="chart-container" style="height:${Math.max(180, top8.length * 34)}px"><canvas id="${wrapId}-canvas"></canvas></div>`;
+  chartRef = destroyChart(chartRef);
+
+  const ctx = document.getElementById(`${wrapId}-canvas`).getContext("2d");
+  const defs = chartDefaults();
+  chartRef = new Chart(ctx, {
+    type: "bar",
+    data: {
+      labels,
+      datasets: [{ label: "Volume (USD)", data: values, backgroundColor: color + "cc", borderColor: color, borderWidth: 1, borderRadius: 4 }],
+    },
+    options: {
+      ...defs,
+      indexAxis: "y",
+      plugins: { ...defs.plugins, legend: { display: false }, tooltip: { ...defs.plugins.tooltip, callbacks: { label: ctx => ` ${fmtUSD(ctx.parsed.x)}  (${pcts[ctx.dataIndex]}%)` } } },
+      scales: { x: { ...defs.scales.x, ticks: { ...defs.scales.x.ticks, callback: v => fmtUSD(v) } }, y: defs.scales.y },
+    },
+  });
+  return chartRef;
+}
+
+let tableData = [];
+let sortCol = 0;
+let sortDir = "desc";
+
+function buildTableData(kalshiVol, kalshiMkts, polyVol) {
+  const days = new Set();
+  (kalshiVol || []).forEach(r => r.day && days.add(r.day.substring(0, 10)));
+  (polyVol || []).forEach(r => r.day && days.add(r.day.substring(0, 10)));
+
+  const kvMap = Object.fromEntries((kalshiVol || []).map(r => [r.day?.substring(0, 10), r]));
+  const kmMap = Object.fromEntries((kalshiMkts || []).map(r => [r.day?.substring(0, 10), r]));
+  const pvMap = Object.fromEntries((polyVol || []).map(r => [r.day?.substring(0, 10), r]));
+
+  return [...days].sort().reverse().slice(0, 30).map(d => ({
+    date: d,
+    kalshiVol:    Number(kvMap[d]?.notional_volume_usd || 0),
+    kalshiTrades: Number(kvMap[d]?.trade_count || 0),
+    kalshiMkts:   Number(kmMap[d]?.active_markets || 0),
+    polyVol:      Number(pvMap[d]?.notional_volume_usd || 0),
+    polyTrades:   Number(pvMap[d]?.trade_count || 0),
+  }));
+}
+
+function renderTable(data) {
+  tableData = data;
+  const wrap = document.getElementById("table-wrap");
+  if (!data || data.length === 0) {
+    wrap.innerHTML = `<div class="error-card">No data available.</div>`;
+    return;
+  }
+
+  const cols = [
+    { key: "date",        label: "Date",              fmt: d => `<td class="date">${fmtDateFull(d.date)}</td>` },
+    { key: "kalshiVol",   label: "Kalshi Volume",     fmt: d => `<td class="num" style="color:var(--kalshi)">${fmtUSD(d.kalshiVol)}</td>` },
+    { key: "kalshiTrades",label: "Kalshi Trades",     fmt: d => `<td class="num">${fmtNum(d.kalshiTrades)}</td>` },
+    { key: "kalshiMkts",  label: "Kalshi Markets",    fmt: d => `<td class="num">${fmtNum(d.kalshiMkts)}</td>` },
+    { key: "polyVol",     label: "Polymarket Volume", fmt: d => `<td class="num" style="color:var(--polymarket)">${fmtUSD(d.polyVol)}</td>` },
+    { key: "polyTrades",  label: "Polymarket Trades", fmt: d => `<td class="num">${fmtNum(d.polyTrades)}</td>` },
+  ];
+
+  const sorted = [...data].sort((a, b) => {
+    const va = a[cols[sortCol].key], vb = b[cols[sortCol].key];
+    const cmp = typeof va === "string" ? va.localeCompare(vb) : va - vb;
+    return sortDir === "asc" ? cmp : -cmp;
+  });
+
+  wrap.innerHTML = `
+    <div class="table-wrap">
+      <table>
+        <thead><tr>${cols.map((c, i) => `<th class="${sortCol === i ? (sortDir === 'asc' ? 'sort-asc' : 'sort-desc') : ''}" onclick="sortTable(${i})">${c.label}</th>`).join("")}</tr></thead>
+        <tbody>${sorted.map(row => `<tr>${cols.map(c => c.fmt(row)).join("")}</tr>`).join("")}</tbody>
+      </table>
+    </div>`;
+}
+
+function sortTable(colIdx) {
+  if (sortCol === colIdx) {
+    sortDir = sortDir === "asc" ? "desc" : "asc";
+  } else {
+    sortCol = colIdx;
+    sortDir = "desc";
+  }
+  renderTable(tableData);
+}
+
+function submitKey() {
+  const val = document.getElementById("key-input").value.trim();
+  if (!val) {
+    document.getElementById("key-input").classList.add("error");
+    return;
+  }
+  DUNE_API_KEY = val;
+  document.getElementById("key-gate").classList.remove("visible");
+  loadAllData();
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+  document.getElementById("key-input").addEventListener("keydown", e => {
+    if (e.key === "Enter") submitKey();
+    document.getElementById("key-input").classList.remove("error");
+  });
+});
+
+async function loadAllData() {
+  if (!DUNE_API_KEY) {
+    document.getElementById("key-gate").classList.add("visible");
+    return;
+  }
+
+  document.getElementById("refresh-btn").disabled = true;
+  setStatusAll("Fetching data...");
+
+  introspectSchemas().catch(() => {});
+
+  const statusEl = document.getElementById("trend-status");
+
+  const [r1, r2, r3, r4, r5] = await Promise.allSettled([
+    runDuneQuery(SQL.kalshiVolume,  statusEl),
+    runDuneQuery(SQL.kalshiMarkets, statusEl),
+    runDuneQuery(SQL.polyVolume,    statusEl),
+    runDuneQuery(SQL.polyCats,      statusEl),
+    runDuneQuery(SQL.kalshiCats,    statusEl),
+  ]);
+
+  const kalshiVol  = r1.status === "fulfilled" ? r1.value : null;
+  const kalshiMkts = r2.status === "fulfilled" ? r2.value : null;
+  const polyVol    = r3.status === "fulfilled" ? r3.value : null;
+  const polyCats   = r4.status === "fulfilled" ? r4.value : null;
+  const kalshiCats = r5.status === "fulfilled" ? r5.value : null;
+
+  [r1, r2, r3, r4, r5].forEach((r, i) => {
+    if (r.status === "rejected") console.error(`Query ${i + 1} failed:`, r.reason);
+  });
+
+  if (kalshiVol && kalshiMkts) {
+    const latest = kalshiVol[0] || {};
+    const latestMkt = kalshiMkts[0] || {};
+    const trend = calcTrend(kalshiVol, "notional_volume_usd");
+    const trendClass = trend == null ? "neutral" : trend >= 0 ? "up" : "down";
+    const trendStr = trend == null ? "—" : (trend >= 0 ? "+" : "") + trend.toFixed(1) + "% vs prior 7d";
+    renderKPIs("kalshi-kpis", [
+      { label: "Daily Volume",    value: fmtUSD(latest.notional_volume_usd) },
+      { label: "Trade Count",     value: fmtNum(latest.trade_count) },
+      { label: "Active Markets",  value: fmtNum(latestMkt.active_markets) },
+      { label: "7d Volume Trend", value: trendStr, trend: trendStr, trendClass },
+    ]);
+  } else {
+    renderKPIError("kalshi-kpis", r1.reason?.message || r2.reason?.message || "Failed to load Kalshi data");
+  }
+
+  if (polyVol) {
+    const latest = polyVol[0] || {};
+    const trend = calcTrend(polyVol, "notional_volume_usd");
+    const trendClass = trend == null ? "neutral" : trend >= 0 ? "up" : "down";
+    const trendStr = trend == null ? "—" : (trend >= 0 ? "+" : "") + trend.toFixed(1) + "% vs prior 7d";
+    renderKPIs("polymarket-kpis", [
+      { label: "Daily Volume",    value: fmtUSD(latest.notional_volume_usd) },
+      { label: "Trade Count",     value: fmtNum(latest.trade_count) },
+      { label: "Active Markets",  value: "—" },
+      { label: "7d Volume Trend", value: trendStr, trend: trendStr, trendClass },
+    ]);
+  } else {
+    renderKPIError("polymarket-kpis", r3.reason?.message || "Failed to load Polymarket data");
+  }
+
+  if (kalshiVol || polyVol) {
+    renderTrendChart(kalshiVol, polyVol);
+  } else {
+    document.getElementById("trend-wrap").innerHTML =
+      `<div class="error-card">&#9888; Could not load volume data: ${r1.reason?.message || r3.reason?.message}</div>`;
+  }
+
+  if (kalshiCats) {
+    kalshiCatChart = renderCatChart("kalshi-cat-wrap", kalshiCats, "volume", "#00d4aa", kalshiCatChart);
+  } else {
+    document.getElementById("kalshi-cat-wrap").innerHTML = `<div class="error-card">&#9888; ${r5.reason?.message || "No data"}</div>`;
+  }
+
+  if (polyCats) {
+    polyCatChart = renderCatChart("poly-cat-wrap", polyCats, "volume_usd", "#8b5cf6", polyCatChart);
+  } else {
+    document.getElementById("poly-cat-wrap").innerHTML = `<div class="error-card">&#9888; ${r4.reason?.message || "No data"}</div>`;
+  }
+
+  if (kalshiVol || polyVol) {
+    renderTable(buildTableData(kalshiVol, kalshiMkts, polyVol));
+  } else {
+    document.getElementById("table-wrap").innerHTML = `<div class="error-card">&#9888; No data available.</div>`;
+  }
+
+  document.getElementById("last-updated").textContent = "Updated " + new Date().toLocaleTimeString();
+  document.getElementById("refresh-btn").disabled = false;
+}
+
+function clearSkeletons() {
+  ["kalshi-kpis", "polymarket-kpis"].forEach(id => {
+    document.getElementById(id).innerHTML =
+      `<div class="error-card" style="grid-column:1/-1">Add API key to load data.</div>`;
+  });
+  ["trend-wrap", "kalshi-cat-wrap", "poly-cat-wrap", "table-wrap"].forEach(id => {
+    document.getElementById(id).innerHTML =
+      `<div style="color:var(--muted);font-size:13px;padding:8px 0;">Waiting for API key...</div>`;
+  });
+}
+
+function setStatusAll(msg) {
+  ["trend-wrap", "kalshi-cat-wrap", "poly-cat-wrap", "table-wrap"].forEach(id => {
+    const el = document.getElementById(id);
+    if (!el.querySelector("canvas")) {
+      el.innerHTML = `<div class="spinner-wrap"><div class="spinner"></div><span>${msg}</span></div>`;
+    }
+  });
+}
+
+function refresh() {
+  trendChart = destroyChart(trendChart);
+  kalshiCatChart = destroyChart(kalshiCatChart);
+  polyCatChart = destroyChart(polyCatChart);
+  loadAllData();
+}
+
+</script>
+</body>
+</html>
