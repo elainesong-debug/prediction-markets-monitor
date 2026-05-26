@@ -423,16 +423,15 @@ ORDER BY 1 DESC`,
 
   polyCats: `
 SELECT
-  CAST(md.tags AS VARCHAR) AS category,
-  COUNT(DISTINCT mt.condition_id) AS markets,
-  SUM(mt.amount) AS volume_usd,
+  event_market_name AS category,
+  COUNT(DISTINCT condition_id) AS markets,
+  SUM(amount) AS volume_usd,
   COUNT(*) AS trade_count
-FROM polymarket_polygon.market_trades mt
-JOIN polymarket_polygon.market_details md ON mt.condition_id = md.condition_id
-WHERE mt.block_time >= NOW() - INTERVAL '30' DAY
-  AND md.tags IS NOT NULL
+FROM polymarket_polygon.market_trades
+WHERE block_time >= NOW() - INTERVAL '30' DAY
+  AND event_market_name IS NOT NULL
 GROUP BY 1
-ORDER BY 2 DESC
+ORDER BY 3 DESC
 LIMIT 10`,
 
   kalshiCats: `
