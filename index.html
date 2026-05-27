@@ -201,7 +201,9 @@
   .chart-container { position: relative; width: 100%; }
   .chart-container canvas { max-width: 100%; }
 
-  .chart-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .chart-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px; }
+  .kpi-error-card { background: #1a0a0a !important; border-color: #3f1515 !important; }
+  .kpi-error-val  { color: var(--error); font-size: 11px; }
 
   .table-wrap { overflow-x: auto; }
   table { width: 100%; border-collapse: collapse; font-size: 13px; }
@@ -343,10 +345,13 @@
     </div>
     <div class="platform-panel">
       <div class="platform-label gemini">Gemini</div>
-      <div class="gemini-placeholder">
-        <div class="icon">+</div>
-        <strong>Internal Data</strong>
-        <span>Connect internal data source to populate Gemini metrics</span>
+      <div id="gemini-kpis" class="kpi-grid">
+        <div class="kpi-card"><div class="kpi-label">Active Events</div><div class="skeleton"></div></div>
+        <div class="kpi-card"><div class="kpi-label">Active Contracts</div><div class="skeleton"></div></div>
+        <div class="kpi-card"><div class="kpi-label">Active Combos</div><div class="skeleton"></div></div>
+        <div class="kpi-card"><div class="kpi-label">Avg Legs/Combo</div><div class="skeleton"></div></div>
+        <div class="kpi-card"><div class="kpi-label">Recently Settled</div><div class="skeleton"></div></div>
+        <div class="kpi-card"><div class="kpi-label">Categories</div><div class="skeleton"></div></div>
       </div>
     </div>
   </div>
@@ -368,6 +373,12 @@
     <div class="chart-card">
       <div class="chart-title">Polymarket &#8212; Category Mix (30d)</div>
       <div id="poly-cat-wrap">
+        <div class="spinner-wrap"><div class="spinner"></div><span>Fetching data...</span></div>
+      </div>
+    </div>
+    <div class="chart-card">
+      <div class="chart-title">Gemini &#8212; Category Mix</div>
+      <div id="gemini-cat-wrap">
         <div class="spinner-wrap"><div class="spinner"></div><span>Fetching data...</span></div>
       </div>
     </div>
@@ -460,6 +471,73 @@ const INTROSPECT = {
 let trendChart = null;
 let kalshiCatChart = null;
 let polyCatChart = null;
+let geminiCatChart = null;
+
+// ─── GEMINI API ───────────────────────────────────────────────────────────────
+const GEMINI_BASE = "https://api.gemini.com/v1/prediction-markets";
+
+async function fetchGemini(path) {
+  const r = await fetch(`${GEMINI_BASE}${path}`);
+  if (!r.ok) throw new Error(`Gemini ${path} ${r.status}: ${r.statusText}`);
+  return r.json();
+}
+
+async function loadGeminiData() {
+  const [eventsRes, settledRes, combosRes] = await Promise.allSettled([
+    fetchGemini("/events?status=active&limit=50"),
+    fetchGemini("/events/recently-settled"),
+    fetchGemini("/combos?status=Active&limit=500"),
+  ]);
+
+  const eventsData  = eventsRes.status  === "fulfilled" ? eventsRes.value  : null;
+  const settledData = settledRes.status === "fulfilled" ? settledRes.value : null;
+  const combosData  = combosRes.status  === "fulfilled" ? combosRes.value  : null;
+
+  [eventsRes, settledRes, combosRes].forEach((r, i) => {
+    if (r.status === "rejected") console.warn(`Gemini fetch ${i + 1} failed:`, r.reason);
+  });
+
+  // ── KPIs — per-card error if its source fetch failed ──
+  const contractCount = eventsData?.data?.reduce((s, e) => s + (e.contracts?.length || 0), 0) ?? 0;
+  const comboTotal    = combosData?.pagination?.total ?? combosData?.combos?.length ?? 0;
+  const avgLegs       = combosData?.combos?.length
+    ? (combosData.combos.reduce((s, c) => s + (c.legs?.length || 0), 0) / combosData.combos.length).toFixed(1)
+    : null;
+  const settledCount  = Array.isArray(settledData?.data) ? settledData.data.length
+                      : Array.isArray(settledData) ? settledData.length : null;
+  const uniqueCats    = eventsData?.data
+    ? new Set(eventsData.data.map(e => e.category).filter(Boolean)).size
+    : null;
+
+  renderKPIs("gemini-kpis", [
+    eventsData  ? { label: "Active Events",    value: fmtNum(eventsData.data?.length ?? 0) }
+                : { label: "Active Events",    value: "Unavailable", error: true },
+    eventsData  ? { label: "Active Contracts", value: fmtNum(contractCount) }
+                : { label: "Active Contracts", value: "Unavailable", error: true },
+    combosData  ? { label: "Active Combos",    value: fmtNum(comboTotal) }
+                : { label: "Active Combos",    value: "Unavailable", error: true },
+    combosData  ? { label: "Avg Legs/Combo",   value: avgLegs ?? "—" }
+                : { label: "Avg Legs/Combo",   value: "Unavailable", error: true },
+    settledData ? { label: "Recently Settled", value: settledCount !== null ? fmtNum(settledCount) : "—" }
+                : { label: "Recently Settled", value: "Unavailable", error: true },
+    eventsData  ? { label: "Categories",       value: uniqueCats !== null ? fmtNum(uniqueCats) : "—" }
+                : { label: "Categories",       value: "Unavailable", error: true },
+  ]);
+
+  // ── Category chart — contracts per category ──
+  if (eventsData?.data) {
+    const catMap = {};
+    for (const ev of eventsData.data) {
+      const cat = ev.category || "Other";
+      catMap[cat] = (catMap[cat] || 0) + (ev.contracts?.length || 0);
+    }
+    const rows = Object.entries(catMap).map(([category, count]) => ({ category, count }));
+    geminiCatChart = renderCatChart("gemini-cat-wrap", rows, "count", "#3b82f6", geminiCatChart, fmtNum);
+  } else {
+    document.getElementById("gemini-cat-wrap").innerHTML =
+      `<div class="error-card">&#9888; ${eventsRes.reason?.message || "No event data"}</div>`;
+  }
+}
 
 async function dunePost(path, body) {
   const r = await fetch(`${DUNE_BASE}${path}`, {
@@ -553,9 +631,9 @@ function fmtDateFull(d) {
 
 function renderKPIs(containerId, kpis) {
   document.getElementById(containerId).innerHTML = kpis.map(k => `
-    <div class="kpi-card">
+    <div class="kpi-card${k.error ? " kpi-error-card" : ""}">
       <div class="kpi-label">${k.label}</div>
-      <div class="kpi-value">${k.value}</div>
+      <div class="kpi-value${k.error ? " kpi-error-val" : ""}">${k.value}</div>
       ${k.trend != null ? `<div class="kpi-trend ${k.trendClass}">${k.trend}</div>` : ""}
     </div>`).join("");
 }
@@ -636,7 +714,8 @@ function renderTrendChart(kalshiRows, polyRows) {
   });
 }
 
-function renderCatChart(wrapId, rows, volumeField, color, chartRef) {
+function renderCatChart(wrapId, rows, volumeField, color, chartRef, fmtFn) {
+  fmtFn = fmtFn || fmtUSD;
   const wrap = document.getElementById(wrapId);
   if (!rows || rows.length === 0) {
     wrap.innerHTML = `<div class="error-card">No category data available.</div>`;
@@ -663,8 +742,8 @@ function renderCatChart(wrapId, rows, volumeField, color, chartRef) {
     options: {
       ...defs,
       indexAxis: "y",
-      plugins: { ...defs.plugins, legend: { display: false }, tooltip: { ...defs.plugins.tooltip, callbacks: { label: ctx => ` ${fmtUSD(ctx.parsed.x)}  (${pcts[ctx.dataIndex]}%)` } } },
-      scales: { x: { ...defs.scales.x, ticks: { ...defs.scales.x.ticks, callback: v => fmtUSD(v) } }, y: defs.scales.y },
+      plugins: { ...defs.plugins, legend: { display: false }, tooltip: { ...defs.plugins.tooltip, callbacks: { label: ctx => ` ${fmtFn(ctx.parsed.x)}  (${pcts[ctx.dataIndex]}%)` } } },
+      scales: { x: { ...defs.scales.x, ticks: { ...defs.scales.x.ticks, callback: v => fmtFn(v) } }, y: defs.scales.y },
     },
   });
   return chartRef;
@@ -763,6 +842,9 @@ async function loadAllData() {
   setStatusAll("Fetching data...");
 
   introspectSchemas().catch(() => {});
+
+  // Gemini is public — fire in parallel, doesn't count against Dune limit
+  loadGeminiData().catch(e => console.error("Gemini load failed:", e));
 
   const statusEl = document.getElementById("trend-status");
 
@@ -871,6 +953,7 @@ function refresh() {
   trendChart = destroyChart(trendChart);
   kalshiCatChart = destroyChart(kalshiCatChart);
   polyCatChart = destroyChart(polyCatChart);
+  geminiCatChart = destroyChart(geminiCatChart);
   loadAllData();
 }
 
