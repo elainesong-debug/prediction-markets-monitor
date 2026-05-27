@@ -78,7 +78,7 @@
   .pill.active { background:var(--polymarket); border-color:var(--polymarket); color:#fff; }
 
   .section-title { font-size:13px; font-weight:600; margin-bottom:12px; }
-  .liq-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:16px; }
+  .liq-grid { display:grid; grid-template-columns:repeat(2,1fr); gap:16px; }
   .liq-card { background:var(--surface); border:1px solid var(--border); border-radius:var(--radius); padding:16px; }
   .liq-card-title { font-size:11px; font-weight:600; letter-spacing:0.5px; text-transform:uppercase; color:var(--muted); margin-bottom:14px; }
   .liq-metric { display:flex; justify-content:space-between; align-items:center; padding:6px 0; border-bottom:1px solid var(--border); }
@@ -189,36 +189,24 @@
         <div class="kpi-card"><div class="kpi-label">Daily Volume</div><div class="skeleton"></div></div>
         <div class="kpi-card"><div class="kpi-label">Trade Count</div><div class="skeleton"></div></div>
         <div class="kpi-card"><div class="kpi-label">Active Markets</div><div class="skeleton"></div></div>
-        <div class="kpi-card"><div class="kpi-label">7d Trend</div><div class="skeleton"></div></div>
       </div>
     </div>
     <div class="platform-panel">
       <div class="platform-label polymarket">Polymarket <span style="font-size:9px;color:var(--muted);margin-left:4px;text-transform:none;letter-spacing:0">via reference queries</span></div>
       <div id="polymarket-kpis" class="kpi-grid">
         <div class="kpi-card"><div class="kpi-label">Daily Volume</div><div class="skeleton"></div></div>
-        <div class="kpi-card"><div class="kpi-label">7d Trend</div><div class="skeleton"></div></div>
-        <div class="kpi-card"><div class="kpi-label">Daily Users</div><div class="skeleton"></div></div>
-        <div class="kpi-card"><div class="kpi-label">Current TVL</div><div class="skeleton"></div></div>
+        <div class="kpi-card"><div class="kpi-label">Trade Count</div><div class="skeleton"></div></div>
+        <div class="kpi-card"><div class="kpi-label">Active Markets</div><div class="skeleton"></div></div>
       </div>
     </div>
     <div class="platform-panel">
       <div class="platform-label gemini">Gemini</div>
       <div id="gemini-kpis" class="kpi-grid">
-        <div class="kpi-card"><div class="kpi-label">Total Active Events</div><div class="skeleton"></div></div>
-        <div class="kpi-card"><div class="kpi-label">24h Volume</div><div class="skeleton"></div></div>
-        <div class="kpi-card"><div class="kpi-label">Active Contracts</div><div class="skeleton"></div></div>
-        <div class="kpi-card"><div class="kpi-label">Recently Settled</div><div class="skeleton"></div></div>
+        <div class="kpi-card"><div class="kpi-label">Daily Volume</div><div class="skeleton"></div></div>
+        <div class="kpi-card"><div class="kpi-label">Trade Count</div><div class="skeleton"></div></div>
+        <div class="kpi-card"><div class="kpi-label">Active Markets</div><div class="skeleton"></div></div>
       </div>
     </div>
-  </div>
-
-  <!-- Reference query status table -->
-  <div class="chart-card">
-    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px">
-      <div class="chart-title" style="margin-bottom:0">Polymarket Reference Query Status</div>
-      <button class="btn btn-poly" onclick="refreshAllRef()" style="font-size:12px;padding:5px 12px">&#8635; Refresh All Queries</button>
-    </div>
-    <div id="ref-status-wrap"><div class="spinner-wrap"><div class="spinner"></div><span>Fetching reference data…</span></div></div>
   </div>
 
   <!-- Volume trend -->
@@ -244,10 +232,6 @@
       <div id="kalshi-cat-wrap"><div class="spinner-wrap"><div class="spinner"></div><span>Fetching…</span></div></div>
     </div>
     <div class="chart-card">
-      <div class="chart-title">Polymarket — Volume by User Bet Bucket <span style="font-size:10px;color:var(--muted)">(Q7588997)</span></div>
-      <div id="poly-cat-wrap"><div class="spinner-wrap"><div class="spinner"></div><span>Fetching…</span></div></div>
-    </div>
-    <div class="chart-card">
       <div class="chart-title">Gemini — Category Mix</div>
       <div id="gemini-cat-wrap"><div class="spinner-wrap"><div class="spinner"></div><span>Fetching…</span></div></div>
     </div>
@@ -264,10 +248,6 @@
       <div class="liq-card">
         <div class="liq-card-title">&#9670; Avg Trade Size</div>
         <div id="liq-avg"><div class="spinner-wrap"><div class="spinner"></div><span>Loading…</span></div></div>
-      </div>
-      <div class="liq-card">
-        <div class="liq-card-title">&#9670; Median / Monthly Avg Bet</div>
-        <div id="liq-median"><div class="spinner-wrap"><div class="spinner"></div><span>Loading…</span></div></div>
       </div>
     </div>
   </div>
@@ -377,7 +357,6 @@ let _kalshiCatsData = [];
 let _selectedCategory  = "All";
 let _geminiVol24h      = 0;
 let _geminiSpread      = null;   // avg bid-ask spread (decimal) from live Gemini contract prices
-let _kalshiMedianTrade = null;   // median trade size USD from PERCENTILE_CONT query
 let _refDataLoaded     = false;
 let _polyTabRendered   = false;
 let _lastSyncedAt      = null;
@@ -516,10 +495,9 @@ async function loadGeminiData() {
   const settled  = Array.isArray(se?.data) ? se.data.length : Array.isArray(se) ? se.length : null;
   _geminiVol24h  = vol24h ?? 0;
   renderKPIs("gemini-kpis", [
-    ev ? { label:"Total Active Events", value:fmtNum(total??0) }     : { label:"Total Active Events", value:"Unavailable", error:true },
-    ev ? { label:"24h Volume",          value:vol24h?fmtUSD(vol24h):"—" } : { label:"24h Volume",      value:"Unavailable", error:true },
-    ev ? { label:"Active Contracts",    value:fmtNum(contracts??0) }  : { label:"Active Contracts",    value:"Unavailable", error:true },
-    se ? { label:"Recently Settled",    value:settled!=null?fmtNum(settled):"—" } : { label:"Recently Settled", value:"Unavailable", error:true },
+    ev ? { label:"Daily Volume",    value:vol24h ? fmtUSD(vol24h) : "—" }         : { label:"Daily Volume",    value:"Unavailable", error:true },
+    {    label:"Trade Count",       value:"Internal data required" },
+    ev ? { label:"Active Markets",  value:fmtNum(total ?? 0) }                     : { label:"Active Markets",  value:"Unavailable", error:true },
   ]);
   if (ev?.data) {
     const catMap = {};
@@ -640,10 +618,8 @@ async function loadReferenceData() {
   _lastSyncedAt  = new Date();
   el("last-synced").textContent = "Synced " + _lastSyncedAt.toLocaleTimeString();
 
-  renderRefStatusTable();
   renderPolymarketSummaryCards();
   renderTrendChart(_kalshiVolData, _refNotionalVol);
-  renderBucketChart();
   renderLiquidity(_kalshiVolData, _kalshiMktsData);
   renderCIPanel();
   renderTable(buildTableData(_kalshiVolData, _kalshiMktsData, _refNotionalVol, _refUsers));
@@ -670,8 +646,7 @@ async function refreshAllRef() {
 
 function updateRefStatus(status) {
   if (status === "loading") {
-    el("ref-status-wrap").innerHTML = `<div class="spinner-wrap"><div class="spinner"></div><span>Fetching reference data…</span></div>`;
-    ["polymarket-kpis","poly-cat-wrap","liq-avg","liq-median","ci-traders-wrap"].forEach(id => {
+    ["polymarket-kpis","liq-avg","ci-traders-wrap"].forEach(id => {
       el(id).innerHTML = `<div class="spinner-wrap"><div class="spinner"></div><span>Loading reference data…</span></div>`;
     });
   }
@@ -721,46 +696,17 @@ function renderRefStatusTable() {
 
 // ─── POLYMARKET SUMMARY CARDS ─────────────────────────────────────────────────
 function renderPolymarketSummaryCards() {
-  // Q7588938: Day, Volume, "Cumulative Volume"
-  const volSorted  = sortByDate(_refNotionalVol, "Day");
-  const latest     = volSorted[volSorted.length - 1] || {};
-  const trend7d    = calcTrend7d(volSorted, "Volume");
+  // Q7588938: Day, Volume, "Cumulative Volume" — daily volume only; no trade count or active markets in ref queries
+  const volSorted = sortByDate(_refNotionalVol, "Day");
+  const latest    = volSorted[volSorted.length - 1] || {};
 
-  // Q7588953: Date, New, Old, "Cumulative Unique Users"
-  const userSorted = sortByDate(_refUsers, "Date");
-  const latestUser = userSorted[userSorted.length - 1] || {};
-  const dailyUsers = (Number(latestUser.New || 0) + Number(latestUser.Old || 0)) || null;
-
-  // Q7588969: day (lowercase), TVLDelta, TVL
-  const tvlSorted  = sortByDate(_refTVL, "day");
-  const latestTVL  = tvlSorted[tvlSorted.length - 1] || {};
-
-  const tc = trend7d == null ? "neutral" : trend7d >= 0 ? "up" : "down";
-  const ts = trend7d == null ? "—" : (trend7d >= 0 ? "+" : "") + trend7d.toFixed(1) + "% vs prior 7d";
-
-  const cards = [];
-
-  if (_refNotionalVol) {
-    cards.push({ label:"Daily Volume",    value:fmtUSD(latest.Volume) });
-    cards.push({ label:"7d Trend",        value:ts, trend:ts, trendClass:tc });
-  } else {
-    cards.push({ label:"Daily Volume",    value:"Q7588938 error", error:true });
-    cards.push({ label:"7d Trend",        value:"Q7588938 error", error:true });
-  }
-
-  if (_refUsers) {
-    cards.push({ label:"Daily Users",     value:fmtNum(dailyUsers) });
-  } else {
-    cards.push({ label:"Daily Users",     value:"Q7588953 error", error:true });
-  }
-
-  if (_refTVL) {
-    cards.push({ label:"Current TVL",     value:fmtUSD(latestTVL.TVL) });
-  } else {
-    cards.push({ label:"Current TVL",     value:"Q7588969 error", error:true });
-  }
-
-  renderKPIs("polymarket-kpis", cards);
+  renderKPIs("polymarket-kpis", [
+    _refNotionalVol
+      ? { label:"Daily Volume",   value:fmtUSD(latest.Volume) }
+      : { label:"Daily Volume",   value:"Q7588938 error", error:true },
+    { label:"Trade Count",        value:"N/A (ref queries)" },
+    { label:"Active Markets",     value:"N/A (ref queries)" },
+  ]);
 }
 
 // ─── VOLUME TREND CHART ───────────────────────────────────────────────────────
@@ -852,12 +798,10 @@ function renderLiquidity(kalshiVol, kalshiMkts) {
 
   const mk = (dot, label, val) => `<div class="liq-metric"><span class="liq-metric-label"><span class="liq-dot" style="background:${dot}"></span>${label}</span><span class="liq-metric-value">${val}</span></div>`;
 
-  const geminiSpreadStr   = _geminiSpread != null ? (_geminiSpread * 100).toFixed(3) + "pp" : "—";
-  const kalshiMedianStr  = _kalshiMedianTrade != null && !isNaN(_kalshiMedianTrade) ? fmtUSD(_kalshiMedianTrade) : "—";
+  const geminiSpreadStr = _geminiSpread != null ? (_geminiSpread * 100).toFixed(3) + "pp" : "—";
 
-  el("liq-spread").innerHTML  = mk("var(--kalshi)","Kalshi (avg daily range)",kalshiSpread) + mk("var(--polymarket)","Polymarket","N/A (no book data)") + mk("var(--gemini)","Gemini (avg bid-ask)",geminiSpreadStr);
-  el("liq-avg").innerHTML     = mk("var(--kalshi)","Kalshi",kalshiAvg) + mk("var(--polymarket)",`Polymarket (Q7589009 · ${latestBet?.month?.substring(0,7)||"—"})`,polyAvg) + mk("var(--gemini)","Gemini","—");
-  el("liq-median").innerHTML  = mk("var(--kalshi)","Kalshi (PERCENTILE_CONT 30d)",kalshiMedianStr) + mk("var(--polymarket)",`Poly avg shares (Q7589009)`,polyShares) + mk("var(--gemini)","Gemini","—");
+  el("liq-spread").innerHTML = mk("var(--kalshi)","Kalshi (avg daily range)",kalshiSpread) + mk("var(--polymarket)","Polymarket","N/A (no book data)") + mk("var(--gemini)","Gemini (avg bid-ask)",geminiSpreadStr);
+  el("liq-avg").innerHTML    = mk("var(--kalshi)","Kalshi",kalshiAvg) + mk("var(--polymarket)",`Polymarket (Q7589009 · ${latestBet?.month?.substring(0,7)||"—"})`,polyAvg) + mk("var(--gemini)","Gemini","—");
 }
 
 // ─── CI PANEL ─────────────────────────────────────────────────────────────────
@@ -1134,7 +1078,6 @@ async function loadAllData() {
   loadGeminiData().catch(e => console.error("Gemini failed:", e));
   loadReferenceData().catch(e => {
     console.error("Reference data load failed:", e);
-    el("ref-status-wrap").innerHTML = errHtml(0, `Reference load failed: ${e.message}`);
   });
   loadKalshiMarketsAPI(); // fire-and-forget: logs field names to console
 
@@ -1170,20 +1113,6 @@ async function loadAllData() {
     console.error("[Kalshi trade_report] Schema query failed:", rTS.reason?.message);
   }
 
-  // ── Batch 3: Kalshi median trade size ───────────────────────────────────────
-  const [rMed] = await Promise.allSettled([
-    runDuneQuery(SQL.kalshiMedian, null),
-  ]);
-  if (rMed.status === "fulfilled") {
-    console.group("[Kalshi Median Trade Size] PERCENTILE_CONT(0.5) on contracts_traded * price / 100.0");
-    console.log("raw result rows:", rMed.value);
-    console.groupEnd();
-    _kalshiMedianTrade = rMed.value[0] != null ? Number(rMed.value[0].median_trade_usd) : null;
-  } else {
-    console.error("[Kalshi Median Trade] Query failed:", rMed.reason?.message);
-    _kalshiMedianTrade = null;
-  }
-
   const kv = r1.status==="fulfilled"?r1.value:null;
   const km = r2.status==="fulfilled"?r2.value:null;
   const kc = r3.status==="fulfilled"?r3.value:null;
@@ -1194,14 +1123,10 @@ async function loadAllData() {
   // Kalshi KPIs
   if (kv && km) {
     const lat=kv[0]||{}, latm=km[0]||{};
-    const tr=calcTrend7d(kv,"notional_volume_usd");
-    const tc=tr==null?"neutral":tr>=0?"up":"down";
-    const ts=tr==null?"—":(tr>=0?"+":"")+tr.toFixed(1)+"% vs prior 7d";
     renderKPIs("kalshi-kpis",[
       {label:"Daily Volume",   value:fmtUSD(lat.notional_volume_usd)},
       {label:"Trade Count",    value:fmtNum(lat.trade_count)},
       {label:"Active Markets", value:fmtNum(latm.active_markets)},
-      {label:"7d Trend",       value:ts, trend:ts, trendClass:tc},
     ]);
   } else {
     renderKPIError("kalshi-kpis", r1.reason?.message || r2.reason?.message || "Kalshi data failed");
@@ -1261,10 +1186,8 @@ function retryCard(wrapId, qid){
     else if(qid===7588991)_refAvgBetUser=result.rows;
     else if(qid===7588997)_refVolPerUser=result.rows;
     else if(qid===7589009)_refAvgBetMonth=result.rows;
-    renderRefStatusTable();
     renderPolymarketSummaryCards();
     renderTrendChart(_kalshiVolData,_refNotionalVol);
-    renderBucketChart();
     renderLiquidity(_kalshiVolData,_kalshiMktsData);
     renderCIPanel();
     renderTable(buildTableData(_kalshiVolData,_kalshiMktsData,_refNotionalVol,_refUsers));
@@ -1279,7 +1202,7 @@ function destroyChart(c){if(c)c.destroy();return null;}
 
 function setKalshiStatus(msg){
   ["trend-wrap","kalshi-cat-wrap","table-wrap"].forEach(id=>{const e=el(id);if(!e.querySelector("canvas"))e.innerHTML=`<div class="spinner-wrap"><div class="spinner"></div><span>${msg}</span></div>`;});
-  ["liq-spread","liq-avg","liq-median","ci-oi-wrap","ci-conc","ci-tradect-wrap"].forEach(id=>el(id).innerHTML=`<div class="spinner-wrap"><div class="spinner"></div><span>${msg}</span></div>`);
+  ["liq-spread","liq-avg","ci-oi-wrap","ci-conc","ci-tradect-wrap"].forEach(id=>el(id).innerHTML=`<div class="spinner-wrap"><div class="spinner"></div><span>${msg}</span></div>`);
 }
 
 function submitKey(){
