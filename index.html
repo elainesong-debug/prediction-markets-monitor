@@ -11,144 +11,141 @@
     --bg: #0f0f0f; --surface: #1a1a1a; --border: #2a2a2a;
     --text: #e5e5e5; --muted: #888;
     --kalshi: #00C805; --polymarket: #0070F3; --gemini: #FF6600;
-    --error: #ef4444; --radius: 8px;
+    --error: #ef4444; --warn: #f59e0b; --ok: #22c55e;
+    --radius: 8px;
   }
-  body { background: var(--bg); color: var(--text); font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; font-size: 14px; line-height: 1.5; min-height: 100vh; }
+  body { background:var(--bg); color:var(--text); font-family:system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif; font-size:14px; line-height:1.5; min-height:100vh; }
 
-  /* Header */
-  .header { display: flex; align-items: center; justify-content: space-between; padding: 16px 24px; border-bottom: 1px solid var(--border); position: sticky; top: 0; background: var(--bg); z-index: 10; }
-  .header h1 { font-size: 18px; font-weight: 600; letter-spacing: -0.3px; }
-  .header-right { display: flex; align-items: center; gap: 16px; }
-  #last-updated { color: var(--muted); font-size: 12px; }
-  .refresh-btn { background: var(--surface); border: 1px solid var(--border); color: var(--text); padding: 6px 14px; border-radius: var(--radius); cursor: pointer; font-size: 13px; }
-  .refresh-btn:hover { border-color: #555; }
-  .refresh-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+  .header { display:flex; align-items:center; justify-content:space-between; padding:16px 24px; border-bottom:1px solid var(--border); position:sticky; top:0; background:var(--bg); z-index:10; }
+  .header h1 { font-size:18px; font-weight:600; letter-spacing:-0.3px; }
+  .header-right { display:flex; align-items:center; gap:12px; }
+  #last-updated, #last-synced { color:var(--muted); font-size:12px; }
+  .btn { background:var(--surface); border:1px solid var(--border); color:var(--text); padding:6px 14px; border-radius:var(--radius); cursor:pointer; font-size:13px; transition:border-color 0.15s; white-space:nowrap; }
+  .btn:hover { border-color:#555; }
+  .btn:disabled { opacity:0.5; cursor:not-allowed; }
+  .btn-poly { border-color:#0070F344; color:var(--polymarket); }
+  .btn-poly:hover { border-color:var(--polymarket); }
 
-  /* Tabs */
-  .tab-bar { display: flex; gap: 0; border-bottom: 1px solid var(--border); padding: 0 24px; background: var(--bg); position: sticky; top: 57px; z-index: 9; }
-  .tab-btn { background: none; border: none; border-bottom: 2px solid transparent; color: var(--muted); cursor: pointer; font-size: 13px; font-weight: 500; padding: 10px 18px; transition: all 0.15s; margin-bottom: -1px; }
-  .tab-btn:hover { color: var(--text); }
-  .tab-btn.active { color: var(--text); border-bottom-color: var(--text); }
-  .tab-btn.poly-tab.active { color: var(--polymarket); border-bottom-color: var(--polymarket); }
+  .tab-bar { display:flex; border-bottom:1px solid var(--border); padding:0 24px; background:var(--bg); position:sticky; top:57px; z-index:9; }
+  .tab-btn { background:none; border:none; border-bottom:2px solid transparent; color:var(--muted); cursor:pointer; font-size:13px; font-weight:500; padding:10px 18px; transition:all 0.15s; margin-bottom:-1px; }
+  .tab-btn:hover { color:var(--text); }
+  .tab-btn.active { color:var(--text); border-bottom-color:var(--text); }
+  .tab-btn.poly-tab.active { color:var(--polymarket); border-bottom-color:var(--polymarket); }
 
-  .main { padding: 20px 24px; display: flex; flex-direction: column; gap: 20px; }
-  .tab-content { display: none; }
-  .tab-content.active { display: flex; flex-direction: column; gap: 20px; }
+  .main { padding:20px 24px; display:flex; flex-direction:column; gap:20px; }
+  .tab-content { display:none; }
+  .tab-content.active { display:flex; flex-direction:column; gap:20px; }
 
-  /* Platform panels */
-  .platform-row { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; }
-  .platform-panel { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 16px; }
-  .platform-label { font-size: 11px; font-weight: 600; letter-spacing: 0.8px; text-transform: uppercase; margin-bottom: 12px; display: flex; align-items: center; gap: 8px; }
-  .platform-label::before { content: ''; display: inline-block; width: 8px; height: 8px; border-radius: 50%; }
-  .platform-label.kalshi { color: var(--kalshi); } .platform-label.kalshi::before { background: var(--kalshi); }
-  .platform-label.polymarket { color: var(--polymarket); } .platform-label.polymarket::before { background: var(--polymarket); }
-  .platform-label.gemini { color: var(--gemini); } .platform-label.gemini::before { background: var(--gemini); }
+  .platform-row { display:grid; grid-template-columns:1fr 1fr 1fr; gap:16px; }
+  .platform-panel { background:var(--surface); border:1px solid var(--border); border-radius:var(--radius); padding:16px; }
+  .platform-label { font-size:11px; font-weight:600; letter-spacing:0.8px; text-transform:uppercase; margin-bottom:12px; display:flex; align-items:center; gap:8px; }
+  .platform-label::before { content:''; display:inline-block; width:8px; height:8px; border-radius:50%; }
+  .platform-label.kalshi { color:var(--kalshi); } .platform-label.kalshi::before { background:var(--kalshi); }
+  .platform-label.polymarket { color:var(--polymarket); } .platform-label.polymarket::before { background:var(--polymarket); }
+  .platform-label.gemini { color:var(--gemini); } .platform-label.gemini::before { background:var(--gemini); }
 
-  /* KPI cards */
-  .kpi-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-  .kpi-card { background: var(--bg); border: 1px solid var(--border); border-radius: 6px; padding: 10px 12px; }
-  .kpi-label { color: var(--muted); font-size: 11px; margin-bottom: 4px; }
-  .kpi-value { font-size: 20px; font-weight: 600; letter-spacing: -0.5px; }
-  .kpi-trend { font-size: 11px; margin-top: 2px; }
-  .kpi-trend.up { color: #22c55e; } .kpi-trend.down { color: var(--error); } .kpi-trend.neutral { color: var(--muted); }
-  .kpi-error-card { background: #1a0a0a !important; border-color: #3f1515 !important; }
-  .kpi-error-val { color: var(--error); font-size: 11px; }
+  .kpi-grid { display:grid; grid-template-columns:1fr 1fr; gap:10px; }
+  .kpi-card { background:var(--bg); border:1px solid var(--border); border-radius:6px; padding:10px 12px; }
+  .kpi-label { color:var(--muted); font-size:11px; margin-bottom:4px; }
+  .kpi-value { font-size:20px; font-weight:600; letter-spacing:-0.5px; }
+  .kpi-trend { font-size:11px; margin-top:2px; }
+  .kpi-trend.up { color:var(--ok); } .kpi-trend.down { color:var(--error); } .kpi-trend.neutral { color:var(--muted); }
+  .kpi-error-card { background:#1a0a0a !important; border-color:#3f1515 !important; }
+  .kpi-error-val { color:var(--error); font-size:11px; }
 
-  /* Polymarket KPI row (6 items) */
-  .poly-kpi-row { display: grid; grid-template-columns: repeat(6, 1fr); gap: 12px; }
-  @media (max-width: 1100px) { .poly-kpi-row { grid-template-columns: repeat(3, 1fr); } }
+  .poly-kpi-row { display:grid; grid-template-columns:repeat(6,1fr); gap:12px; }
 
-  .skeleton { background: linear-gradient(90deg, var(--border) 25%, #333 50%, var(--border) 75%); background-size: 200% 100%; animation: shimmer 1.5s infinite; border-radius: 4px; height: 20px; width: 80%; margin-top: 4px; }
-  @keyframes shimmer { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
-  .error-card { background: #1a0a0a; border: 1px solid #3f1515; color: #f87171; border-radius: var(--radius); padding: 12px; font-size: 12px; display: flex; gap: 8px; align-items: flex-start; }
-  .spinner-wrap { display: flex; align-items: center; gap: 8px; color: var(--muted); font-size: 12px; padding: 4px 0; }
-  .spinner { width: 14px; height: 14px; border: 2px solid var(--border); border-top-color: var(--kalshi); border-radius: 50%; animation: spin 0.8s linear infinite; flex-shrink: 0; }
-  @keyframes spin { to { transform: rotate(360deg); } }
+  .skeleton { background:linear-gradient(90deg,var(--border) 25%,#333 50%,var(--border) 75%); background-size:200% 100%; animation:shimmer 1.5s infinite; border-radius:4px; height:20px; width:80%; margin-top:4px; }
+  @keyframes shimmer { 0%{background-position:200% 0} 100%{background-position:-200% 0} }
 
-  /* Chart cards */
-  .chart-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 16px; }
-  .chart-title { font-size: 13px; font-weight: 600; margin-bottom: 14px; }
-  .chart-container { position: relative; width: 100%; }
-  .chart-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px; }
-  .chart-row-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .error-card { background:#1a0a0a; border:1px solid #3f1515; color:#f87171; border-radius:var(--radius); padding:12px; font-size:12px; display:flex; gap:8px; align-items:flex-start; flex-wrap:wrap; }
+  .error-card .retry-btn { margin-left:auto; flex-shrink:0; background:#3f1515; border:1px solid #7f2020; color:#f87171; padding:4px 10px; border-radius:4px; cursor:pointer; font-size:11px; }
+  .error-card .retry-btn:hover { background:#5a1e1e; }
+  .spinner-wrap { display:flex; align-items:center; gap:8px; color:var(--muted); font-size:12px; padding:4px 0; }
+  .spinner { width:14px; height:14px; border:2px solid var(--border); border-top-color:var(--kalshi); border-radius:50%; animation:spin 0.8s linear infinite; flex-shrink:0; }
+  @keyframes spin { to{transform:rotate(360deg)} }
 
-  /* Category filter */
-  .filter-bar { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
-  .filter-label { font-size: 11px; font-weight: 600; color: var(--muted); text-transform: uppercase; letter-spacing: 0.5px; }
-  .pill { padding: 5px 14px; border-radius: 20px; border: 1px solid var(--border); background: var(--surface); color: var(--muted); cursor: pointer; font-size: 12px; font-weight: 500; transition: all 0.15s; }
-  .pill:hover { border-color: #555; color: var(--text); }
-  .pill.active { background: var(--polymarket); border-color: var(--polymarket); color: #fff; }
+  .chart-card { background:var(--surface); border:1px solid var(--border); border-radius:var(--radius); padding:16px; }
+  .chart-title { font-size:13px; font-weight:600; margin-bottom:14px; }
+  .chart-container { position:relative; width:100%; }
+  .chart-row { display:grid; grid-template-columns:repeat(auto-fit,minmax(280px,1fr)); gap:16px; }
+  .chart-row-2 { display:grid; grid-template-columns:1fr 1fr; gap:16px; }
 
-  /* Liquidity quality */
-  .section-title { font-size: 13px; font-weight: 600; color: var(--text); margin-bottom: 12px; }
-  .liq-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
-  .liq-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 16px; }
-  .liq-card-title { font-size: 11px; font-weight: 600; letter-spacing: 0.5px; text-transform: uppercase; color: var(--muted); margin-bottom: 14px; }
-  .liq-metric { display: flex; justify-content: space-between; align-items: center; padding: 6px 0; border-bottom: 1px solid var(--border); }
-  .liq-metric:last-child { border-bottom: none; }
-  .liq-metric-label { font-size: 12px; color: var(--muted); display: flex; align-items: center; gap: 6px; }
-  .liq-dot { width: 6px; height: 6px; border-radius: 50%; display: inline-block; flex-shrink: 0; }
-  .liq-metric-value { font-size: 14px; font-weight: 600; }
+  .filter-bar { display:flex; align-items:center; gap:10px; flex-wrap:wrap; }
+  .filter-label { font-size:11px; font-weight:600; color:var(--muted); text-transform:uppercase; letter-spacing:0.5px; }
+  .pill { padding:5px 14px; border-radius:20px; border:1px solid var(--border); background:var(--surface); color:var(--muted); cursor:pointer; font-size:12px; font-weight:500; }
+  .pill:hover { border-color:#555; color:var(--text); }
+  .pill.active { background:var(--polymarket); border-color:var(--polymarket); color:#fff; }
 
-  /* CI panel */
-  .ci-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
-  .ci-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 16px; }
-  .ci-title { font-size: 13px; font-weight: 600; margin-bottom: 14px; }
-  .conc-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-  .conc-stat { background: var(--bg); border-radius: 6px; padding: 12px; border: 1px solid var(--border); }
-  .conc-stat-val { font-size: 26px; font-weight: 700; letter-spacing: -1px; }
-  .conc-stat-label { font-size: 11px; color: var(--muted); margin-top: 2px; }
-  .conc-stat-sub { font-size: 11px; color: var(--muted); }
+  .section-title { font-size:13px; font-weight:600; margin-bottom:12px; }
+  .liq-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:16px; }
+  .liq-card { background:var(--surface); border:1px solid var(--border); border-radius:var(--radius); padding:16px; }
+  .liq-card-title { font-size:11px; font-weight:600; letter-spacing:0.5px; text-transform:uppercase; color:var(--muted); margin-bottom:14px; }
+  .liq-metric { display:flex; justify-content:space-between; align-items:center; padding:6px 0; border-bottom:1px solid var(--border); }
+  .liq-metric:last-child { border-bottom:none; }
+  .liq-metric-label { font-size:12px; color:var(--muted); display:flex; align-items:center; gap:6px; }
+  .liq-dot { width:6px; height:6px; border-radius:50%; display:inline-block; flex-shrink:0; }
+  .liq-metric-value { font-size:14px; font-weight:600; }
 
-  /* Accuracy check table */
-  .accuracy-table-wrap { overflow-x: auto; }
-  .accuracy-table { width: 100%; border-collapse: collapse; font-size: 13px; }
-  .accuracy-table th { text-align: left; padding: 8px 14px; border-bottom: 1px solid var(--border); color: var(--muted); font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; }
-  .accuracy-table td { padding: 10px 14px; border-bottom: 1px solid var(--border); }
-  .accuracy-table tr:last-child td { border-bottom: none; }
-  .accuracy-table td.num { font-variant-numeric: tabular-nums; text-align: right; }
-  .delta-ok { color: #22c55e; }
-  .delta-warn { color: #f59e0b; }
-  .delta-bad { color: var(--error); font-weight: 600; }
-  .delta-na { color: var(--muted); }
-  .ref-note { font-size: 11px; color: var(--muted); margin-top: 8px; }
+  .ci-grid { display:grid; grid-template-columns:1fr 1fr; gap:16px; }
+  .ci-card { background:var(--surface); border:1px solid var(--border); border-radius:var(--radius); padding:16px; }
+  .ci-title { font-size:13px; font-weight:600; margin-bottom:14px; }
+  .conc-stats { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+  .conc-stat { background:var(--bg); border-radius:6px; padding:12px; border:1px solid var(--border); }
+  .conc-stat-val { font-size:26px; font-weight:700; letter-spacing:-1px; }
+  .conc-stat-label { font-size:11px; color:var(--muted); margin-top:2px; }
+  .conc-stat-sub { font-size:11px; color:var(--muted); }
 
-  /* Table */
-  .table-wrap { overflow-x: auto; }
-  table { width: 100%; border-collapse: collapse; font-size: 13px; }
-  thead th { text-align: left; padding: 8px 12px; border-bottom: 1px solid var(--border); color: var(--muted); font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; cursor: pointer; user-select: none; white-space: nowrap; }
-  thead th:hover { color: var(--text); }
-  thead th.sort-asc::after { content: ' ↑'; color: var(--kalshi); }
-  thead th.sort-desc::after { content: ' ↓'; color: var(--kalshi); }
-  tbody tr { border-bottom: 1px solid var(--border); transition: background 0.1s; }
-  tbody tr:hover { background: #222; }
-  tbody td { padding: 8px 12px; white-space: nowrap; }
-  tbody td.num { font-variant-numeric: tabular-nums; text-align: right; }
-  tbody td.date { color: var(--muted); font-size: 12px; }
+  /* Accuracy / metadata table */
+  .meta-table-wrap { overflow-x:auto; }
+  .meta-table { width:100%; border-collapse:collapse; font-size:13px; }
+  .meta-table th { text-align:left; padding:8px 14px; border-bottom:1px solid var(--border); color:var(--muted); font-size:11px; font-weight:600; text-transform:uppercase; letter-spacing:0.5px; }
+  .meta-table td { padding:9px 14px; border-bottom:1px solid var(--border); }
+  .meta-table tr:last-child td { border-bottom:none; }
+  .meta-table td.num { font-variant-numeric:tabular-nums; text-align:right; }
+  .status-ok { color:var(--ok); font-weight:500; }
+  .status-stale { color:var(--warn); font-weight:500; }
+  .status-error { color:var(--error); font-weight:500; }
+  .status-loading { color:var(--muted); }
+  .qid-link { color:var(--polymarket); text-decoration:none; font-size:12px; font-family:monospace; }
+  .qid-link:hover { text-decoration:underline; }
+  .meta-note { font-size:11px; color:var(--muted); margin-top:8px; }
 
-  /* Polymarket section label */
-  .poly-section-label { font-size: 11px; font-weight: 600; letter-spacing: 0.6px; text-transform: uppercase; color: var(--polymarket); margin-bottom: 10px; display: flex; align-items: center; gap: 6px; }
-  .poly-section-label::before { content: ''; display: inline-block; width: 6px; height: 6px; border-radius: 50%; background: var(--polymarket); }
+  /* Daily table */
+  .table-wrap { overflow-x:auto; }
+  table { width:100%; border-collapse:collapse; font-size:13px; }
+  thead th { text-align:left; padding:8px 12px; border-bottom:1px solid var(--border); color:var(--muted); font-size:11px; font-weight:600; text-transform:uppercase; letter-spacing:0.5px; cursor:pointer; user-select:none; white-space:nowrap; }
+  thead th:hover { color:var(--text); }
+  thead th.sort-asc::after { content:' ↑'; color:var(--kalshi); }
+  thead th.sort-desc::after { content:' ↓'; color:var(--kalshi); }
+  tbody tr { border-bottom:1px solid var(--border); }
+  tbody tr:hover { background:#222; }
+  tbody td { padding:8px 12px; white-space:nowrap; }
+  tbody td.num { font-variant-numeric:tabular-nums; text-align:right; }
+  tbody td.date { color:var(--muted); font-size:12px; }
 
-  /* Key gate */
-  #key-gate { display: none; position: fixed; inset: 0; background: var(--bg); z-index: 100; align-items: center; justify-content: center; }
-  #key-gate.visible { display: flex; }
-  .key-gate-box { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 32px; width: 100%; max-width: 420px; display: flex; flex-direction: column; gap: 16px; }
-  .key-gate-box h2 { font-size: 16px; font-weight: 600; }
-  .key-gate-box p { color: var(--muted); font-size: 13px; line-height: 1.6; }
-  .key-gate-box a { color: var(--kalshi); text-decoration: none; }
-  .key-input-row { display: flex; gap: 8px; }
-  .key-input { flex: 1; background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius); color: var(--text); font-size: 13px; padding: 8px 12px; font-family: monospace; outline: none; }
-  .key-input:focus { border-color: var(--kalshi); }
-  .key-input.error { border-color: var(--error); }
-  .key-submit { background: var(--kalshi); border: none; border-radius: var(--radius); color: #000; font-size: 13px; font-weight: 600; padding: 8px 16px; cursor: pointer; white-space: nowrap; }
-  .key-submit:hover { opacity: 0.85; }
-  .key-error { color: var(--error); font-size: 12px; display: none; }
-  .key-error.visible { display: block; }
+  .poly-section-label { font-size:11px; font-weight:600; letter-spacing:0.6px; text-transform:uppercase; color:var(--polymarket); margin-bottom:10px; display:flex; align-items:center; gap:6px; }
+  .poly-section-label::before { content:''; display:inline-block; width:6px; height:6px; border-radius:50%; background:var(--polymarket); }
 
-  @media (max-width: 1000px) { .ci-grid { grid-template-columns: 1fr; } .chart-row-2 { grid-template-columns: 1fr; } }
-  @media (max-width: 900px) { .platform-row { grid-template-columns: 1fr; } .chart-row { grid-template-columns: 1fr; } .liq-grid { grid-template-columns: 1fr; } }
-  @media (max-width: 600px) { .main { padding: 12px; } .header { padding: 12px; } .tab-bar { padding: 0 12px; } }
+  #key-gate { display:none; position:fixed; inset:0; background:var(--bg); z-index:100; align-items:center; justify-content:center; }
+  #key-gate.visible { display:flex; }
+  .key-gate-box { background:var(--surface); border:1px solid var(--border); border-radius:12px; padding:32px; width:100%; max-width:420px; display:flex; flex-direction:column; gap:16px; }
+  .key-gate-box h2 { font-size:16px; font-weight:600; }
+  .key-gate-box p { color:var(--muted); font-size:13px; line-height:1.6; }
+  .key-gate-box a { color:var(--kalshi); text-decoration:none; }
+  .key-input-row { display:flex; gap:8px; }
+  .key-input { flex:1; background:var(--bg); border:1px solid var(--border); border-radius:var(--radius); color:var(--text); font-size:13px; padding:8px 12px; font-family:monospace; outline:none; }
+  .key-input:focus { border-color:var(--kalshi); }
+  .key-input.error { border-color:var(--error); }
+  .key-submit { background:var(--kalshi); border:none; border-radius:var(--radius); color:#000; font-size:13px; font-weight:600; padding:8px 16px; cursor:pointer; }
+  .key-submit:hover { opacity:0.85; }
+  .key-error { color:var(--error); font-size:12px; display:none; }
+  .key-error.visible { display:block; }
+
+  @media(max-width:1100px){.poly-kpi-row{grid-template-columns:repeat(3,1fr)}}
+  @media(max-width:1000px){.ci-grid{grid-template-columns:1fr}.chart-row-2{grid-template-columns:1fr}}
+  @media(max-width:900px){.platform-row{grid-template-columns:1fr}.chart-row{grid-template-columns:1fr}.liq-grid{grid-template-columns:1fr}}
+  @media(max-width:600px){.main{padding:12px}.header{padding:12px}.tab-bar{padding:0 12px}}
 </style>
 </head>
 <body>
@@ -156,9 +153,9 @@
 <div id="key-gate" class="visible">
   <div class="key-gate-box">
     <h2>Prediction Markets Monitor</h2>
-    <p>Enter your <a href="https://dune.com/settings/api" target="_blank">Dune API key</a> to load live data. Stored in memory only — never persisted.</p>
+    <p>Enter your <a href="https://dune.com/settings/api" target="_blank">Dune API key</a>. Stored in memory only — never persisted.</p>
     <div class="key-input-row">
-      <input id="key-input" class="key-input" type="password" placeholder="Paste API key..." autocomplete="off" />
+      <input id="key-input" class="key-input" type="password" placeholder="Paste API key…" autocomplete="off"/>
       <button class="key-submit" onclick="submitKey()">Load</button>
     </div>
     <div id="key-error" class="key-error">Invalid key — please check and try again.</div>
@@ -168,8 +165,10 @@
 <header class="header">
   <h1>Prediction Markets Monitor</h1>
   <div class="header-right">
+    <span id="last-synced"></span>
     <span id="last-updated"></span>
-    <button class="refresh-btn" id="refresh-btn" onclick="refresh()">&#8635; Refresh</button>
+    <button class="btn btn-poly" onclick="refreshAllRef()" id="refresh-ref-btn">&#8635; Refresh Reference</button>
+    <button class="btn" id="refresh-btn" onclick="refresh()">&#8635; Refresh All</button>
   </div>
 </header>
 
@@ -180,7 +179,7 @@
 
 <main class="main">
 
-<!-- ═══════════════════════════ SUMMARY TAB ═══════════════════════════ -->
+<!-- ═══════════════ SUMMARY TAB ═══════════════ -->
 <div id="tab-summary" class="tab-content active">
 
   <div class="platform-row">
@@ -194,12 +193,12 @@
       </div>
     </div>
     <div class="platform-panel">
-      <div class="platform-label polymarket">Polymarket</div>
+      <div class="platform-label polymarket">Polymarket <span style="font-size:9px;color:var(--muted);margin-left:4px;text-transform:none;letter-spacing:0">via reference queries</span></div>
       <div id="polymarket-kpis" class="kpi-grid">
         <div class="kpi-card"><div class="kpi-label">Daily Volume</div><div class="skeleton"></div></div>
-        <div class="kpi-card"><div class="kpi-label">Trade Count</div><div class="skeleton"></div></div>
-        <div class="kpi-card"><div class="kpi-label">Unique Traders</div><div class="skeleton"></div></div>
         <div class="kpi-card"><div class="kpi-label">7d Trend</div><div class="skeleton"></div></div>
+        <div class="kpi-card"><div class="kpi-label">Daily Users</div><div class="skeleton"></div></div>
+        <div class="kpi-card"><div class="kpi-label">Current TVL</div><div class="skeleton"></div></div>
       </div>
     </div>
     <div class="platform-panel">
@@ -213,15 +212,18 @@
     </div>
   </div>
 
-  <!-- Accuracy check -->
+  <!-- Reference query status table -->
   <div class="chart-card">
-    <div class="chart-title">Accuracy Check — Our Queries vs. Reference Dashboard</div>
-    <div id="accuracy-wrap"><div class="spinner-wrap"><div class="spinner"></div><span>Fetching reference data...</span></div></div>
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px">
+      <div class="chart-title" style="margin-bottom:0">Polymarket Reference Query Status</div>
+      <button class="btn btn-poly" onclick="refreshAllRef()" style="font-size:12px;padding:5px 12px">&#8635; Refresh All Queries</button>
+    </div>
+    <div id="ref-status-wrap"><div class="spinner-wrap"><div class="spinner"></div><span>Fetching reference data…</span></div></div>
   </div>
 
-  <!-- Volume trend with category pills -->
+  <!-- Volume trend -->
   <div class="chart-card">
-    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;flex-wrap:wrap;gap:10px;">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;flex-wrap:wrap;gap:10px">
       <div class="chart-title" style="margin-bottom:0">30-Day Volume Trend</div>
       <div class="filter-bar">
         <span class="filter-label">Filter:</span>
@@ -232,40 +234,40 @@
         <button class="pill" data-cat="Finance" onclick="selectCategory('Finance')">Finance</button>
       </div>
     </div>
-    <div id="trend-wrap"><div class="spinner-wrap"><div class="spinner"></div><span id="trend-status">Fetching data...</span></div></div>
+    <div id="trend-wrap"><div class="spinner-wrap"><div class="spinner"></div><span id="trend-status">Fetching data…</span></div></div>
   </div>
 
   <!-- Category charts -->
   <div class="chart-row">
     <div class="chart-card">
       <div class="chart-title">Kalshi — Category Mix (30d)</div>
-      <div id="kalshi-cat-wrap"><div class="spinner-wrap"><div class="spinner"></div><span>Fetching...</span></div></div>
+      <div id="kalshi-cat-wrap"><div class="spinner-wrap"><div class="spinner"></div><span>Fetching…</span></div></div>
     </div>
     <div class="chart-card">
-      <div class="chart-title">Polymarket — Category Mix (30d)</div>
-      <div id="poly-cat-wrap"><div class="spinner-wrap"><div class="spinner"></div><span>Fetching...</span></div></div>
+      <div class="chart-title">Polymarket — Volume by User Bet Bucket <span style="font-size:10px;color:var(--muted)">(Q7588997)</span></div>
+      <div id="poly-cat-wrap"><div class="spinner-wrap"><div class="spinner"></div><span>Fetching…</span></div></div>
     </div>
     <div class="chart-card">
       <div class="chart-title">Gemini — Category Mix</div>
-      <div id="gemini-cat-wrap"><div class="spinner-wrap"><div class="spinner"></div><span>Fetching...</span></div></div>
+      <div id="gemini-cat-wrap"><div class="spinner-wrap"><div class="spinner"></div><span>Fetching…</span></div></div>
     </div>
   </div>
 
-  <!-- Liquidity Quality -->
+  <!-- Liquidity quality -->
   <div>
     <div class="section-title">Liquidity Quality</div>
     <div class="liq-grid">
       <div class="liq-card">
         <div class="liq-card-title">&#9670; Bid-Ask Spread Proxy</div>
-        <div id="liq-spread"><div class="spinner-wrap"><div class="spinner"></div><span>Loading...</span></div></div>
+        <div id="liq-spread"><div class="spinner-wrap"><div class="spinner"></div><span>Loading…</span></div></div>
       </div>
       <div class="liq-card">
         <div class="liq-card-title">&#9670; Avg Trade Size</div>
-        <div id="liq-avg"><div class="spinner-wrap"><div class="spinner"></div><span>Loading...</span></div></div>
+        <div id="liq-avg"><div class="spinner-wrap"><div class="spinner"></div><span>Loading…</span></div></div>
       </div>
       <div class="liq-card">
-        <div class="liq-card-title">&#9670; Median Trade Size</div>
-        <div id="liq-median"><div class="spinner-wrap"><div class="spinner"></div><span>Loading...</span></div></div>
+        <div class="liq-card-title">&#9670; Median / Monthly Avg Bet</div>
+        <div id="liq-median"><div class="spinner-wrap"><div class="spinner"></div><span>Loading…</span></div></div>
       </div>
     </div>
   </div>
@@ -274,26 +276,23 @@
   <div>
     <div class="section-title">Competitive Intelligence</div>
     <div class="ci-grid">
-      <div class="ci-card"><div class="ci-title">Open Interest by Category (Kalshi)</div><div id="ci-oi-wrap"><div class="spinner-wrap"><div class="spinner"></div><span>Loading...</span></div></div></div>
-      <div class="ci-card"><div class="ci-title">Volume Concentration</div><div id="ci-conc"><div class="spinner-wrap"><div class="spinner"></div><span>Loading...</span></div></div></div>
-      <div class="ci-card"><div class="ci-title">Trader Activity (Polymarket, 30d)</div><div id="ci-traders-wrap"><div class="spinner-wrap"><div class="spinner"></div><span>Loading...</span></div></div></div>
-      <div class="ci-card"><div class="ci-title">Trade Count by Category</div><div id="ci-tradect-wrap"><div class="spinner-wrap"><div class="spinner"></div><span>Loading...</span></div></div></div>
+      <div class="ci-card"><div class="ci-title">Open Interest by Category (Kalshi)</div><div id="ci-oi-wrap"><div class="spinner-wrap"><div class="spinner"></div><span>Loading…</span></div></div></div>
+      <div class="ci-card"><div class="ci-title">Volume Concentration</div><div id="ci-conc"><div class="spinner-wrap"><div class="spinner"></div><span>Loading…</span></div></div></div>
+      <div class="ci-card"><div class="ci-title">Trader Activity (Polymarket — Q7588953)</div><div id="ci-traders-wrap"><div class="spinner-wrap"><div class="spinner"></div><span>Loading…</span></div></div></div>
+      <div class="ci-card"><div class="ci-title">Trade Count by Category (Kalshi)</div><div id="ci-tradect-wrap"><div class="spinner-wrap"><div class="spinner"></div><span>Loading…</span></div></div></div>
     </div>
   </div>
 
   <!-- Daily table -->
   <div class="chart-card">
     <div class="chart-title">Daily Summary — Last 30 Days</div>
-    <div id="table-wrap"><div class="spinner-wrap"><div class="spinner"></div><span>Fetching data...</span></div></div>
+    <div id="table-wrap"><div class="spinner-wrap"><div class="spinner"></div><span>Fetching…</span></div></div>
   </div>
-</div><!-- /tab-summary -->
+</div>
 
-<!-- ═══════════════════════════ POLYMARKET TAB ═══════════════════════════ -->
+<!-- ═══════════════ POLYMARKET TAB ═══════════════ -->
 <div id="tab-polymarket" class="tab-content">
-
-  <div class="poly-section-label">Reference: Dune Dashboard Queries</div>
-
-  <!-- KPI row -->
+  <div class="poly-section-label">Source of truth: Dune reference queries (cached results, no re-execution)</div>
   <div class="poly-kpi-row" id="poly-tab-kpis">
     <div class="kpi-card"><div class="kpi-label">Latest Daily Vol</div><div class="skeleton"></div></div>
     <div class="kpi-card"><div class="kpi-label">30d Volume</div><div class="skeleton"></div></div>
@@ -302,85 +301,78 @@
     <div class="kpi-card"><div class="kpi-label">Cumulative Users</div><div class="skeleton"></div></div>
     <div class="kpi-card"><div class="kpi-label">Avg Bet (latest mo)</div><div class="skeleton"></div></div>
   </div>
-
-  <!-- Volume charts -->
   <div class="chart-row-2">
-    <div class="chart-card">
-      <div class="chart-title" style="color:var(--polymarket)">Daily Volume (90d) · Q7588938</div>
-      <div id="poly-vol-wrap"><div class="spinner-wrap"><div class="spinner"></div><span>Loading reference data...</span></div></div>
-    </div>
-    <div class="chart-card">
-      <div class="chart-title" style="color:var(--polymarket)">Cumulative Volume · Q7588938</div>
-      <div id="poly-cumvol-wrap"><div class="spinner-wrap"><div class="spinner"></div><span>Loading...</span></div></div>
-    </div>
+    <div class="chart-card"><div class="chart-title" style="color:var(--polymarket)">Daily Volume (90d) · Q7588938</div><div id="poly-vol-wrap"><div class="spinner-wrap"><div class="spinner"></div><span>Loading…</span></div></div></div>
+    <div class="chart-card"><div class="chart-title" style="color:var(--polymarket)">Cumulative Volume · Q7588938</div><div id="poly-cumvol-wrap"><div class="spinner-wrap"><div class="spinner"></div><span>Loading…</span></div></div></div>
   </div>
-
-  <!-- Users charts -->
   <div class="chart-row-2">
-    <div class="chart-card">
-      <div class="chart-title" style="color:var(--polymarket)">New vs. Returning Users · Q7588953</div>
-      <div id="poly-users-wrap"><div class="spinner-wrap"><div class="spinner"></div><span>Loading...</span></div></div>
-    </div>
-    <div class="chart-card">
-      <div class="chart-title" style="color:var(--polymarket)">Cumulative Unique Users · Q7588953</div>
-      <div id="poly-cumusers-wrap"><div class="spinner-wrap"><div class="spinner"></div><span>Loading...</span></div></div>
-    </div>
+    <div class="chart-card"><div class="chart-title" style="color:var(--polymarket)">New vs. Returning Users · Q7588953</div><div id="poly-users-wrap"><div class="spinner-wrap"><div class="spinner"></div><span>Loading…</span></div></div></div>
+    <div class="chart-card"><div class="chart-title" style="color:var(--polymarket)">Cumulative Unique Users · Q7588953</div><div id="poly-cumusers-wrap"><div class="spinner-wrap"><div class="spinner"></div><span>Loading…</span></div></div></div>
   </div>
-
-  <!-- TVL + Avg bet -->
   <div class="chart-row-2">
-    <div class="chart-card">
-      <div class="chart-title" style="color:var(--polymarket)">TVL (90d) · Q7588969</div>
-      <div id="poly-tvl-wrap"><div class="spinner-wrap"><div class="spinner"></div><span>Loading...</span></div></div>
-    </div>
-    <div class="chart-card">
-      <div class="chart-title" style="color:var(--polymarket)">Avg Monthly USDC Bet · Q7589009</div>
-      <div id="poly-avgbet-wrap"><div class="spinner-wrap"><div class="spinner"></div><span>Loading...</span></div></div>
-    </div>
+    <div class="chart-card"><div class="chart-title" style="color:var(--polymarket)">TVL (90d) · Q7588969</div><div id="poly-tvl-wrap"><div class="spinner-wrap"><div class="spinner"></div><span>Loading…</span></div></div></div>
+    <div class="chart-card"><div class="chart-title" style="color:var(--polymarket)">Avg Monthly USDC Bet · Q7589009</div><div id="poly-avgbet-wrap"><div class="spinner-wrap"><div class="spinner"></div><span>Loading…</span></div></div></div>
   </div>
-
-  <!-- Distributions -->
   <div class="chart-row-2">
-    <div class="chart-card">
-      <div class="chart-title" style="color:var(--polymarket)">Users by Bet Size Bucket · Q7588991</div>
-      <div id="poly-betdist-wrap"><div class="spinner-wrap"><div class="spinner"></div><span>Loading...</span></div></div>
-    </div>
-    <div class="chart-card">
-      <div class="chart-title" style="color:var(--polymarket)">Volume by User Bucket · Q7588997</div>
-      <div id="poly-voldist-wrap"><div class="spinner-wrap"><div class="spinner"></div><span>Loading...</span></div></div>
-    </div>
+    <div class="chart-card"><div class="chart-title" style="color:var(--polymarket)">Users by Bet Size Bucket · Q7588991</div><div id="poly-betdist-wrap"><div class="spinner-wrap"><div class="spinner"></div><span>Loading…</span></div></div></div>
+    <div class="chart-card"><div class="chart-title" style="color:var(--polymarket)">Volume by User Bucket · Q7588997</div><div id="poly-voldist-wrap"><div class="spinner-wrap"><div class="spinner"></div><span>Loading…</span></div></div></div>
   </div>
-
-</div><!-- /tab-polymarket -->
+</div>
 
 </main>
 
 <script>
-// ─── CONFIG ──────────────────────────────────────────────────────────────────
+// ─── CONSTANTS ────────────────────────────────────────────────────────────────
 let DUNE_API_KEY = "";
-const DUNE_BASE = "https://api.dune.com/api/v1";
+const DUNE_BASE   = "https://api.dune.com/api/v1";
 const GEMINI_BASE = "https://api.gemini.com/v1/prediction-markets";
-const POLL_INTERVAL_MS = 3000;
-const MAX_POLL_SECONDS = 240;
+const POLL_MS     = 3000;
+const MAX_POLL_S  = 240;
+const STALE_MS    = 24 * 60 * 60 * 1000; // 24 h
 
-// Reference query IDs (read-only — fetch cached results, no re-execution)
-const REF = {
-  notionalVol: 7588938,   // Day, Volume, Cumulative Volume
-  users:       7588953,   // Date, New, Old, Cumulative Unique Users
-  tvl:         7588969,   // day, TVLDelta, TVL
-  avgBetMonth: 7589009,   // month, Average USDC Bet Size, Average Shares Traded
-  betSizeDist: 7588991,   // bucket, Users in Bucket, Total Volume in Bucket, %
-  volPerUser:  7588997,   // bucket, Users in Bucket, Total Volume in Bucket, %
+// Reference query IDs — Polymarket source of truth
+// Fetched via GET /api/v1/query/{id}/results (cached; no re-execution cost)
+const POLYMARKET_QUERIES = {
+  notionalVolume:  7588938,  // Day, Volume, "Cumulative Volume"
+  volume:          7588943,  // Day, Volume, "Cumulative Volume"  (same shape; different methodology)
+  transactions:    7588943,  // same query — "Volume" column used for trade volume
+  users:           7588953,  // Date, New (new users), Old (returning users), "Cumulative Unique Users"
+  tvl:             7588969,  // day (lowercase), TVLDelta, TVL
+  avgBetPerUser:   7588991,  // bucket, "Users in Bucket", "Total Volume in Bucket", "Percentage of Users in Bucket", "Percentage of Volume in Bucket"
+  totalBetPerUser: 7588997,  // same columns as avgBetPerUser — 21 rows
+  avgBetPerMonth:  7589009,  // month, "Average USDC Bet Size", "Average Shares Traded"
 };
 
-// SQL queries (confirmed schemas via introspection 2026-05-26)
+// Kalshi SQL (reference queries cover all Polymarket; polyVolume + polyCats removed)
 const SQL = {
-  kalshiVolume: `SELECT CAST(date AS DATE) AS day, COUNT(*) AS trade_count, SUM(contracts_traded) AS contracts_traded, SUM(contracts_traded * price) / 100.0 AS notional_volume_usd FROM kalshi.trade_report WHERE CAST(date AS DATE) >= CURRENT_DATE - INTERVAL '30' DAY GROUP BY 1 ORDER BY 1 DESC`,
+  kalshiVolume:  `SELECT CAST(date AS DATE) AS day, COUNT(*) AS trade_count, SUM(contracts_traded) AS contracts_traded, SUM(contracts_traded * price) / 100.0 AS notional_volume_usd FROM kalshi.trade_report WHERE CAST(date AS DATE) >= CURRENT_DATE - INTERVAL '30' DAY GROUP BY 1 ORDER BY 1 DESC`,
   kalshiMarkets: `SELECT CAST(date AS DATE) AS day, COUNT(DISTINCT report_ticker) AS active_markets, SUM(daily_volume) AS daily_volume, AVG(open_interest) AS avg_open_interest, AVG(high - low) AS avg_spread FROM kalshi.market_report WHERE CAST(date AS DATE) >= CURRENT_DATE - INTERVAL '30' DAY GROUP BY 1 ORDER BY 1 DESC`,
-  polyVolume: `SELECT date_trunc('day', block_time) AS day, COUNT(*) AS trade_count, COUNT(DISTINCT maker) + COUNT(DISTINCT taker) AS unique_traders, SUM(amount) AS notional_volume_usd, SUM(CASE WHEN is_taker_side = true THEN amount ELSE 0 END) AS taker_volume, SUM(CASE WHEN is_taker_side = false THEN amount ELSE 0 END) AS maker_volume, AVG(amount) AS avg_trade_size, approx_percentile(amount, 0.5) AS median_trade_size FROM polymarket_polygon.market_trades WHERE block_time >= NOW() - INTERVAL '30' DAY AND block_month >= DATE_TRUNC('month', CURRENT_DATE - INTERVAL '30' DAY) GROUP BY 1 ORDER BY 1 DESC`,
-  polyCats: `SELECT CASE WHEN LOWER(question) LIKE '%bitcoin%' OR LOWER(question) LIKE '%ethereum%' OR LOWER(question) LIKE '%crypto%' OR LOWER(question) LIKE '%btc%' OR LOWER(question) LIKE '% eth %' OR LOWER(question) LIKE '%defi%' OR LOWER(question) LIKE '%solana%' OR LOWER(question) LIKE '%blockchain%' THEN 'Crypto' WHEN LOWER(question) LIKE '%nba%' OR LOWER(question) LIKE '%nfl%' OR LOWER(question) LIKE '%soccer%' OR LOWER(question) LIKE '%tennis%' OR LOWER(question) LIKE '%football%' OR LOWER(question) LIKE '%basketball%' OR LOWER(question) LIKE '%baseball%' OR LOWER(question) LIKE '%mls%' OR LOWER(question) LIKE '%ufc%' OR LOWER(question) LIKE '%sports%' OR LOWER(question) LIKE '%champions league%' OR LOWER(question) LIKE '%world cup%' THEN 'Sports' WHEN LOWER(question) LIKE '%election%' OR LOWER(question) LIKE '%president%' OR LOWER(question) LIKE '%congress%' OR LOWER(question) LIKE '%senate%' OR LOWER(question) LIKE '%trump%' OR LOWER(question) LIKE '%biden%' OR LOWER(question) LIKE '%harris%' OR LOWER(question) LIKE '%vote%' OR LOWER(question) LIKE '%democrat%' OR LOWER(question) LIKE '%republican%' THEN 'Politics' WHEN LOWER(question) LIKE '%stock%' OR LOWER(question) LIKE '% fed %' OR LOWER(question) LIKE '%interest rate%' OR LOWER(question) LIKE '%gdp%' OR LOWER(question) LIKE '%inflation%' OR LOWER(question) LIKE '%s&p%' OR LOWER(question) LIKE '%nasdaq%' OR LOWER(question) LIKE '%recession%' OR LOWER(question) LIKE '%earnings%' OR LOWER(question) LIKE '%ipo%' THEN 'Finance' ELSE 'Other' END AS category, COUNT(DISTINCT condition_id) AS markets, SUM(amount) AS volume_usd, COUNT(*) AS trade_count FROM polymarket_polygon.market_trades WHERE block_time >= NOW() - INTERVAL '30' DAY AND block_month >= DATE_TRUNC('month', CURRENT_DATE - INTERVAL '30' DAY) GROUP BY 1 ORDER BY 3 DESC`,
-  kalshiCats: `SELECT mr.category, COUNT(DISTINCT mr.report_ticker) AS markets, SUM(mr.daily_volume) AS volume, AVG(mr.open_interest) AS avg_open_interest FROM kalshi.market_report mr WHERE CAST(mr.date AS DATE) >= CURRENT_DATE - INTERVAL '30' DAY AND mr.category IS NOT NULL GROUP BY 1 ORDER BY 2 DESC LIMIT 10`,
+  kalshiCats:    `SELECT mr.category, COUNT(DISTINCT mr.report_ticker) AS markets, SUM(mr.daily_volume) AS volume, AVG(mr.open_interest) AS avg_open_interest FROM kalshi.market_report mr WHERE CAST(mr.date AS DATE) >= CURRENT_DATE - INTERVAL '30' DAY AND mr.category IS NOT NULL GROUP BY 1 ORDER BY 2 DESC LIMIT 10`,
 };
+
+// ─── STATE ────────────────────────────────────────────────────────────────────
+// Reference data (populated by loadReferenceData)
+let _refNotionalVol = [];   // Q7588938 rows
+let _refVolume      = [];   // Q7588943 rows
+let _refUsers       = [];   // Q7588953 rows  — columns: Date, New, Old, "Cumulative Unique Users"
+let _refTVL         = [];   // Q7588969 rows  — columns: day, TVLDelta, TVL
+let _refAvgBetUser  = [];   // Q7588991 rows  — bucket distribution
+let _refVolPerUser  = [];   // Q7588997 rows  — bucket distribution
+let _refAvgBetMonth = [];   // Q7589009 rows  — month, "Average USDC Bet Size", "Average Shares Traded"
+
+// Query metadata for status table
+let _refMeta = {};   // { [queryId]: { execAt, total, status:'ok'|'stale'|'error', error? } }
+
+// Kalshi data
+let _kalshiVolData  = [];
+let _kalshiMktsData = [];
+let _kalshiCatsData = [];
+
+let _selectedCategory  = "All";
+let _geminiVol24h      = 0;
+let _refDataLoaded     = false;
+let _polyTabRendered   = false;
+let _lastSyncedAt      = null;
 
 // Chart refs
 let trendChart=null, kalshiCatChart=null, polyCatChart=null, geminiCatChart=null;
@@ -388,18 +380,10 @@ let oiCatChart=null, traderActivityChart=null, tradeCountCatChart=null;
 let polyVolChart=null, polyCumVolChart=null, polyUsersChart=null, polyCumUsersChart=null;
 let polyTVLChart=null, polyAvgBetChart=null, polyBetDistChart=null, polyVolDistChart=null;
 
-// Data state
-let _polyCatsData=[], _kalshiCatsData=[], _polyVolData=[], _kalshiVolData=[], _kalshiMktsData=[];
-let _selectedCategory="All", _geminiVol24h=0;
-let _refDataLoaded=false, _polyTabRendered=false;
-let _refVol=[], _refUsers=[], _refTVL=[], _refAvgBet=[], _refBetDist=[], _refVolDist=[];
-
-// ─── TAB SWITCHING ────────────────────────────────────────────────────────────
+// ─── TAB ──────────────────────────────────────────────────────────────────────
 function switchTab(name) {
   document.querySelectorAll(".tab-btn").forEach(b => b.classList.toggle("active", b.dataset.tab === name));
-  document.querySelectorAll(".tab-content").forEach(c => {
-    c.classList.toggle("active", c.id === `tab-${name}`);
-  });
+  document.querySelectorAll(".tab-content").forEach(c => c.classList.toggle("active", c.id === `tab-${name}`));
   if (name === "polymarket" && _refDataLoaded && !_polyTabRendered) {
     _polyTabRendered = true;
     renderPolyTab();
@@ -413,12 +397,12 @@ async function dunePost(path, body) {
     headers: { "X-DUNE-API-KEY": DUNE_API_KEY, "Content-Type": "application/json" },
     body: JSON.stringify(body),
   });
-  if (!r.ok) { const t = await r.text().catch(() => r.statusText); throw new Error(`Dune POST ${path} ${r.status}: ${t}`); }
+  if (!r.ok) { const t = await r.text().catch(() => r.statusText); throw new Error(`POST ${path} ${r.status}: ${t}`); }
   return r.json();
 }
 async function duneGet(path) {
   const r = await fetch(`${DUNE_BASE}${path}`, { headers: { "X-DUNE-API-KEY": DUNE_API_KEY } });
-  if (!r.ok) { const t = await r.text().catch(() => r.statusText); throw new Error(`Dune GET ${path} ${r.status}: ${t}`); }
+  if (!r.ok) { const t = await r.text().catch(() => r.statusText); throw new Error(`GET ${path} ${r.status}: ${t}`); }
   return r.json();
 }
 async function runDuneQuery(sql, statusEl) {
@@ -427,10 +411,10 @@ async function runDuneQuery(sql, statusEl) {
   if (!execId) throw new Error("No execution_id");
   const start = Date.now();
   while (true) {
-    await sleep(POLL_INTERVAL_MS);
+    await sleep(POLL_MS);
     const elapsed = Math.round((Date.now() - start) / 1000);
-    if (statusEl) statusEl.textContent = `Fetching data... ${elapsed}s`;
-    if (elapsed > MAX_POLL_SECONDS) throw new Error(`Timed out after ${elapsed}s`);
+    if (statusEl) statusEl.textContent = `Fetching data… ${elapsed}s`;
+    if (elapsed > MAX_POLL_S) throw new Error(`Timed out after ${elapsed}s`);
     const st = await duneGet(`/execution/${execId}/status`);
     if (st.state === "QUERY_STATE_COMPLETED") break;
     if (st.state === "QUERY_STATE_FAILED") {
@@ -442,578 +426,760 @@ async function runDuneQuery(sql, statusEl) {
   return res.result?.rows ?? [];
 }
 
-// Fetch cached results from a saved Dune query ID (no re-execution)
-async function fetchRefQuery(queryId, wantRows = 100) {
-  // Probe to get total count (1 row only)
-  const probe = await duneGet(`/query/${queryId}/results?limit=1`);
-  const total = probe.result?.metadata?.total_row_count ?? 0;
-  if (total === 0) return [];
-  if (total <= wantRows) {
-    // Small dataset — fetch all in one call
-    const all = await duneGet(`/query/${queryId}/results?limit=${total}`);
-    return all.result?.rows ?? [];
+// Execute a saved reference query by ID and poll until done
+async function executeRefQuery(queryId) {
+  const exec = await dunePost(`/query/${queryId}/execute`, { performance: "free" });
+  const execId = exec.execution_id;
+  if (!execId) throw new Error("No execution_id from saved query execute");
+  const start = Date.now();
+  while (true) {
+    await sleep(POLL_MS);
+    if (Date.now() - start > MAX_POLL_S * 1000) throw new Error("Execution timed out");
+    const st = await duneGet(`/execution/${execId}/status`);
+    if (st.state === "QUERY_STATE_COMPLETED") return;
+    if (st.state === "QUERY_STATE_FAILED") {
+      const msg = st.error ? (typeof st.error === "object" ? JSON.stringify(st.error) : st.error) : "failed";
+      throw new Error(msg);
+    }
   }
-  // Large time series — fetch last wantRows rows
-  const offset = total - wantRows;
-  const last = await duneGet(`/query/${queryId}/results?limit=${wantRows}&offset=${offset}`);
-  return last.result?.rows ?? [];
+}
+
+// Fetch cached results for a reference query. If stale (>24h), re-executes first.
+// Mandatory: logs column_names + first 2 rows to console for every call.
+async function fetchRefQueryFull(queryId, wantRows = 120) {
+  // Probe: get total count + execution timestamp (1 row, minimal data transfer)
+  const probe = await duneGet(`/query/${queryId}/results?limit=1`);
+  const execAt   = probe.execution_started_at || "";
+  const total    = probe.result?.metadata?.total_row_count ?? 0;
+  const isStale  = execAt ? (Date.now() - new Date(execAt).getTime() > STALE_MS) : false;
+
+  if (isStale) {
+    console.warn(`[Ref Q${queryId}] Results are stale (${execAt}). Triggering re-execution…`);
+    try {
+      await executeRefQuery(queryId);
+    } catch (e) {
+      console.error(`[Ref Q${queryId}] Re-execution failed (may require Plus tier):`, e.message);
+      // Continue — return stale results rather than failing completely
+    }
+  }
+
+  // Fetch actual rows
+  let rows;
+  if (total === 0) {
+    rows = [];
+  } else if (total <= wantRows) {
+    const all = await duneGet(`/query/${queryId}/results?limit=${total}`);
+    rows = all.result?.rows ?? [];
+  } else {
+    const offset = total - wantRows;
+    const last   = await duneGet(`/query/${queryId}/results?limit=${wantRows}&offset=${offset}`);
+    rows = last.result?.rows ?? [];
+  }
+
+  // ── MANDATORY console inspection ───────────────────────────────────────────
+  console.group(`[Ref Q${queryId}] Schema inspection`);
+  console.log("column_names:", rows.length > 0 ? Object.keys(rows[0]) : "(no rows)");
+  console.log("row[0]:", rows[0] ?? "(empty)");
+  console.log("row[1]:", rows[1] ?? "(no second row)");
+  console.log(`total_row_count: ${total} | execution_started_at: ${execAt} | stale: ${isStale}`);
+  console.groupEnd();
+
+  return { rows, execAt, total, isStale };
 }
 
 function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
 
-// ─── GEMINI API ───────────────────────────────────────────────────────────────
+// ─── GEMINI ───────────────────────────────────────────────────────────────────
 async function fetchGemini(path) {
   const r = await fetch(`${GEMINI_BASE}${path}`);
   if (!r.ok) throw new Error(`Gemini ${path} ${r.status}: ${r.statusText}`);
   return r.json();
 }
 async function loadGeminiData() {
-  const [eventsRes, settledRes] = await Promise.allSettled([
+  const [evR, seR] = await Promise.allSettled([
     fetchGemini("/events?status=active&limit=50"),
     fetchGemini("/events/recently-settled"),
   ]);
-  const eventsData  = eventsRes.status  === "fulfilled" ? eventsRes.value  : null;
-  const settledData = settledRes.status === "fulfilled" ? settledRes.value : null;
-  const totalEvents   = eventsData?.pagination?.total ?? eventsData?.data?.length ?? null;
-  const contractCount = eventsData?.data?.reduce((s, e) => s + (e.contracts?.length || 0), 0) ?? null;
-  const vol24h        = eventsData?.data?.reduce((s, e) => s + (Number(e.volume24h) || Number(e.totalVolume) || 0), 0) ?? null;
-  const settledCount  = Array.isArray(settledData?.data) ? settledData.data.length : Array.isArray(settledData) ? settledData.length : null;
-  _geminiVol24h = vol24h ?? 0;
+  const ev = evR.status === "fulfilled" ? evR.value : null;
+  const se = seR.status === "fulfilled" ? seR.value : null;
+  const total    = ev?.pagination?.total ?? ev?.data?.length ?? null;
+  const contracts = ev?.data?.reduce((s, e) => s + (e.contracts?.length || 0), 0) ?? null;
+  const vol24h   = ev?.data?.reduce((s, e) => s + (Number(e.volume24h) || Number(e.totalVolume) || 0), 0) ?? null;
+  const settled  = Array.isArray(se?.data) ? se.data.length : Array.isArray(se) ? se.length : null;
+  _geminiVol24h  = vol24h ?? 0;
   renderKPIs("gemini-kpis", [
-    eventsData  ? { label: "Total Active Events", value: fmtNum(totalEvents ?? 0) } : { label: "Total Active Events", value: "Unavailable", error: true },
-    eventsData  ? { label: "24h Volume",          value: vol24h ? fmtUSD(vol24h) : "—" } : { label: "24h Volume", value: "Unavailable", error: true },
-    eventsData  ? { label: "Active Contracts",    value: fmtNum(contractCount ?? 0) } : { label: "Active Contracts", value: "Unavailable", error: true },
-    settledData ? { label: "Recently Settled",    value: settledCount !== null ? fmtNum(settledCount) : "—" } : { label: "Recently Settled", value: "Unavailable", error: true },
+    ev ? { label:"Total Active Events", value:fmtNum(total??0) }     : { label:"Total Active Events", value:"Unavailable", error:true },
+    ev ? { label:"24h Volume",          value:vol24h?fmtUSD(vol24h):"—" } : { label:"24h Volume",      value:"Unavailable", error:true },
+    ev ? { label:"Active Contracts",    value:fmtNum(contracts??0) }  : { label:"Active Contracts",    value:"Unavailable", error:true },
+    se ? { label:"Recently Settled",    value:settled!=null?fmtNum(settled):"—" } : { label:"Recently Settled", value:"Unavailable", error:true },
   ]);
-  if (eventsData?.data) {
+  if (ev?.data) {
     const catMap = {};
-    for (const ev of eventsData.data) { const cat = ev.category || "Other"; catMap[cat] = (catMap[cat] || 0) + (ev.contracts?.length || 0); }
-    const rows = Object.entries(catMap).map(([category, count]) => ({ category, count }));
-    geminiCatChart = renderCatChart("gemini-cat-wrap", rows, "count", "#FF6600", geminiCatChart, fmtNum);
+    ev.data.forEach(e => { const c = e.category || "Other"; catMap[c] = (catMap[c]||0) + (e.contracts?.length||0); });
+    geminiCatChart = renderCatChart("gemini-cat-wrap", Object.entries(catMap).map(([category,count])=>({category,count})), "count", "#FF6600", geminiCatChart, fmtNum);
   } else {
-    document.getElementById("gemini-cat-wrap").innerHTML = `<div class="error-card">&#9888; ${eventsRes.reason?.message || "No data"}</div>`;
+    el("gemini-cat-wrap").innerHTML = errHtml(0, evR.reason?.message || "No event data");
   }
 }
 
-// ─── FORMATTERS ──────────────────────────────────────────────────────────────
-function fmtUSD(n) { if (n==null||isNaN(n)) return "—"; n=Number(n); if(n>=1e9) return "$"+(n/1e9).toFixed(2)+"B"; if(n>=1e6) return "$"+(n/1e6).toFixed(2)+"M"; if(n>=1e3) return "$"+(n/1e3).toFixed(1)+"K"; return "$"+n.toFixed(2); }
-function fmtNum(n) { if (n==null||isNaN(n)) return "—"; n=Number(n); if(n>=1e6) return (n/1e6).toFixed(2)+"M"; if(n>=1e3) return (n/1e3).toFixed(1)+"K"; return n.toLocaleString(); }
-function fmtDate(d) { if(!d) return "—"; return new Date(d).toLocaleDateString("en-US",{month:"short",day:"numeric"}); }
-function fmtDateFull(d) { if(!d) return "—"; return new Date(d).toLocaleDateString("en-US",{year:"numeric",month:"short",day:"numeric"}); }
-function fmtPct(n,dec=1) { if(n==null||isNaN(n)) return "—"; return Number(n).toFixed(dec)+"%"; }
-function dayStr(d) { if(!d) return ""; return String(d).substring(0,10); }
+// ─── REFERENCE DATA LOADING ───────────────────────────────────────────────────
+async function loadReferenceData() {
+  updateRefStatus("loading");
 
-// ─── KPI HELPERS ──────────────────────────────────────────────────────────────
-function renderKPIs(id, kpis) {
-  document.getElementById(id).innerHTML = kpis.map(k => `
-    <div class="kpi-card${k.error?" kpi-error-card":""}">
-      <div class="kpi-label">${k.label}</div>
-      <div class="kpi-value${k.error?" kpi-error-val":""}">${k.value}</div>
-      ${k.trend!=null?`<div class="kpi-trend ${k.trendClass}">${k.trend}</div>`:""}
-    </div>`).join("");
-}
-function renderKPIError(id, msg) {
-  document.getElementById(id).innerHTML = `<div class="error-card" style="grid-column:1/-1">&#9888; ${msg}</div>`;
-}
-function calcTrend(rows, field, n=7) {
-  if(!rows||rows.length<2) return null;
-  const s=[...rows].sort((a,b)=>new Date(b.day)-new Date(a.day));
-  const recent=s.slice(0,n).reduce((t,r)=>t+Number(r[field]||0),0);
-  const prior=s.slice(n,n*2).reduce((t,r)=>t+Number(r[field]||0),0);
-  if(!prior) return null;
-  return ((recent-prior)/prior)*100;
+  // Deduplicated unique IDs (7588943 appears as both volume and transactions)
+  const uniqueIds = [...new Set(Object.values(POLYMARKET_QUERIES))];
+
+  const results = await Promise.allSettled(
+    uniqueIds.map(qid => fetchRefQueryFull(qid, 120).then(r => ({ qid, ...r })))
+  );
+
+  const dataMap = {};
+  results.forEach((r, i) => {
+    const qid = uniqueIds[i];
+    if (r.status === "fulfilled") {
+      dataMap[qid] = r.value;
+      _refMeta[qid] = { execAt: r.value.execAt, total: r.value.total, isStale: r.value.isStale, status: "ok" };
+    } else {
+      dataMap[qid] = { rows: null };
+      _refMeta[qid] = { status: "error", error: r.reason?.message || "fetch failed" };
+      console.error(`[Ref Q${qid}] FAILED:`, r.reason?.message);
+    }
+  });
+
+  // Assign to global state variables
+  _refNotionalVol = dataMap[7588938]?.rows ?? null;
+  _refVolume      = dataMap[7588943]?.rows ?? null;
+  _refUsers       = dataMap[7588953]?.rows ?? null;
+  _refTVL         = dataMap[7588969]?.rows ?? null;
+  _refAvgBetUser  = dataMap[7588991]?.rows ?? null;
+  _refVolPerUser  = dataMap[7588997]?.rows ?? null;
+  _refAvgBetMonth = dataMap[7589009]?.rows ?? null;
+
+  _refDataLoaded = true;
+  _lastSyncedAt  = new Date();
+  el("last-synced").textContent = "Synced " + _lastSyncedAt.toLocaleTimeString();
+
+  renderRefStatusTable();
+  renderPolymarketSummaryCards();
+  renderTrendChart(_kalshiVolData, _refNotionalVol);
+  renderBucketChart();
+  renderLiquidity(_kalshiVolData, _kalshiMktsData);
+  renderCIPanel();
+  renderTable(buildTableData(_kalshiVolData, _kalshiMktsData, _refNotionalVol, _refUsers));
+
+  if (_polyTabRendered) renderPolyTab();
+  else if (document.getElementById("tab-polymarket").classList.contains("active")) {
+    _polyTabRendered = true;
+    renderPolyTab();
+  }
 }
 
-// ─── CHART HELPERS ────────────────────────────────────────────────────────────
-function chartDefs() {
-  return {
-    responsive:true, maintainAspectRatio:false,
-    plugins: {
-      legend:{labels:{color:"#aaa",font:{size:12}}},
-      tooltip:{backgroundColor:"#1a1a1a",borderColor:"#2a2a2a",borderWidth:1,titleColor:"#e5e5e5",bodyColor:"#aaa"},
-    },
-    scales: {
-      x:{grid:{color:"#222"},ticks:{color:"#888",font:{size:11}}},
-      y:{grid:{color:"#222"},ticks:{color:"#888",font:{size:11}}},
-    },
+async function refreshAllRef() {
+  if (!DUNE_API_KEY) { el("key-gate").classList.add("visible"); return; }
+  el("refresh-ref-btn").disabled = true;
+  _refDataLoaded = false;
+  _polyTabRendered = false;
+  updateRefStatus("loading");
+  try {
+    await loadReferenceData();
+  } finally {
+    el("refresh-ref-btn").disabled = false;
+  }
+}
+
+function updateRefStatus(status) {
+  if (status === "loading") {
+    el("ref-status-wrap").innerHTML = `<div class="spinner-wrap"><div class="spinner"></div><span>Fetching reference data…</span></div>`;
+    ["polymarket-kpis","poly-cat-wrap","liq-avg","liq-median","ci-traders-wrap"].forEach(id => {
+      el(id).innerHTML = `<div class="spinner-wrap"><div class="spinner"></div><span>Loading reference data…</span></div>`;
+    });
+  }
+}
+
+function renderRefStatusTable() {
+  // Rows: one per unique query ID, with human-readable name
+  const QUERY_NAMES = {
+    7588938: "Notional Volume",
+    7588943: "Volume / Transactions",
+    7588953: "Users (New vs. Returning)",
+    7588969: "TVL",
+    7588991: "Avg Bet per User (buckets)",
+    7588997: "Total Bet per User (buckets)",
+    7589009: "Avg USDC Bet per Month",
   };
-}
-function destroyChart(c) { if(c) c.destroy(); return null; }
-function mkCanvas(wrapId, height=260) {
-  document.getElementById(wrapId).innerHTML = `<div class="chart-container" style="height:${height}px"><canvas id="${wrapId}-canvas"></canvas></div>`;
-  return document.getElementById(`${wrapId}-canvas`).getContext("2d");
+  const rows = Object.entries(QUERY_NAMES).map(([qid, name]) => {
+    const m = _refMeta[qid] || { status: "error", error: "not loaded" };
+    let statusHtml, execStr = "—", rowCount = "—";
+    if (m.status === "ok") {
+      execStr  = m.execAt ? relTime(m.execAt) : "—";
+      rowCount = m.total?.toLocaleString() ?? "—";
+      statusHtml = m.isStale
+        ? `<span class="status-stale">&#9888; Stale (&gt;24h)</span>`
+        : `<span class="status-ok">&#10003; Fresh</span>`;
+    } else {
+      statusHtml = `<span class="status-error">&#9888; ${escHtml(m.error || "error")}</span>`;
+    }
+    return `<tr>
+      <td>${escHtml(name)}</td>
+      <td><a class="qid-link" href="https://dune.com/queries/${qid}" target="_blank">#${qid}</a></td>
+      <td>${execStr}</td>
+      <td class="num">${rowCount}</td>
+      <td>${statusHtml}</td>
+    </tr>`;
+  }).join("");
+
+  el("ref-status-wrap").innerHTML = `
+    <div class="meta-table-wrap">
+      <table class="meta-table">
+        <thead><tr><th>Metric</th><th>Query ID</th><th>Last Executed</th><th class="num">Row Count</th><th>Status</th></tr></thead>
+        <tbody>${rows}</tbody>
+      </table>
+    </div>
+    <div class="meta-note">&#9432; All Polymarket data sourced exclusively from these reference queries. "Refresh All Queries" re-executes each (requires Dune Plus or higher).</div>`;
 }
 
-// ─── SUMMARY CHARTS ───────────────────────────────────────────────────────────
-function renderTrendChart(kalshiRows, polyRows) {
-  const defs=chartDefs();
-  const ctx=mkCanvas("trend-wrap",280);
-  trendChart=destroyChart(trendChart);
-  const days=new Set();
-  (kalshiRows||[]).forEach(r=>r.day&&days.add(dayStr(r.day)));
-  (polyRows||[]).forEach(r=>r.day&&days.add(dayStr(r.day)));
-  const sorted=[...days].sort().slice(-30);
-  const km=Object.fromEntries((kalshiRows||[]).map(r=>[dayStr(r.day),r]));
-  const pm=Object.fromEntries((polyRows||[]).map(r=>[dayStr(r.day),r]));
-  const labels=sorted.map(fmtDate);
-  const kVols=sorted.map(d=>Number(km[d]?.notional_volume_usd||0));
-  const pMaker=sorted.map(d=>Number(pm[d]?.maker_volume||0));
-  const pTaker=sorted.map(d=>Number(pm[d]?.taker_volume||0));
-  const gVols=sorted.map((d,i)=>i===sorted.length-1&&_geminiVol24h>0?_geminiVol24h:null);
-  trendChart=new Chart(ctx,{
-    type:"bar",
-    data:{labels,datasets:[
-      {label:"Kalshi",data:kVols,backgroundColor:"#00C805bb",stack:"k",order:2},
-      {label:"Poly Maker",data:pMaker,backgroundColor:"#0070F388",stack:"p",order:2},
-      {label:"Poly Taker",data:pTaker,backgroundColor:"#0070F3cc",stack:"p",order:2},
-      {label:"Gemini (est.)",data:gVols,type:"line",borderColor:"#FF6600",backgroundColor:"rgba(255,102,0,0.12)",fill:true,tension:0.3,pointRadius:5,pointBackgroundColor:"#FF6600",spanGaps:false,yAxisID:"y1",order:1},
+// ─── POLYMARKET SUMMARY CARDS ─────────────────────────────────────────────────
+function renderPolymarketSummaryCards() {
+  // Q7588938: Day, Volume, "Cumulative Volume"
+  const volSorted  = sortByDate(_refNotionalVol, "Day");
+  const latest     = volSorted[volSorted.length - 1] || {};
+  const trend7d    = calcTrend7d(volSorted, "Volume");
+
+  // Q7588953: Date, New, Old, "Cumulative Unique Users"
+  const userSorted = sortByDate(_refUsers, "Date");
+  const latestUser = userSorted[userSorted.length - 1] || {};
+  const dailyUsers = (Number(latestUser.New || 0) + Number(latestUser.Old || 0)) || null;
+
+  // Q7588969: day (lowercase), TVLDelta, TVL
+  const tvlSorted  = sortByDate(_refTVL, "day");
+  const latestTVL  = tvlSorted[tvlSorted.length - 1] || {};
+
+  const tc = trend7d == null ? "neutral" : trend7d >= 0 ? "up" : "down";
+  const ts = trend7d == null ? "—" : (trend7d >= 0 ? "+" : "") + trend7d.toFixed(1) + "% vs prior 7d";
+
+  const cards = [];
+
+  if (_refNotionalVol) {
+    cards.push({ label:"Daily Volume",    value:fmtUSD(latest.Volume) });
+    cards.push({ label:"7d Trend",        value:ts, trend:ts, trendClass:tc });
+  } else {
+    cards.push({ label:"Daily Volume",    value:"Q7588938 error", error:true });
+    cards.push({ label:"7d Trend",        value:"Q7588938 error", error:true });
+  }
+
+  if (_refUsers) {
+    cards.push({ label:"Daily Users",     value:fmtNum(dailyUsers) });
+  } else {
+    cards.push({ label:"Daily Users",     value:"Q7588953 error", error:true });
+  }
+
+  if (_refTVL) {
+    cards.push({ label:"Current TVL",     value:fmtUSD(latestTVL.TVL) });
+  } else {
+    cards.push({ label:"Current TVL",     value:"Q7588969 error", error:true });
+  }
+
+  renderKPIs("polymarket-kpis", cards);
+}
+
+// ─── VOLUME TREND CHART ───────────────────────────────────────────────────────
+// Q7588938 columns: Day, Volume, "Cumulative Volume"
+// Q7588969 for TVL not shown here; Gemini as line
+function renderTrendChart(kalshiRows, polyRefRows) {
+  const wrap = el("trend-wrap");
+  if (!kalshiRows?.length && !polyRefRows?.length) {
+    wrap.innerHTML = errHtml(0, "No volume data available");
+    return;
+  }
+  trendChart = destroyChart(trendChart);
+  wrap.innerHTML = `<div class="chart-container" style="height:280px"><canvas id="trend-canvas"></canvas></div>`;
+
+  // Build date union from last 30 days
+  const days = new Set();
+  (kalshiRows  || []).forEach(r => r.day  && days.add(ds(r.day)));
+  (polyRefRows || []).forEach(r => r.Day  && days.add(ds(r.Day)));
+  const sortedDays = [...days].sort().slice(-30);
+
+  const km = Object.fromEntries((kalshiRows  || []).map(r => [ds(r.day), r]));
+  const pm = Object.fromEntries((polyRefRows || []).map(r => [ds(r.Day), r]));
+
+  const kVols  = sortedDays.map(d => Number(km[d]?.notional_volume_usd || 0));
+  const pVols  = sortedDays.map(d => Number(pm[d]?.Volume || 0));
+  const gVols  = sortedDays.map((d, i) => i === sortedDays.length - 1 && _geminiVol24h > 0 ? _geminiVol24h : null);
+
+  const D = chartDefs();
+  trendChart = new Chart(el("trend-canvas").getContext("2d"), {
+    type: "bar",
+    data: { labels: sortedDays.map(fmtDate), datasets: [
+      { label:"Kalshi",        data:kVols,  backgroundColor:"#00C805bb", stack:"k", order:2 },
+      { label:"Polymarket",    data:pVols,  backgroundColor:"#0070F3bb", stack:"p", order:2 },
+      { label:"Gemini (est.)", data:gVols,  type:"line", borderColor:"#FF6600", backgroundColor:"rgba(255,102,0,0.12)", fill:true, tension:0.3, pointRadius:5, pointBackgroundColor:"#FF6600", spanGaps:false, yAxisID:"y1", order:1 },
     ]},
-    options:{...defs,plugins:{...defs.plugins,tooltip:{...defs.plugins.tooltip,callbacks:{label:c=>` ${c.dataset.label}: ${fmtUSD(c.parsed.y)}`}}},
-      scales:{x:{...defs.scales.x,stacked:true},y:{...defs.scales.y,stacked:true,ticks:{...defs.scales.y.ticks,callback:v=>fmtUSD(v)}},
-        y1:{position:"right",grid:{display:false},ticks:{color:"#FF6600",font:{size:10},callback:v=>fmtUSD(v)},title:{display:true,text:"Gemini",color:"#FF6600",font:{size:10}}}}},
+    options: { ...D,
+      plugins: { ...D.plugins, tooltip: { ...D.plugins.tooltip, callbacks: { label: c => ` ${c.dataset.label}: ${fmtUSD(c.parsed.y)}` }}},
+      scales: {
+        x: { ...D.scales.x, stacked:true },
+        y: { ...D.scales.y, stacked:true, ticks:{...D.scales.y.ticks, callback:v=>fmtUSD(v)} },
+        y1: { position:"right", grid:{display:false}, ticks:{color:"#FF6600",font:{size:10},callback:v=>fmtUSD(v)}, title:{display:true,text:"Gemini",color:"#FF6600",font:{size:10}} },
+      },
+    },
   });
 }
 
-function renderCatChart(wrapId, rows, volField, color, chartRef, fmtFn) {
-  fmtFn=fmtFn||fmtUSD;
-  const wrap=document.getElementById(wrapId);
-  if(!rows||rows.length===0){wrap.innerHTML=`<div class="error-card">No category data.</div>`;return null;}
-  const top8=[...rows].sort((a,b)=>Number(b[volField]||0)-Number(a[volField]||0)).slice(0,8);
-  const total=top8.reduce((s,r)=>s+Number(r[volField]||0),0);
-  const labels=top8.map(r=>r.category||"Unknown");
-  const values=top8.map(r=>Number(r[volField]||0));
-  const pcts=values.map(v=>total>0?((v/total)*100).toFixed(1):0);
-  wrap.innerHTML=`<div class="chart-container" style="height:${Math.max(180,top8.length*34)}px"><canvas id="${wrapId}-canvas"></canvas></div>`;
-  chartRef=destroyChart(chartRef);
-  const ctx=document.getElementById(`${wrapId}-canvas`).getContext("2d");
-  const defs=chartDefs();
-  chartRef=new Chart(ctx,{type:"bar",data:{labels,datasets:[{data:values,backgroundColor:color+"cc",borderColor:color,borderWidth:1,borderRadius:4}]},
-    options:{...defs,indexAxis:"y",plugins:{...defs.plugins,legend:{display:false},tooltip:{...defs.plugins.tooltip,callbacks:{label:c=>` ${fmtFn(c.parsed.x)}  (${pcts[c.dataIndex]}%)`}}},
-      scales:{x:{...defs.scales.x,ticks:{...defs.scales.x.ticks,callback:v=>fmtFn(v)}},y:defs.scales.y}}});
-  return chartRef;
-}
-
-function renderLiquidity(kalshiVol, kalshiMkts, polyVol) {
-  const latestMkt=(kalshiMkts||[]).find(r=>r.avg_spread!=null);
-  const kalshiSpread=latestMkt?(Number(latestMkt.avg_spread)/100).toFixed(2)+"%":"—";
-  const latestKV=(kalshiVol||[]).find(r=>r.notional_volume_usd!=null&&r.trade_count>0);
-  const kalshiAvg=latestKV?fmtUSD(Number(latestKV.notional_volume_usd)/Number(latestKV.trade_count)):"—";
-  const latestPV=(polyVol||[]).find(r=>r.avg_trade_size!=null);
-  const polyAvg=latestPV?fmtUSD(Number(latestPV.avg_trade_size)):"—";
-  const polyMedian=latestPV?fmtUSD(Number(latestPV.median_trade_size)):"—";
-  const mk=(dot,label,val)=>`<div class="liq-metric"><span class="liq-metric-label"><span class="liq-dot" style="background:${dot}"></span>${label}</span><span class="liq-metric-value">${val}</span></div>`;
-  document.getElementById("liq-spread").innerHTML=mk("var(--kalshi)","Kalshi (avg daily range)",kalshiSpread)+mk("var(--polymarket)","Polymarket","N/A")+mk("var(--gemini)","Gemini","N/A");
-  document.getElementById("liq-avg").innerHTML=mk("var(--kalshi)","Kalshi",kalshiAvg)+mk("var(--polymarket)","Polymarket",polyAvg)+mk("var(--gemini)","Gemini","—");
-  document.getElementById("liq-median").innerHTML=mk("var(--kalshi)","Kalshi","—")+mk("var(--polymarket)","Polymarket",polyMedian)+mk("var(--gemini)","Gemini","—");
-}
-
-function renderCIPanel() {
-  const poly=_selectedCategory==="All"?_polyCatsData:_polyCatsData.filter(r=>r.category===_selectedCategory);
-  const kal=_kalshiCatsData;
-  // Card 1: OI by category
-  const oiWrap=document.getElementById("ci-oi-wrap");
-  if(kal.length>0){
-    oiWrap.innerHTML=`<div class="chart-container" style="height:200px"><canvas id="ci-oi-canvas"></canvas></div>`;
-    oiCatChart=destroyChart(oiCatChart);
-    const cats=kal.slice(0,8);
-    const defs=chartDefs();
-    oiCatChart=new Chart(document.getElementById("ci-oi-canvas").getContext("2d"),{type:"bar",
-      data:{labels:cats.map(r=>r.category||"?"),datasets:[{label:"Avg OI",data:cats.map(r=>Number(r.avg_open_interest||0)),backgroundColor:"#00C805bb",borderColor:"#00C805",borderWidth:1,borderRadius:3}]},
-      options:{...defs,indexAxis:"y",plugins:{...defs.plugins,legend:{display:false},tooltip:{...defs.plugins.tooltip,callbacks:{label:c=>` ${fmtUSD(c.parsed.x)}`}}},
-        scales:{x:{...defs.scales.x,ticks:{...defs.scales.x.ticks,callback:v=>fmtUSD(v)}},y:{...defs.scales.y,ticks:{color:"#aaa",font:{size:10}}}}}});
-  } else { oiWrap.innerHTML=`<div class="error-card">&#9888; No data</div>`; }
-  // Card 2: Volume concentration
-  const concEl=document.getElementById("ci-conc");
-  const pTotal=poly.reduce((s,r)=>s+Number(r.volume_usd||0),0);
-  const kTotal=kal.reduce((s,r)=>s+Number(r.volume||0),0);
-  const topP=poly[0], topK=[...kal].sort((a,b)=>Number(b.volume||0)-Number(a.volume||0))[0];
-  const pShare=pTotal>0&&topP?((Number(topP.volume_usd)/pTotal)*100).toFixed(1):null;
-  const kShare=kTotal>0&&topK?((Number(topK.volume)/kTotal)*100).toFixed(1):null;
-  concEl.innerHTML=`<div class="conc-stats"><div class="conc-stat"><div class="conc-stat-val" style="color:var(--polymarket)">${pShare?pShare+"%":"—"}</div><div class="conc-stat-label">Polymarket top-cat share</div><div class="conc-stat-sub">${topP?.category||"—"}</div></div><div class="conc-stat"><div class="conc-stat-val" style="color:var(--kalshi)">${kShare?kShare+"%":"—"}</div><div class="conc-stat-label">Kalshi top-cat share</div><div class="conc-stat-sub">${topK?.category||"—"}</div></div></div>`;
-  // Card 3: Trader activity
-  const tWrap=document.getElementById("ci-traders-wrap");
-  if(_polyVolData.length>0){
-    tWrap.innerHTML=`<div class="chart-container" style="height:200px"><canvas id="ci-traders-canvas"></canvas></div>`;
-    traderActivityChart=destroyChart(traderActivityChart);
-    const s=[..._polyVolData].sort((a,b)=>new Date(a.day)-new Date(b.day)).slice(-30);
-    const defs=chartDefs();
-    traderActivityChart=new Chart(document.getElementById("ci-traders-canvas").getContext("2d"),{type:"line",
-      data:{labels:s.map(r=>fmtDate(r.day)),datasets:[{label:"Unique Traders",data:s.map(r=>Number(r.unique_traders||0)),borderColor:"#0070F3",backgroundColor:"rgba(0,112,243,0.08)",fill:true,tension:0.3,pointRadius:2}]},
-      options:{...defs,plugins:{...defs.plugins,legend:{display:false},tooltip:{...defs.plugins.tooltip,callbacks:{label:c=>` ${fmtNum(c.parsed.y)} traders`}}},
-        scales:{x:{...defs.scales.x,ticks:{color:"#666",font:{size:10},maxTicksLimit:8}},y:{...defs.scales.y,ticks:{...defs.scales.y.ticks,callback:v=>fmtNum(v)}}}}});
-  } else { tWrap.innerHTML=`<div class="error-card">&#9888; No trader data</div>`; }
-  // Card 4: Trade count by category
-  const ctWrap=document.getElementById("ci-tradect-wrap");
-  const pCats=poly.filter(r=>r.category!=="Other"||_selectedCategory!=="All").slice(0,6);
-  const kCats=_selectedCategory==="All"?kal.slice(0,6):kal.filter(r=>r.category===_selectedCategory).slice(0,6);
-  if(pCats.length>0||kCats.length>0){
-    const allCats=[...new Set([...pCats.map(r=>r.category),...kCats.map(r=>r.category)])].slice(0,7);
-    const pMap=Object.fromEntries(pCats.map(r=>[r.category,Number(r.trade_count||0)]));
-    const kMap=Object.fromEntries(kCats.map(r=>[r.category,Number(r.markets||0)]));
-    ctWrap.innerHTML=`<div class="chart-container" style="height:200px"><canvas id="ci-tradect-canvas"></canvas></div>`;
-    tradeCountCatChart=destroyChart(tradeCountCatChart);
-    const defs=chartDefs();
-    tradeCountCatChart=new Chart(document.getElementById("ci-tradect-canvas").getContext("2d"),{type:"bar",
-      data:{labels:allCats,datasets:[{label:"Poly Trades",data:allCats.map(c=>pMap[c]||0),backgroundColor:"#0070F3bb",borderRadius:3},{label:"Kalshi Markets",data:allCats.map(c=>kMap[c]||0),backgroundColor:"#00C805bb",borderRadius:3}]},
-      options:{...defs,plugins:{...defs.plugins,tooltip:{...defs.plugins.tooltip,callbacks:{label:c=>` ${c.dataset.label}: ${fmtNum(c.parsed.y)}`}}},
-        scales:{x:{...defs.scales.x,ticks:{color:"#888",font:{size:10}}},y:{...defs.scales.y,ticks:{...defs.scales.y.ticks,callback:v=>fmtNum(v)}}}}});
-  } else { ctWrap.innerHTML=`<div class="error-card">&#9888; No data</div>`; }
-}
-
-// ─── CATEGORY FILTER ──────────────────────────────────────────────────────────
-function selectCategory(cat) {
-  _selectedCategory=cat;
-  document.querySelectorAll(".pill").forEach(p=>p.classList.toggle("active",p.dataset.cat===cat));
-  const filtered=cat==="All"?_polyCatsData:_polyCatsData.filter(r=>r.category===cat);
-  polyCatChart=renderCatChart("poly-cat-wrap",filtered,"volume_usd","#0070F3",polyCatChart);
-  if(_polyCatsData.length||_kalshiCatsData.length) renderCIPanel();
-}
-
-// ─── ACCURACY CHECK ───────────────────────────────────────────────────────────
-function renderAccuracyCheck() {
-  const wrap=document.getElementById("accuracy-wrap");
-  if(!_refVol.length&&!_refAvgBet.length){
-    wrap.innerHTML=`<div class="error-card">&#9888; Could not load reference data</div>`;
+// ─── POLYMARKET BUCKET CHART (replaces polyCats) ──────────────────────────────
+// Q7588997 columns: bucket, "Users in Bucket", "Total Volume in Bucket",
+//   "Percentage of Users in Bucket", "Percentage of Volume in Bucket"
+function renderBucketChart() {
+  const wrap = el("poly-cat-wrap");
+  if (!_refVolPerUser) {
+    wrap.innerHTML = errHtml(POLYMARKET_QUERIES.totalBetPerUser, "Failed to load Q7588997", "poly-cat-wrap", 7588997);
     return;
   }
+  if (!_refVolPerUser.length) { wrap.innerHTML = errHtml(7588997, "No rows returned"); return; }
 
-  // Our 30d total from polyVolume query
-  const our30dVol=_polyVolData.reduce((s,r)=>s+Number(r.notional_volume_usd||0),0);
-  // Reference 30d total: last 30 rows of refVol sorted by date
-  const refSorted=[..._refVol].sort((a,b)=>new Date(a.Day)-new Date(b.Day));
-  const ref30d=refSorted.slice(-30).reduce((s,r)=>s+Number(r.Volume||0),0);
-  // Latest avg trade size from our query
-  const ourAvg=Number(_polyVolData[0]?.avg_trade_size)||null;
-  // Reference avg bet — most recent month with data
-  const refAvgSorted=[..._refAvgBet].sort((a,b)=>new Date(b.month)-new Date(a.month));
-  const refAvg=Number(refAvgSorted[0]?.["Average USDC Bet Size"])||null;
-  // Our unique traders (latest day)
-  const ourTraders=Number(_polyVolData[0]?.unique_traders)||null;
-  // Reference cumulative users (latest)
-  const refUserSorted=[..._refUsers].sort((a,b)=>new Date(b.Date)-new Date(a.Date));
-  const refCumUsers=Number(refUserSorted[0]?.["Cumulative Unique Users"])||null;
-  // Current TVL from reference
-  const refTVLSorted=[..._refTVL].sort((a,b)=>new Date(b.day)-new Date(a.day));
-  const refCurrentTVL=Number(refTVLSorted[0]?.TVL)||null;
+  const rows   = _refVolPerUser;
+  const labels = rows.map(r => r.bucket);
+  const values = rows.map(r => Number(r["Percentage of Volume in Bucket"] || 0) * 100);
 
-  function delta(ours, ref) {
-    if(ours==null||ref==null||ref===0) return null;
-    return ((ours-ref)/ref)*100;
+  wrap.innerHTML = `<div class="chart-container" style="height:${Math.max(180, rows.length * 28)}px"><canvas id="poly-cat-canvas"></canvas></div>`;
+  polyCatChart = destroyChart(polyCatChart);
+  const D = chartDefs();
+  polyCatChart = new Chart(el("poly-cat-canvas").getContext("2d"), {
+    type:"bar",
+    data:{ labels, datasets:[{ data:values, backgroundColor:"#0070F3bb", borderColor:"#0070F3", borderWidth:1, borderRadius:3 }]},
+    options:{ ...D, indexAxis:"y",
+      plugins:{ ...D.plugins, legend:{display:false}, tooltip:{...D.plugins.tooltip, callbacks:{label:c=>` ${c.parsed.x.toFixed(2)}% of volume`}}},
+      scales:{ x:{...D.scales.x, ticks:{...D.scales.x.ticks, callback:v=>v.toFixed(1)+"%"}}, y:D.scales.y }},
+  });
+}
+
+// ─── LIQUIDITY QUALITY ────────────────────────────────────────────────────────
+// Avg trade size: latest "Average USDC Bet Size" from Q7589009
+// Spread proxy: Kalshi AVG(high-low)/100
+function renderLiquidity(kalshiVol, kalshiMkts) {
+  const latestMkt  = (kalshiMkts||[]).find(r => r.avg_spread != null);
+  const kalshiSpread = latestMkt ? (Number(latestMkt.avg_spread)/100).toFixed(2)+"%" : "—";
+
+  // Avg trade size: Kalshi derived; Polymarket from Q7589009 latest month
+  const latestKV   = (kalshiVol||[]).find(r => r.notional_volume_usd != null && r.trade_count > 0);
+  const kalshiAvg  = latestKV ? fmtUSD(Number(latestKV.notional_volume_usd)/Number(latestKV.trade_count)) : "—";
+  const avgBetSorted = _refAvgBetMonth ? sortByDate(_refAvgBetMonth, "month") : [];
+  const latestBet    = avgBetSorted[avgBetSorted.length - 1];
+  // Q7589009 columns: month, "Average USDC Bet Size", "Average Shares Traded"
+  const polyAvg    = latestBet ? fmtUSD(Number(latestBet["Average USDC Bet Size"])) : (_refAvgBetMonth === null ? "Q7589009 error" : "—");
+  const polyShares = latestBet ? fmtNum(Number(latestBet["Average Shares Traded"])) : "—";
+
+  const mk = (dot, label, val) => `<div class="liq-metric"><span class="liq-metric-label"><span class="liq-dot" style="background:${dot}"></span>${label}</span><span class="liq-metric-value">${val}</span></div>`;
+
+  el("liq-spread").innerHTML  = mk("var(--kalshi)","Kalshi (avg daily range)",kalshiSpread) + mk("var(--polymarket)","Polymarket","N/A (no book data)") + mk("var(--gemini)","Gemini","N/A");
+  el("liq-avg").innerHTML     = mk("var(--kalshi)","Kalshi",kalshiAvg) + mk("var(--polymarket)",`Polymarket (Q7589009 · ${latestBet?.month?.substring(0,7)||"—"})`,polyAvg) + mk("var(--gemini)","Gemini","—");
+  el("liq-median").innerHTML  = mk("var(--kalshi)","Kalshi","—") + mk("var(--polymarket)",`Poly avg shares (Q7589009)`,polyShares) + mk("var(--gemini)","Gemini","—");
+}
+
+// ─── CI PANEL ─────────────────────────────────────────────────────────────────
+function renderCIPanel() {
+  const kal = _kalshiCatsData;
+
+  // Card 1: Kalshi OI by category
+  const oiWrap = el("ci-oi-wrap");
+  if (kal.length) {
+    oiWrap.innerHTML = `<div class="chart-container" style="height:200px"><canvas id="ci-oi-canvas"></canvas></div>`;
+    oiCatChart = destroyChart(oiCatChart);
+    const D = chartDefs();
+    oiCatChart = new Chart(el("ci-oi-canvas").getContext("2d"), { type:"bar",
+      data:{ labels:kal.slice(0,8).map(r=>r.category||"?"), datasets:[{ label:"Avg OI", data:kal.slice(0,8).map(r=>Number(r.avg_open_interest||0)), backgroundColor:"#00C805bb", borderColor:"#00C805", borderWidth:1, borderRadius:3 }]},
+      options:{ ...D, indexAxis:"y", plugins:{...D.plugins,legend:{display:false},tooltip:{...D.plugins.tooltip,callbacks:{label:c=>` ${fmtUSD(c.parsed.x)}`}}},
+        scales:{ x:{...D.scales.x,ticks:{...D.scales.x.ticks,callback:v=>fmtUSD(v)}}, y:{...D.scales.y,ticks:{color:"#aaa",font:{size:10}}} }},
+    });
+  } else { oiWrap.innerHTML = `<div class="error-card">&#9888; No Kalshi category data</div>`; }
+
+  // Card 2: Volume concentration — Polymarket from Q7588997 bucket distribution
+  const concEl = el("ci-conc");
+  const kTotal = kal.reduce((s,r)=>s+Number(r.volume||0),0);
+  const topK   = [...kal].sort((a,b)=>Number(b.volume||0)-Number(a.volume||0))[0];
+  const kShare = kTotal>0&&topK ? ((Number(topK.volume)/kTotal)*100).toFixed(1) : null;
+  // Polymarket: top volume bucket from Q7588997
+  const topBucket = (_refVolPerUser||[]).slice().sort((a,b)=>Number(b["Percentage of Volume in Bucket"]||0)-Number(a["Percentage of Volume in Bucket"]||0))[0];
+  const pTopPct   = topBucket ? (Number(topBucket["Percentage of Volume in Bucket"])*100).toFixed(1) : null;
+  concEl.innerHTML = `<div class="conc-stats">
+    <div class="conc-stat"><div class="conc-stat-val" style="color:var(--polymarket)">${pTopPct?pTopPct+"%":"—"}</div><div class="conc-stat-label">Poly top bucket vol share</div><div class="conc-stat-sub">${topBucket?.bucket||"—"} users</div></div>
+    <div class="conc-stat"><div class="conc-stat-val" style="color:var(--kalshi)">${kShare?kShare+"%":"—"}</div><div class="conc-stat-label">Kalshi top-cat vol share</div><div class="conc-stat-sub">${topK?.category||"—"}</div></div>
+  </div>`;
+
+  // Card 3: Trader activity — Q7588953 (Date, New, Old, "Cumulative Unique Users")
+  // New = new users; Old = returning users
+  const tWrap = el("ci-traders-wrap");
+  if (_refUsers?.length) {
+    const sorted = sortByDate(_refUsers, "Date").slice(-60);
+    tWrap.innerHTML = `<div class="chart-container" style="height:200px"><canvas id="ci-traders-canvas"></canvas></div>`;
+    traderActivityChart = destroyChart(traderActivityChart);
+    const D = chartDefs();
+    traderActivityChart = new Chart(el("ci-traders-canvas").getContext("2d"), { type:"bar",
+      data:{ labels:sorted.map(r=>fmtDate(r.Date)),
+        datasets:[
+          { label:"New",      data:sorted.map(r=>Number(r.New||0)), backgroundColor:"#0070F3dd", stack:"u", borderRadius:2 },
+          { label:"Returning",data:sorted.map(r=>Number(r.Old||0)), backgroundColor:"#0070F355", stack:"u", borderRadius:2 },
+        ]},
+      options:{ ...D, plugins:{...D.plugins,tooltip:{...D.plugins.tooltip,callbacks:{label:c=>` ${c.dataset.label}: ${fmtNum(c.parsed.y)}`}}},
+        scales:{ x:{...D.scales.x,stacked:true,ticks:{...D.scales.x.ticks,maxTicksLimit:10}}, y:{...D.scales.y,stacked:true,ticks:{...D.scales.y.ticks,callback:v=>fmtNum(v)}} }},
+    });
+  } else {
+    tWrap.innerHTML = errHtml(7588953, _refUsers===null?"Q7588953 fetch failed":"No user data", "ci-traders-wrap", 7588953);
   }
-  function deltaCell(d) {
-    if(d==null) return `<td class="num delta-na">N/A</td>`;
-    const abs=Math.abs(d);
-    const cls=abs<5?"delta-ok":abs<20?"delta-warn":"delta-bad";
-    return `<td class="num ${cls}">${d>=0?"+":""}${d.toFixed(1)}%${abs>5?" ⚠":""}`;
-  }
-  function refQueryLink(id) { return `<a href="https://dune.com/queries/${id}" target="_blank" style="color:var(--polymarket);font-size:11px">#${id}</a>`; }
 
-  const dVol=delta(our30dVol,ref30d);
-  const dAvg=delta(ourAvg,refAvg);
-
-  const lastRefDate=refSorted[refSorted.length-1]?.Day?.substring(0,10)||"?";
-  const ourPeriod=_polyVolData.length>0?`${dayStr(_polyVolData[_polyVolData.length-1]?.day)} → ${dayStr(_polyVolData[0]?.day)}`:"—";
-
-  wrap.innerHTML=`
-    <div class="accuracy-table-wrap">
-      <table class="accuracy-table">
-        <thead><tr>
-          <th>Metric</th><th>Our Query</th><th>Our Value</th>
-          <th>Reference Query</th><th class="num">Reference Value</th>
-          <th class="num">Delta %</th>
-        </tr></thead>
-        <tbody>
-          <tr>
-            <td>30d Notional Volume</td>
-            <td><code style="font-size:11px">polyVolume SQL</code></td>
-            <td>${fmtUSD(our30dVol)}</td>
-            <td>${refQueryLink(REF.notionalVol)} · last 30 days</td>
-            <td class="num">${fmtUSD(ref30d)}</td>
-            ${deltaCell(dVol)}
-          </tr>
-          <tr>
-            <td>Avg Trade Size</td>
-            <td><code style="font-size:11px">AVG(amount)</code></td>
-            <td>${ourAvg?fmtUSD(ourAvg):"—"}</td>
-            <td>${refQueryLink(REF.avgBetMonth)} · latest month</td>
-            <td class="num">${refAvg?fmtUSD(refAvg):"—"}</td>
-            ${deltaCell(dAvg)}
-          </tr>
-          <tr>
-            <td>Unique Traders (latest day)</td>
-            <td><code style="font-size:11px">DISTINCT maker + taker</code></td>
-            <td>${ourTraders?fmtNum(ourTraders):"—"}</td>
-            <td>${refQueryLink(REF.users)} · cumulative</td>
-            <td class="num">${refCumUsers?fmtNum(refCumUsers):"—"}</td>
-            <td class="num delta-na">N/A <span style="font-size:10px;color:var(--muted)">(different scope)</span></td>
-          </tr>
-          <tr>
-            <td>Current TVL</td>
-            <td><code style="font-size:11px">not in dashboard</code></td>
-            <td>—</td>
-            <td>${refQueryLink(REF.tvl)} · latest day</td>
-            <td class="num">${refCurrentTVL?fmtUSD(refCurrentTVL):"—"}</td>
-            <td class="num delta-na">N/A</td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-    <div class="ref-note">
-      &#9432; Our period: ${ourPeriod} &nbsp;|&nbsp; Reference last row: ${lastRefDate} &nbsp;|&nbsp;
-      Volume delta &gt;5% likely reflects gross notional vs. net USDC difference in methodology. Reference queries may count both sides of each trade.
-    </div>`;
+  // Card 4: Kalshi only (no Poly category reference query available)
+  const ctWrap = el("ci-tradect-wrap");
+  if (kal.length) {
+    const cats = _selectedCategory === "All" ? kal.slice(0,7) : kal.filter(r=>r.category===_selectedCategory);
+    ctWrap.innerHTML = `<div class="chart-container" style="height:200px"><canvas id="ci-tradect-canvas"></canvas></div>`;
+    tradeCountCatChart = destroyChart(tradeCountCatChart);
+    const D = chartDefs();
+    tradeCountCatChart = new Chart(el("ci-tradect-canvas").getContext("2d"), { type:"bar",
+      data:{ labels:cats.map(r=>r.category||"?"), datasets:[{ label:"Kalshi Markets", data:cats.map(r=>Number(r.markets||0)), backgroundColor:"#00C805bb", borderRadius:3 }]},
+      options:{ ...D, plugins:{...D.plugins,tooltip:{...D.plugins.tooltip,callbacks:{label:c=>` ${fmtNum(c.parsed.y)} markets`}}},
+        scales:{ x:{...D.scales.x,ticks:{color:"#888",font:{size:10}}}, y:{...D.scales.y,ticks:{...D.scales.y.ticks,callback:v=>fmtNum(v)}} }},
+    });
+  } else { ctWrap.innerHTML = `<div class="error-card">&#9888; No Kalshi category data</div>`; }
 }
 
 // ─── POLYMARKET TAB ───────────────────────────────────────────────────────────
 function renderPolyTab() {
-  // KPIs
-  const volSorted=[..._refVol].sort((a,b)=>new Date(a.Day)-new Date(b.Day));
-  const latest=volSorted[volSorted.length-1]||{};
-  const vol30d=volSorted.slice(-30).reduce((s,r)=>s+Number(r.Volume||0),0);
-  const cumVol=Number(latest["Cumulative Volume"])||0;
-  const tvlSorted=[..._refTVL].sort((a,b)=>new Date(a.day)-new Date(b.day));
-  const latestTVL=tvlSorted[tvlSorted.length-1]||{};
-  const userSorted=[..._refUsers].sort((a,b)=>new Date(a.Date)-new Date(b.Date));
-  const latestUsers=userSorted[userSorted.length-1]||{};
-  const avgBetSorted=[..._refAvgBet].sort((a,b)=>new Date(b.month)-new Date(a.month));
-  const latestAvgBet=avgBetSorted[0]||{};
+  const D = chartDefs();
 
-  document.getElementById("poly-tab-kpis").innerHTML=[
-    {label:"Latest Daily Vol",    value:fmtUSD(latest.Volume)},
-    {label:"30d Volume",          value:fmtUSD(vol30d)},
-    {label:"All-Time Volume",     value:fmtUSD(cumVol)},
-    {label:"Current TVL",         value:fmtUSD(latestTVL.TVL)},
-    {label:"Cumulative Users",    value:fmtNum(latestUsers["Cumulative Unique Users"])},
-    {label:"Avg Bet (latest mo)", value:fmtUSD(latestAvgBet["Average USDC Bet Size"])},
+  // KPIs
+  const volSorted  = sortByDate(_refNotionalVol, "Day");
+  const tvlSorted  = sortByDate(_refTVL, "day");
+  const userSorted = sortByDate(_refUsers, "Date");
+  const avgBetSorted = sortByDate(_refAvgBetMonth, "month");
+  const latestVol  = volSorted[volSorted.length-1] || {};
+  const vol30d     = volSorted.slice(-30).reduce((s,r)=>s+Number(r.Volume||0),0);
+  const cumVol     = Number(latestVol["Cumulative Volume"] || 0);
+  const latestTVL  = tvlSorted[tvlSorted.length-1] || {};
+  const latestUser = userSorted[userSorted.length-1] || {};
+  const latestBet  = avgBetSorted[avgBetSorted.length-1] || {};
+
+  el("poly-tab-kpis").innerHTML = [
+    { label:"Latest Daily Vol",    value:fmtUSD(latestVol.Volume) },
+    { label:"30d Volume",          value:fmtUSD(vol30d) },
+    { label:"All-Time Volume",     value:fmtUSD(cumVol) },
+    { label:"Current TVL",         value:fmtUSD(latestTVL.TVL) },
+    { label:"Cumulative Users",    value:fmtNum(latestUser["Cumulative Unique Users"]) },
+    { label:"Avg Bet (latest mo)", value:fmtUSD(latestBet["Average USDC Bet Size"]) },
   ].map(k=>`<div class="kpi-card" style="border-color:#0070F333"><div class="kpi-label">${k.label}</div><div class="kpi-value" style="color:var(--polymarket)">${k.value}</div></div>`).join("");
 
-  // Volume charts
-  const D=chartDefs();
-  const last90vol=volSorted.slice(-90);
-  if(last90vol.length){
-    polyVolChart=destroyChart(polyVolChart);
-    const ctx=mkCanvas("poly-vol-wrap",260);
-    polyVolChart=new Chart(ctx,{type:"bar",data:{labels:last90vol.map(r=>fmtDate(r.Day)),datasets:[{label:"Daily Volume",data:last90vol.map(r=>Number(r.Volume||0)),backgroundColor:"#0070F3bb",borderRadius:2}]},
-      options:{...D,plugins:{...D.plugins,legend:{display:false},tooltip:{...D.plugins.tooltip,callbacks:{label:c=>` ${fmtUSD(c.parsed.y)}`}}},scales:{x:{...D.scales.x,ticks:{...D.scales.x.ticks,maxTicksLimit:10}},y:{...D.scales.y,ticks:{...D.scales.y.ticks,callback:v=>fmtUSD(v)}}}}});
+  // Volume charts — Q7588938: Day, Volume, "Cumulative Volume"
+  mkPolyChart("poly-vol-wrap","poly-vol-canvas",260,ctx=>{
+    if (!volSorted.length) return;
+    const last90 = volSorted.slice(-90);
+    polyVolChart = destroyChart(polyVolChart);
+    polyVolChart = new Chart(ctx,{ type:"bar",
+      data:{ labels:last90.map(r=>fmtDate(r.Day)), datasets:[{ label:"Daily Volume (Q7588938)", data:last90.map(r=>Number(r.Volume||0)), backgroundColor:"#0070F3bb", borderRadius:2 }]},
+      options:{ ...D, plugins:{...D.plugins,legend:{display:false},tooltip:{...D.plugins.tooltip,callbacks:{label:c=>` ${fmtUSD(c.parsed.y)}`}}},
+        scales:{ x:{...D.scales.x,ticks:{...D.scales.x.ticks,maxTicksLimit:10}}, y:{...D.scales.y,ticks:{...D.scales.y.ticks,callback:v=>fmtUSD(v)}} }},
+    });
+  }, 7588938);
 
-    polyCumVolChart=destroyChart(polyCumVolChart);
-    const ctx2=mkCanvas("poly-cumvol-wrap",260);
-    polyCumVolChart=new Chart(ctx2,{type:"line",data:{labels:last90vol.map(r=>fmtDate(r.Day)),datasets:[{label:"Cumulative Volume",data:last90vol.map(r=>Number(r["Cumulative Volume"]||0)),borderColor:"#0070F3",backgroundColor:"rgba(0,112,243,0.1)",fill:true,tension:0.2,pointRadius:0}]},
-      options:{...D,plugins:{...D.plugins,legend:{display:false},tooltip:{...D.plugins.tooltip,callbacks:{label:c=>` ${fmtUSD(c.parsed.y)}`}}},scales:{x:{...D.scales.x,ticks:{...D.scales.x.ticks,maxTicksLimit:10}},y:{...D.scales.y,ticks:{...D.scales.y.ticks,callback:v=>fmtUSD(v)}}}}});
-  }
+  mkPolyChart("poly-cumvol-wrap","poly-cumvol-canvas",260,ctx=>{
+    if (!volSorted.length) return;
+    const last90 = volSorted.slice(-90);
+    polyCumVolChart = destroyChart(polyCumVolChart);
+    polyCumVolChart = new Chart(ctx,{ type:"line",
+      data:{ labels:last90.map(r=>fmtDate(r.Day)), datasets:[{ label:'Cumulative Volume (Q7588938)', data:last90.map(r=>Number(r["Cumulative Volume"]||0)), borderColor:"#0070F3", backgroundColor:"rgba(0,112,243,0.1)", fill:true, tension:0.2, pointRadius:0 }]},
+      options:{ ...D, plugins:{...D.plugins,legend:{display:false},tooltip:{...D.plugins.tooltip,callbacks:{label:c=>` ${fmtUSD(c.parsed.y)}`}}},
+        scales:{ x:{...D.scales.x,ticks:{...D.scales.x.ticks,maxTicksLimit:10}}, y:{...D.scales.y,ticks:{...D.scales.y.ticks,callback:v=>fmtUSD(v)}} }},
+    });
+  }, 7588938);
 
-  // Users charts
-  const last90users=userSorted.slice(-90);
-  if(last90users.length){
-    polyUsersChart=destroyChart(polyUsersChart);
-    const ctx3=mkCanvas("poly-users-wrap",260);
-    polyUsersChart=new Chart(ctx3,{type:"bar",data:{labels:last90users.map(r=>fmtDate(r.Date)),datasets:[
-      {label:"New",data:last90users.map(r=>Number(r.New||0)),backgroundColor:"#0070F3dd",stack:"u",borderRadius:2},
-      {label:"Returning",data:last90users.map(r=>Number(r.Old||0)),backgroundColor:"#0070F355",stack:"u",borderRadius:2},
-    ]},options:{...D,plugins:{...D.plugins,tooltip:{...D.plugins.tooltip,callbacks:{label:c=>` ${c.dataset.label}: ${fmtNum(c.parsed.y)}`}}},scales:{x:{...D.scales.x,stacked:true,ticks:{...D.scales.x.ticks,maxTicksLimit:10}},y:{...D.scales.y,stacked:true,ticks:{...D.scales.y.ticks,callback:v=>fmtNum(v)}}}}});
+  // Users — Q7588953: Date, New (new users), Old (returning users), "Cumulative Unique Users"
+  mkPolyChart("poly-users-wrap","poly-users-canvas",260,ctx=>{
+    const last90 = userSorted.slice(-90);
+    polyUsersChart = destroyChart(polyUsersChart);
+    polyUsersChart = new Chart(ctx,{ type:"bar",
+      data:{ labels:last90.map(r=>fmtDate(r.Date)),
+        datasets:[
+          { label:"New (Q7588953)",      data:last90.map(r=>Number(r.New||0)), backgroundColor:"#0070F3dd", stack:"u", borderRadius:2 },
+          { label:"Returning (Q7588953)",data:last90.map(r=>Number(r.Old||0)), backgroundColor:"#0070F355", stack:"u", borderRadius:2 },
+        ]},
+      options:{ ...D, plugins:{...D.plugins,tooltip:{...D.plugins.tooltip,callbacks:{label:c=>` ${c.dataset.label}: ${fmtNum(c.parsed.y)}`}}},
+        scales:{ x:{...D.scales.x,stacked:true,ticks:{...D.scales.x.ticks,maxTicksLimit:10}}, y:{...D.scales.y,stacked:true,ticks:{...D.scales.y.ticks,callback:v=>fmtNum(v)}} }},
+    });
+  }, 7588953);
 
-    polyCumUsersChart=destroyChart(polyCumUsersChart);
-    const ctx4=mkCanvas("poly-cumusers-wrap",260);
-    polyCumUsersChart=new Chart(ctx4,{type:"line",data:{labels:last90users.map(r=>fmtDate(r.Date)),datasets:[{label:"Cumulative Users",data:last90users.map(r=>Number(r["Cumulative Unique Users"]||0)),borderColor:"#0070F3",backgroundColor:"rgba(0,112,243,0.1)",fill:true,tension:0.2,pointRadius:0}]},
-      options:{...D,plugins:{...D.plugins,legend:{display:false},tooltip:{...D.plugins.tooltip,callbacks:{label:c=>` ${fmtNum(c.parsed.y)}`}}},scales:{x:{...D.scales.x,ticks:{...D.scales.x.ticks,maxTicksLimit:10}},y:{...D.scales.y,ticks:{...D.scales.y.ticks,callback:v=>fmtNum(v)}}}}});
-  }
+  mkPolyChart("poly-cumusers-wrap","poly-cumusers-canvas",260,ctx=>{
+    const last90 = userSorted.slice(-90);
+    polyCumUsersChart = destroyChart(polyCumUsersChart);
+    polyCumUsersChart = new Chart(ctx,{ type:"line",
+      data:{ labels:last90.map(r=>fmtDate(r.Date)), datasets:[{ label:'Cumulative Users (Q7588953)', data:last90.map(r=>Number(r["Cumulative Unique Users"]||0)), borderColor:"#0070F3", backgroundColor:"rgba(0,112,243,0.1)", fill:true, tension:0.2, pointRadius:0 }]},
+      options:{ ...D, plugins:{...D.plugins,legend:{display:false},tooltip:{...D.plugins.tooltip,callbacks:{label:c=>` ${fmtNum(c.parsed.y)}`}}},
+        scales:{ x:{...D.scales.x,ticks:{...D.scales.x.ticks,maxTicksLimit:10}}, y:{...D.scales.y,ticks:{...D.scales.y.ticks,callback:v=>fmtNum(v)}} }},
+    });
+  }, 7588953);
 
-  // TVL chart
-  const last90tvl=tvlSorted.slice(-90);
-  if(last90tvl.length){
-    polyTVLChart=destroyChart(polyTVLChart);
-    const ctx5=mkCanvas("poly-tvl-wrap",260);
-    polyTVLChart=new Chart(ctx5,{type:"line",data:{labels:last90tvl.map(r=>fmtDate(r.day)),datasets:[{label:"TVL",data:last90tvl.map(r=>Number(r.TVL||0)),borderColor:"#0070F3",backgroundColor:"rgba(0,112,243,0.1)",fill:true,tension:0.2,pointRadius:0}]},
-      options:{...D,plugins:{...D.plugins,legend:{display:false},tooltip:{...D.plugins.tooltip,callbacks:{label:c=>` ${fmtUSD(c.parsed.y)}`}}},scales:{x:{...D.scales.x,ticks:{...D.scales.x.ticks,maxTicksLimit:10}},y:{...D.scales.y,ticks:{...D.scales.y.ticks,callback:v=>fmtUSD(v)}}}}});
-  }
+  // TVL — Q7588969: day (lowercase), TVLDelta, TVL
+  mkPolyChart("poly-tvl-wrap","poly-tvl-canvas",260,ctx=>{
+    const last90 = tvlSorted.slice(-90);
+    polyTVLChart = destroyChart(polyTVLChart);
+    polyTVLChart = new Chart(ctx,{ type:"line",
+      data:{ labels:last90.map(r=>fmtDate(r.day)), datasets:[{ label:"TVL (Q7588969)", data:last90.map(r=>Number(r.TVL||0)), borderColor:"#0070F3", backgroundColor:"rgba(0,112,243,0.1)", fill:true, tension:0.2, pointRadius:0 }]},
+      options:{ ...D, plugins:{...D.plugins,legend:{display:false},tooltip:{...D.plugins.tooltip,callbacks:{label:c=>` ${fmtUSD(c.parsed.y)}`}}},
+        scales:{ x:{...D.scales.x,ticks:{...D.scales.x.ticks,maxTicksLimit:10}}, y:{...D.scales.y,ticks:{...D.scales.y.ticks,callback:v=>fmtUSD(v)}} }},
+    });
+  }, 7588969);
 
-  // Avg monthly bet chart (all data, sorted oldest first)
-  const avgBetAll=[..._refAvgBet].sort((a,b)=>new Date(a.month)-new Date(b.month));
-  if(avgBetAll.length){
-    polyAvgBetChart=destroyChart(polyAvgBetChart);
-    const ctx6=mkCanvas("poly-avgbet-wrap",260);
-    polyAvgBetChart=new Chart(ctx6,{type:"bar",data:{labels:avgBetAll.map(r=>fmtDate(r.month)),datasets:[{label:"Avg USDC Bet",data:avgBetAll.map(r=>Number(r["Average USDC Bet Size"]||0)),backgroundColor:"#0070F3bb",borderRadius:2}]},
-      options:{...D,plugins:{...D.plugins,legend:{display:false},tooltip:{...D.plugins.tooltip,callbacks:{label:c=>` ${fmtUSD(c.parsed.y)}`}}},scales:{x:{...D.scales.x,ticks:{...D.scales.x.ticks,maxTicksLimit:12}},y:{...D.scales.y,ticks:{...D.scales.y.ticks,callback:v=>fmtUSD(v)}}}}});
-  }
+  // Avg monthly bet — Q7589009: month, "Average USDC Bet Size", "Average Shares Traded"
+  mkPolyChart("poly-avgbet-wrap","poly-avgbet-canvas",260,ctx=>{
+    const all = avgBetSorted;
+    polyAvgBetChart = destroyChart(polyAvgBetChart);
+    polyAvgBetChart = new Chart(ctx,{ type:"bar",
+      data:{ labels:all.map(r=>fmtDate(r.month)), datasets:[{ label:"Avg USDC Bet Size (Q7589009)", data:all.map(r=>Number(r["Average USDC Bet Size"]||0)), backgroundColor:"#0070F3bb", borderRadius:2 }]},
+      options:{ ...D, plugins:{...D.plugins,legend:{display:false},tooltip:{...D.plugins.tooltip,callbacks:{label:c=>` ${fmtUSD(c.parsed.y)}`}}},
+        scales:{ x:{...D.scales.x,ticks:{...D.scales.x.ticks,maxTicksLimit:12}}, y:{...D.scales.y,ticks:{...D.scales.y.ticks,callback:v=>fmtUSD(v)}} }},
+    });
+  }, 7589009);
 
-  // Bet size distribution (users %)
-  if(_refBetDist.length){
-    polyBetDistChart=destroyChart(polyBetDistChart);
-    const ctx7=mkCanvas("poly-betdist-wrap",260);
-    polyBetDistChart=new Chart(ctx7,{type:"bar",data:{labels:_refBetDist.map(r=>r.bucket),datasets:[{label:"% of Users",data:_refBetDist.map(r=>Number(r["Percentage of Users in Bucket"]||0)*100),backgroundColor:"#0070F3bb",borderRadius:3}]},
-      options:{...D,indexAxis:"y",plugins:{...D.plugins,legend:{display:false},tooltip:{...D.plugins.tooltip,callbacks:{label:c=>` ${c.parsed.x.toFixed(1)}% of users`}}},
-        scales:{x:{...D.scales.x,ticks:{...D.scales.x.ticks,callback:v=>v.toFixed(0)+"%"}},y:{...D.scales.y,ticks:{color:"#aaa",font:{size:11}}}}}});
-  }
+  // Bet size dist — Q7588991: bucket, "Users in Bucket", "Total Volume in Bucket", "Percentage of Users in Bucket", "Percentage of Volume in Bucket"
+  mkPolyChart("poly-betdist-wrap","poly-betdist-canvas",260,ctx=>{
+    const rows = _refAvgBetUser || [];
+    polyBetDistChart = destroyChart(polyBetDistChart);
+    polyBetDistChart = new Chart(ctx,{ type:"bar",
+      data:{ labels:rows.map(r=>r.bucket), datasets:[{ label:"% of Users (Q7588991)", data:rows.map(r=>Number(r["Percentage of Users in Bucket"]||0)*100), backgroundColor:"#0070F3bb", borderRadius:3 }]},
+      options:{ ...D, indexAxis:"y", plugins:{...D.plugins,legend:{display:false},tooltip:{...D.plugins.tooltip,callbacks:{label:c=>` ${c.parsed.x.toFixed(1)}% of users`}}},
+        scales:{ x:{...D.scales.x,ticks:{...D.scales.x.ticks,callback:v=>v.toFixed(0)+"%"}}, y:{...D.scales.y,ticks:{color:"#aaa",font:{size:11}}} }},
+    });
+  }, 7588991);
 
-  // Volume per user bucket
-  if(_refVolDist.length){
-    polyVolDistChart=destroyChart(polyVolDistChart);
-    const ctx8=mkCanvas("poly-voldist-wrap",260);
-    polyVolDistChart=new Chart(ctx8,{type:"bar",data:{labels:_refVolDist.map(r=>r.bucket),datasets:[{label:"% of Volume",data:_refVolDist.map(r=>Number(r["Percentage of Volume in Bucket"]||0)*100),backgroundColor:"#0070F366",borderColor:"#0070F3",borderWidth:1,borderRadius:3}]},
-      options:{...D,indexAxis:"y",plugins:{...D.plugins,legend:{display:false},tooltip:{...D.plugins.tooltip,callbacks:{label:c=>` ${c.parsed.x.toFixed(2)}% of volume`}}},
-        scales:{x:{...D.scales.x,ticks:{...D.scales.x.ticks,callback:v=>v.toFixed(1)+"%"}},y:{...D.scales.y,ticks:{color:"#aaa",font:{size:11}}}}}});
-  }
+  // Volume per user — Q7588997: same columns
+  mkPolyChart("poly-voldist-wrap","poly-voldist-canvas",260,ctx=>{
+    const rows = _refVolPerUser || [];
+    polyVolDistChart = destroyChart(polyVolDistChart);
+    polyVolDistChart = new Chart(ctx,{ type:"bar",
+      data:{ labels:rows.map(r=>r.bucket), datasets:[{ label:"% of Volume (Q7588997)", data:rows.map(r=>Number(r["Percentage of Volume in Bucket"]||0)*100), backgroundColor:"#0070F366", borderColor:"#0070F3", borderWidth:1, borderRadius:3 }]},
+      options:{ ...D, indexAxis:"y", plugins:{...D.plugins,legend:{display:false},tooltip:{...D.plugins.tooltip,callbacks:{label:c=>` ${c.parsed.x.toFixed(2)}% of volume`}}},
+        scales:{ x:{...D.scales.x,ticks:{...D.scales.x.ticks,callback:v=>v.toFixed(1)+"%"}}, y:{...D.scales.y,ticks:{color:"#aaa",font:{size:11}}} }},
+    });
+  }, 7588997);
 }
 
-// ─── LOAD ALL DATA ────────────────────────────────────────────────────────────
-async function loadReferenceData() {
-  try {
-    const [v,u,t,b,bd,vd] = await Promise.all([
-      fetchRefQuery(REF.notionalVol, 90),
-      fetchRefQuery(REF.users,       90),
-      fetchRefQuery(REF.tvl,         90),
-      fetchRefQuery(REF.avgBetMonth, 100),
-      fetchRefQuery(REF.betSizeDist, 100),
-      fetchRefQuery(REF.volPerUser,  100),
-    ]);
-    _refVol=v; _refUsers=u; _refTVL=t; _refAvgBet=b; _refBetDist=bd; _refVolDist=vd;
-    _refDataLoaded=true;
-    renderAccuracyCheck();
-    // If Polymarket tab is already open, render it now
-    if(!_polyTabRendered && document.getElementById("tab-polymarket").classList.contains("active")) {
-      _polyTabRendered=true; renderPolyTab();
-    }
-  } catch(e) {
-    console.error("Reference data load failed:", e);
-    document.getElementById("accuracy-wrap").innerHTML=`<div class="error-card">&#9888; Reference fetch failed: ${e.message}</div>`;
-  }
+function mkPolyChart(wrapId, canvasId, height, drawFn, qid) {
+  const wrap = el(wrapId);
+  const refArr = {
+    7588938: _refNotionalVol, 7588943: _refVolume,
+    7588953: _refUsers, 7588969: _refTVL,
+    7588991: _refAvgBetUser, 7588997: _refVolPerUser, 7589009: _refAvgBetMonth,
+  }[qid];
+  if (refArr === null) { wrap.innerHTML = errHtml(qid, `Q${qid} fetch failed`, wrapId, qid); return; }
+  wrap.innerHTML = `<div class="chart-container" style="height:${height}px"><canvas id="${canvasId}"></canvas></div>`;
+  drawFn(el(canvasId).getContext("2d"));
 }
 
-async function loadAllData() {
-  if(!DUNE_API_KEY) { document.getElementById("key-gate").classList.add("visible"); return; }
-  document.getElementById("refresh-btn").disabled=true;
-  setStatusAll("Fetching data...");
-
-  // Gemini (public) and reference data — fire concurrently, no execution slot used
-  loadGeminiData().catch(e=>console.error("Gemini failed:",e));
-  loadReferenceData().catch(e=>console.error("Reference load failed:",e));
-
-  const statusEl=document.getElementById("trend-status");
-
-  // Batch 1: max 3 parallel executions on free tier
-  const [r1,r2,r3]=await Promise.allSettled([
-    runDuneQuery(SQL.kalshiVolume,  statusEl),
-    runDuneQuery(SQL.kalshiMarkets, statusEl),
-    runDuneQuery(SQL.polyVolume,    statusEl),
-  ]);
-  // Batch 2
-  const [r4,r5]=await Promise.allSettled([
-    runDuneQuery(SQL.polyCats,   statusEl),
-    runDuneQuery(SQL.kalshiCats, statusEl),
-  ]);
-
-  const kalshiVol  = r1.status==="fulfilled"?r1.value:null;
-  const kalshiMkts = r2.status==="fulfilled"?r2.value:null;
-  const polyVol    = r3.status==="fulfilled"?r3.value:null;
-  const polyCats   = r4.status==="fulfilled"?r4.value:null;
-  const kalshiCats = r5.status==="fulfilled"?r5.value:null;
-
-  _kalshiVolData=kalshiVol||[]; _kalshiMktsData=kalshiMkts||[];
-  _polyVolData=polyVol||[]; _polyCatsData=polyCats||[]; _kalshiCatsData=kalshiCats||[];
-
-  [r1,r2,r3,r4,r5].forEach((r,i)=>{ if(r.status==="rejected") console.error(`Query ${i+1} failed:`,r.reason?.message); });
-
-  // Kalshi KPIs
-  if(kalshiVol&&kalshiMkts){
-    const lat=kalshiVol[0]||{}, latm=kalshiMkts[0]||{};
-    const tr=calcTrend(kalshiVol,"notional_volume_usd");
-    const tc=tr==null?"neutral":tr>=0?"up":"down";
-    const ts=tr==null?"—":(tr>=0?"+":"")+tr.toFixed(1)+"% vs prior 7d";
-    renderKPIs("kalshi-kpis",[{label:"Daily Volume",value:fmtUSD(lat.notional_volume_usd)},{label:"Trade Count",value:fmtNum(lat.trade_count)},{label:"Active Markets",value:fmtNum(latm.active_markets)},{label:"7d Volume Trend",value:ts,trend:ts,trendClass:tc}]);
-  } else { renderKPIError("kalshi-kpis",r1.reason?.message||r2.reason?.message||"Failed"); }
-
-  // Polymarket KPIs
-  if(polyVol){
-    const lat=polyVol[0]||{};
-    const tr=calcTrend(polyVol,"notional_volume_usd");
-    const tc=tr==null?"neutral":tr>=0?"up":"down";
-    const ts=tr==null?"—":(tr>=0?"+":"")+tr.toFixed(1)+"% vs prior 7d";
-    renderKPIs("polymarket-kpis",[{label:"Daily Volume",value:fmtUSD(lat.notional_volume_usd)},{label:"Trade Count",value:fmtNum(lat.trade_count)},{label:"Unique Traders",value:fmtNum(lat.unique_traders)},{label:"7d Volume Trend",value:ts,trend:ts,trendClass:tc}]);
-  } else { renderKPIError("polymarket-kpis",r3.reason?.message||"Failed"); }
-
-  // Volume trend
-  if(kalshiVol||polyVol) renderTrendChart(kalshiVol,polyVol);
-  else document.getElementById("trend-wrap").innerHTML=`<div class="error-card">&#9888; ${r1.reason?.message||r3.reason?.message||"No data"}</div>`;
-
-  // Category charts
-  if(kalshiCats) kalshiCatChart=renderCatChart("kalshi-cat-wrap",kalshiCats,"volume","#00C805",kalshiCatChart);
-  else document.getElementById("kalshi-cat-wrap").innerHTML=`<div class="error-card">&#9888; ${r5.reason?.message||"No data"}</div>`;
-  if(polyCats) polyCatChart=renderCatChart("poly-cat-wrap",polyCats,"volume_usd","#0070F3",polyCatChart);
-  else document.getElementById("poly-cat-wrap").innerHTML=`<div class="error-card">&#9888; ${r4.reason?.message||"No data"}</div>`;
-
-  // Liquidity + CI
-  renderLiquidity(kalshiVol,kalshiMkts,polyVol);
+// ─── CATEGORY FILTER (Kalshi CI only) ────────────────────────────────────────
+function selectCategory(cat) {
+  _selectedCategory = cat;
+  document.querySelectorAll(".pill").forEach(p => p.classList.toggle("active", p.dataset.cat === cat));
   renderCIPanel();
+}
 
-  // Accuracy check — re-render now that polyVol is loaded (reference data may already be in)
-  if(_refDataLoaded) renderAccuracyCheck();
-
-  // Table
-  if(kalshiVol||polyVol) renderTable(buildTableData(kalshiVol,kalshiMkts,polyVol));
-  else document.getElementById("table-wrap").innerHTML=`<div class="error-card">&#9888; No data</div>`;
-
-  document.getElementById("last-updated").textContent="Updated "+new Date().toLocaleTimeString();
-  document.getElementById("refresh-btn").disabled=false;
+// ─── KALSHI CATEGORY CHART ────────────────────────────────────────────────────
+function renderCatChart(wrapId, rows, volField, color, chartRef, fmtFn) {
+  fmtFn = fmtFn || fmtUSD;
+  const wrap = el(wrapId);
+  if (!rows?.length) { wrap.innerHTML = `<div class="error-card">No category data.</div>`; return null; }
+  const top8  = [...rows].sort((a,b)=>Number(b[volField]||0)-Number(a[volField]||0)).slice(0,8);
+  const total = top8.reduce((s,r)=>s+Number(r[volField]||0),0);
+  const labels = top8.map(r=>r.category||"Unknown");
+  const values = top8.map(r=>Number(r[volField]||0));
+  const pcts   = values.map(v=>total>0?((v/total)*100).toFixed(1):0);
+  wrap.innerHTML = `<div class="chart-container" style="height:${Math.max(180,top8.length*34)}px"><canvas id="${wrapId}-canvas"></canvas></div>`;
+  chartRef = destroyChart(chartRef);
+  const D = chartDefs();
+  chartRef = new Chart(el(`${wrapId}-canvas`).getContext("2d"),{ type:"bar",
+    data:{ labels, datasets:[{ data:values, backgroundColor:color+"cc", borderColor:color, borderWidth:1, borderRadius:4 }]},
+    options:{ ...D, indexAxis:"y", plugins:{...D.plugins,legend:{display:false},tooltip:{...D.plugins.tooltip,callbacks:{label:c=>` ${fmtFn(c.parsed.x)}  (${pcts[c.dataIndex]}%)`}}},
+      scales:{ x:{...D.scales.x,ticks:{...D.scales.x.ticks,callback:v=>fmtFn(v)}}, y:D.scales.y }},
+  });
+  return chartRef;
 }
 
 // ─── TABLE ────────────────────────────────────────────────────────────────────
 let tableData=[], sortCol=0, sortDir="desc";
-function buildTableData(kv,km,pv) {
-  const days=new Set();
-  (kv||[]).forEach(r=>r.day&&days.add(dayStr(r.day)));
-  (pv||[]).forEach(r=>r.day&&days.add(dayStr(r.day)));
-  const kvm=Object.fromEntries((kv||[]).map(r=>[dayStr(r.day),r]));
-  const kmm=Object.fromEntries((km||[]).map(r=>[dayStr(r.day),r]));
-  const pvm=Object.fromEntries((pv||[]).map(r=>[dayStr(r.day),r]));
+
+// Builds daily table merging Kalshi SQL data + Polymarket reference data
+// Q7588938: Day, Volume     Q7588953: Date, New, Old
+function buildTableData(kv, km, polyVol, polyUsers) {
+  const days = new Set();
+  (kv||[]).forEach(r=>r.day&&days.add(ds(r.day)));
+  (polyVol||[]).forEach(r=>r.Day&&days.add(ds(r.Day)));
+  const kvm  = Object.fromEntries((kv||[]).map(r=>[ds(r.day),r]));
+  const kmm  = Object.fromEntries((km||[]).map(r=>[ds(r.day),r]));
+  const pvm  = Object.fromEntries((polyVol||[]).map(r=>[ds(r.Day),r]));
+  const pum  = Object.fromEntries((polyUsers||[]).map(r=>[ds(r.Date),r]));
   return [...days].sort().reverse().slice(0,30).map(d=>({
-    date:d, kalshiVol:Number(kvm[d]?.notional_volume_usd||0), kalshiTrades:Number(kvm[d]?.trade_count||0),
-    kalshiMkts:Number(kmm[d]?.active_markets||0), polyVol:Number(pvm[d]?.notional_volume_usd||0),
-    polyTrades:Number(pvm[d]?.trade_count||0), polyTraders:Number(pvm[d]?.unique_traders||0),
+    date:d,
+    kalshiVol:    Number(kvm[d]?.notional_volume_usd||0),
+    kalshiTrades: Number(kvm[d]?.trade_count||0),
+    kalshiMkts:   Number(kmm[d]?.active_markets||0),
+    polyVol:      Number(pvm[d]?.Volume||0),
+    polyUsers:    pum[d] ? Number(pum[d].New||0)+Number(pum[d].Old||0) : null,
   }));
 }
+
 function renderTable(data) {
-  tableData=data;
-  const wrap=document.getElementById("table-wrap");
-  if(!data||!data.length){wrap.innerHTML=`<div class="error-card">No data.</div>`;return;}
+  tableData=data; const wrap=el("table-wrap");
+  if (!data?.length) { wrap.innerHTML=`<div class="error-card">No data.</div>`; return; }
   const cols=[
-    {key:"date",        label:"Date",           fmt:d=>`<td class="date">${fmtDateFull(d.date)}</td>`},
-    {key:"kalshiVol",   label:"Kalshi Volume",  fmt:d=>`<td class="num" style="color:var(--kalshi)">${fmtUSD(d.kalshiVol)}</td>`},
-    {key:"kalshiTrades",label:"Kalshi Trades",  fmt:d=>`<td class="num">${fmtNum(d.kalshiTrades)}</td>`},
-    {key:"kalshiMkts",  label:"Kalshi Mkts",    fmt:d=>`<td class="num">${fmtNum(d.kalshiMkts)}</td>`},
-    {key:"polyVol",     label:"Poly Volume",    fmt:d=>`<td class="num" style="color:var(--polymarket)">${fmtUSD(d.polyVol)}</td>`},
-    {key:"polyTrades",  label:"Poly Trades",    fmt:d=>`<td class="num">${fmtNum(d.polyTrades)}</td>`},
-    {key:"polyTraders", label:"Poly Traders",   fmt:d=>`<td class="num">${fmtNum(d.polyTraders)}</td>`},
+    {key:"date",       label:"Date",           fmt:d=>`<td class="date">${fmtDateFull(d.date)}</td>`},
+    {key:"kalshiVol",  label:"Kalshi Volume",  fmt:d=>`<td class="num" style="color:var(--kalshi)">${fmtUSD(d.kalshiVol)}</td>`},
+    {key:"kalshiTrades",label:"Kalshi Trades", fmt:d=>`<td class="num">${fmtNum(d.kalshiTrades)}</td>`},
+    {key:"kalshiMkts", label:"Kalshi Mkts",    fmt:d=>`<td class="num">${fmtNum(d.kalshiMkts)}</td>`},
+    {key:"polyVol",    label:"Poly Vol (Q7588938)", fmt:d=>`<td class="num" style="color:var(--polymarket)">${fmtUSD(d.polyVol)}</td>`},
+    {key:"polyUsers",  label:"Poly Users (Q7588953)", fmt:d=>`<td class="num">${d.polyUsers!=null?fmtNum(d.polyUsers):"—"}</td>`},
   ];
-  const sorted=[...data].sort((a,b)=>{const va=a[cols[sortCol].key],vb=b[cols[sortCol].key];const c=typeof va==="string"?va.localeCompare(vb):va-vb;return sortDir==="asc"?c:-c;});
+  const sorted=[...data].sort((a,b)=>{const va=a[cols[sortCol].key],vb=b[cols[sortCol].key]; if(va==null&&vb==null)return 0; if(va==null)return 1; if(vb==null)return -1; const c=typeof va==="string"?va.localeCompare(vb):va-vb; return sortDir==="asc"?c:-c;});
   wrap.innerHTML=`<div class="table-wrap"><table><thead><tr>${cols.map((c,i)=>`<th class="${sortCol===i?(sortDir==="asc"?"sort-asc":"sort-desc"):""}" onclick="sortTable(${i})">${c.label}</th>`).join("")}</tr></thead><tbody>${sorted.map(row=>`<tr>${cols.map(c=>c.fmt(row)).join("")}</tr>`).join("")}</tbody></table></div>`;
 }
-function sortTable(i) { if(sortCol===i) sortDir=sortDir==="asc"?"desc":"asc"; else{sortCol=i;sortDir="desc";} renderTable(tableData); }
+function sortTable(i){if(sortCol===i)sortDir=sortDir==="asc"?"desc":"asc";else{sortCol=i;sortDir="desc";}renderTable(tableData);}
 
-// ─── PLUMBING ──────────────────────────────────────────────────────────────────
-function submitKey() {
-  const val=document.getElementById("key-input").value.trim();
-  if(!val){document.getElementById("key-input").classList.add("error");return;}
+// ─── MAIN LOAD ─────────────────────────────────────────────────────────────────
+async function loadAllData() {
+  if (!DUNE_API_KEY) { el("key-gate").classList.add("visible"); return; }
+  el("refresh-btn").disabled = true;
+  el("refresh-ref-btn").disabled = true;
+  setKalshiStatus("Fetching data…");
+
+  // Fire reference data + Gemini concurrently (no execution slot used)
+  loadGeminiData().catch(e => console.error("Gemini failed:", e));
+  loadReferenceData().catch(e => {
+    console.error("Reference data load failed:", e);
+    el("ref-status-wrap").innerHTML = errHtml(0, `Reference load failed: ${e.message}`);
+  });
+
+  const statusEl = el("trend-status");
+
+  // Kalshi only — 3 queries, 2 batches
+  const [r1,r2] = await Promise.allSettled([
+    runDuneQuery(SQL.kalshiVolume,  statusEl),
+    runDuneQuery(SQL.kalshiMarkets, statusEl),
+  ]);
+  const [r3] = await Promise.allSettled([
+    runDuneQuery(SQL.kalshiCats, statusEl),
+  ]);
+
+  const kv = r1.status==="fulfilled"?r1.value:null;
+  const km = r2.status==="fulfilled"?r2.value:null;
+  const kc = r3.status==="fulfilled"?r3.value:null;
+  _kalshiVolData=kv||[]; _kalshiMktsData=km||[]; _kalshiCatsData=kc||[];
+
+  [r1,r2,r3].forEach((r,i)=>{ if(r.status==="rejected") console.error(`Kalshi query ${i+1} failed:`,r.reason?.message); });
+
+  // Kalshi KPIs
+  if (kv && km) {
+    const lat=kv[0]||{}, latm=km[0]||{};
+    const tr=calcTrend7d(kv,"notional_volume_usd");
+    const tc=tr==null?"neutral":tr>=0?"up":"down";
+    const ts=tr==null?"—":(tr>=0?"+":"")+tr.toFixed(1)+"% vs prior 7d";
+    renderKPIs("kalshi-kpis",[
+      {label:"Daily Volume",   value:fmtUSD(lat.notional_volume_usd)},
+      {label:"Trade Count",    value:fmtNum(lat.trade_count)},
+      {label:"Active Markets", value:fmtNum(latm.active_markets)},
+      {label:"7d Trend",       value:ts, trend:ts, trendClass:tc},
+    ]);
+  } else {
+    renderKPIError("kalshi-kpis", r1.reason?.message || r2.reason?.message || "Kalshi data failed");
+  }
+
+  if (kc) kalshiCatChart = renderCatChart("kalshi-cat-wrap", kc, "volume", "#00C805", kalshiCatChart);
+  else el("kalshi-cat-wrap").innerHTML = errHtml(0, r3.reason?.message || "No Kalshi category data");
+
+  // Render charts that need Kalshi SQL data
+  renderLiquidity(kv, km);
+  renderCIPanel();
+
+  // If reference data is already loaded, also render trend + table
+  if (_refDataLoaded) {
+    renderTrendChart(_kalshiVolData, _refNotionalVol);
+    renderTable(buildTableData(_kalshiVolData, _kalshiMktsData, _refNotionalVol, _refUsers));
+  }
+
+  el("last-updated").textContent = "Updated " + new Date().toLocaleTimeString();
+  el("refresh-btn").disabled = false;
+  el("refresh-ref-btn").disabled = false;
+}
+
+// ─── FORMATTERS & UTILS ───────────────────────────────────────────────────────
+function fmtUSD(n){if(n==null||isNaN(n))return"—";n=Number(n);if(n>=1e9)return"$"+(n/1e9).toFixed(2)+"B";if(n>=1e6)return"$"+(n/1e6).toFixed(2)+"M";if(n>=1e3)return"$"+(n/1e3).toFixed(1)+"K";return"$"+n.toFixed(2);}
+function fmtNum(n){if(n==null||isNaN(n))return"—";n=Number(n);if(n>=1e6)return(n/1e6).toFixed(2)+"M";if(n>=1e3)return(n/1e3).toFixed(1)+"K";return n.toLocaleString();}
+function fmtDate(d){if(!d)return"—";return new Date(d).toLocaleDateString("en-US",{month:"short",day:"numeric"});}
+function fmtDateFull(d){if(!d)return"—";return new Date(d).toLocaleDateString("en-US",{year:"numeric",month:"short",day:"numeric"});}
+function ds(d){return d?String(d).substring(0,10):"";}  // normalize to YYYY-MM-DD
+function escHtml(s){return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");}
+function relTime(iso){if(!iso)return"—";const d=Date.now()-new Date(iso).getTime();if(d<3600000)return Math.round(d/60000)+"m ago";if(d<86400000)return Math.round(d/3600000)+"h ago";return Math.round(d/86400000)+"d ago";}
+function el(id){return document.getElementById(id);}
+function sortByDate(arr, field){if(!arr?.length)return[];return[...arr].sort((a,b)=>new Date(a[field]||0)-new Date(b[field]||0));}
+function calcTrend7d(rows, field){
+  if(!rows?.length)return null;
+  const sorted=[...rows].sort((a,b)=>new Date(b.day||b.Day||b.Date||0)-new Date(a.day||a.Day||a.Date||0));
+  const recent=sorted.slice(0,7).reduce((s,r)=>s+Number(r[field]||0),0);
+  const prior=sorted.slice(7,14).reduce((s,r)=>s+Number(r[field]||0),0);
+  if(!prior)return null;
+  return((recent-prior)/prior)*100;
+}
+function renderKPIs(id,kpis){el(id).innerHTML=kpis.map(k=>`<div class="kpi-card${k.error?" kpi-error-card":""}"><div class="kpi-label">${k.label}</div><div class="kpi-value${k.error?" kpi-error-val":""}">${k.value}</div>${k.trend!=null?`<div class="kpi-trend ${k.trendClass}">${k.trend}</div>`:""}</div>`).join("");}
+function renderKPIError(id,msg){el(id).innerHTML=`<div class="error-card" style="grid-column:1/-1">&#9888; ${escHtml(msg)}</div>`;}
+function errHtml(qid, msg, retryTarget, retryQid){
+  const retry = retryTarget&&retryQid ? `<button class="retry-btn" onclick="retryCard('${retryTarget}',${retryQid})">Retry</button>` : "";
+  return `<div class="error-card">&#9888;${qid?" Q"+qid+":":""} ${escHtml(msg)}${retry}</div>`;
+}
+function retryCard(wrapId, qid){
+  el(wrapId).innerHTML=`<div class="spinner-wrap"><div class="spinner"></div><span>Retrying Q${qid}…</span></div>`;
+  fetchRefQueryFull(qid,120).then(result=>{
+    _refMeta[qid]={execAt:result.execAt,total:result.total,isStale:result.isStale,status:"ok"};
+    // Update the appropriate state variable
+    if(qid===7588938)_refNotionalVol=result.rows;
+    else if(qid===7588943)_refVolume=result.rows;
+    else if(qid===7588953)_refUsers=result.rows;
+    else if(qid===7588969)_refTVL=result.rows;
+    else if(qid===7588991)_refAvgBetUser=result.rows;
+    else if(qid===7588997)_refVolPerUser=result.rows;
+    else if(qid===7589009)_refAvgBetMonth=result.rows;
+    renderRefStatusTable();
+    renderPolymarketSummaryCards();
+    renderTrendChart(_kalshiVolData,_refNotionalVol);
+    renderBucketChart();
+    renderLiquidity(_kalshiVolData,_kalshiMktsData);
+    renderCIPanel();
+    renderTable(buildTableData(_kalshiVolData,_kalshiMktsData,_refNotionalVol,_refUsers));
+    if(_polyTabRendered)renderPolyTab();
+  }).catch(e=>{
+    el(wrapId).innerHTML=errHtml(qid,e.message,wrapId,qid);
+  });
+}
+
+function chartDefs(){return{responsive:true,maintainAspectRatio:false,plugins:{legend:{labels:{color:"#aaa",font:{size:12}}},tooltip:{backgroundColor:"#1a1a1a",borderColor:"#2a2a2a",borderWidth:1,titleColor:"#e5e5e5",bodyColor:"#aaa"}},scales:{x:{grid:{color:"#222"},ticks:{color:"#888",font:{size:11}}},y:{grid:{color:"#222"},ticks:{color:"#888",font:{size:11}}}}};}
+function destroyChart(c){if(c)c.destroy();return null;}
+
+function setKalshiStatus(msg){
+  ["trend-wrap","kalshi-cat-wrap","table-wrap"].forEach(id=>{const e=el(id);if(!e.querySelector("canvas"))e.innerHTML=`<div class="spinner-wrap"><div class="spinner"></div><span>${msg}</span></div>`;});
+  ["liq-spread","liq-avg","liq-median","ci-oi-wrap","ci-conc","ci-tradect-wrap"].forEach(id=>el(id).innerHTML=`<div class="spinner-wrap"><div class="spinner"></div><span>${msg}</span></div>`);
+}
+
+function submitKey(){
+  const val=el("key-input").value.trim();
+  if(!val){el("key-input").classList.add("error");return;}
   DUNE_API_KEY=val;
-  document.getElementById("key-gate").classList.remove("visible");
+  el("key-gate").classList.remove("visible");
   loadAllData();
 }
 document.addEventListener("DOMContentLoaded",()=>{
-  document.getElementById("key-input").addEventListener("keydown",e=>{
-    if(e.key==="Enter") submitKey();
-    document.getElementById("key-input").classList.remove("error");
-  });
+  el("key-input").addEventListener("keydown",e=>{if(e.key==="Enter")submitKey();el("key-input").classList.remove("error");});
 });
-function setStatusAll(msg) {
-  ["trend-wrap","kalshi-cat-wrap","poly-cat-wrap","table-wrap"].forEach(id=>{const el=document.getElementById(id);if(!el.querySelector("canvas")) el.innerHTML=`<div class="spinner-wrap"><div class="spinner"></div><span>${msg}</span></div>`;});
-  ["liq-spread","liq-avg","liq-median","ci-oi-wrap","ci-conc","ci-traders-wrap","ci-tradect-wrap"].forEach(id=>{document.getElementById(id).innerHTML=`<div class="spinner-wrap"><div class="spinner"></div><span>${msg}</span></div>`;});
-}
-function refresh() {
+
+function refresh(){
   [trendChart,kalshiCatChart,polyCatChart,geminiCatChart,oiCatChart,traderActivityChart,tradeCountCatChart,
    polyVolChart,polyCumVolChart,polyUsersChart,polyCumUsersChart,polyTVLChart,polyAvgBetChart,polyBetDistChart,polyVolDistChart]
     .forEach(c=>{if(c)c.destroy();});
   trendChart=kalshiCatChart=polyCatChart=geminiCatChart=oiCatChart=traderActivityChart=tradeCountCatChart=null;
   polyVolChart=polyCumVolChart=polyUsersChart=polyCumUsersChart=polyTVLChart=polyAvgBetChart=polyBetDistChart=polyVolDistChart=null;
-  _selectedCategory="All"; _refDataLoaded=false; _polyTabRendered=false;
+  _refDataLoaded=false; _polyTabRendered=false; _selectedCategory="All";
   document.querySelectorAll(".pill").forEach(p=>p.classList.toggle("active",p.dataset.cat==="All"));
   loadAllData();
 }
