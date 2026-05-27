@@ -340,7 +340,7 @@ const SQL = {
   polyCatInspect:    `SELECT category, COUNT(*) AS cnt FROM polymarket_polygon.market_details GROUP BY 1 ORDER BY 2 DESC LIMIT 20`,
   // 24h category charts (shared x-axis scale)
   kalshiCats24h: `SELECT category, SUM(daily_volume) AS volume_usd FROM kalshi.market_report WHERE CAST(date AS DATE) = (SELECT MAX(CAST(date AS DATE)) FROM kalshi.market_report) AND category IS NOT NULL GROUP BY 1 ORDER BY 2 DESC LIMIT 8`,
-  polyCats24h:   `SELECT md.category, SUM(mt.amount) AS volume_usd FROM polymarket_polygon.market_trades mt JOIN polymarket_polygon.market_details md ON CAST(mt.condition_id AS VARCHAR) = md.condition_id WHERE mt.block_time >= NOW() - INTERVAL '1' DAY AND md.category IS NOT NULL GROUP BY 1 ORDER BY 2 DESC LIMIT 8`,
+  polyCats24h:   `SELECT md.category, SUM(mt.amount) AS volume_usd FROM polymarket_polygon.market_trades mt JOIN polymarket_polygon.market_details md ON CAST(mt.condition_id AS VARCHAR) = md.condition_id WHERE mt.block_month >= DATE_TRUNC('month', CURRENT_TIMESTAMP - INTERVAL '1' DAY) AND mt.block_time >= CURRENT_TIMESTAMP - INTERVAL '1' DAY AND md.category IS NOT NULL GROUP BY 1 ORDER BY 2 DESC LIMIT 8`,
 };
 
 // ─── STATE ────────────────────────────────────────────────────────────────────
@@ -518,7 +518,8 @@ async function loadGeminiData() {
       .slice(0, 8);
     renderAllCategoryCharts();
   } else {
-    el("gemini-cat-wrap").innerHTML = errHtml(0, evR.reason?.message || "No event data");
+    _geminiCatsData = null;
+    renderAllCategoryCharts();
   }
 
   // ── Bid-ask spread from contract.prices.bestBid / bestAsk ───────────────────
