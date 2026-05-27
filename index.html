@@ -348,6 +348,12 @@ const SQL = {
   kalshiVolume:  `SELECT CAST(date AS DATE) AS day, COUNT(*) AS trade_count, SUM(contracts_traded) AS contracts_traded, SUM(contracts_traded * price) / 100.0 AS notional_volume_usd FROM kalshi.trade_report WHERE CAST(date AS DATE) >= CURRENT_DATE - INTERVAL '30' DAY GROUP BY 1 ORDER BY 1 DESC`,
   kalshiMarkets: `SELECT CAST(date AS DATE) AS day, COUNT(DISTINCT report_ticker) AS active_markets, SUM(daily_volume) AS daily_volume, AVG(open_interest) AS avg_open_interest, AVG(high - low) AS avg_spread FROM kalshi.market_report WHERE CAST(date AS DATE) >= CURRENT_DATE - INTERVAL '30' DAY GROUP BY 1 ORDER BY 1 DESC`,
   kalshiCats:    `SELECT mr.category, COUNT(DISTINCT mr.report_ticker) AS markets, SUM(mr.daily_volume) AS volume, AVG(mr.open_interest) AS avg_open_interest FROM kalshi.market_report mr WHERE CAST(mr.date AS DATE) >= CURRENT_DATE - INTERVAL '30' DAY AND mr.category IS NOT NULL GROUP BY 1 ORDER BY 2 DESC LIMIT 10`,
+  // Schema inspection — logged to console only, no UI render
+  kalshiTradeSchema: `SELECT * FROM kalshi.trade_report LIMIT 1`,
+  // Median trade size via PERCENTILE_CONT: notional = contracts_traded * price / 100 (price in cents)
+  kalshiMedian:      `SELECT PERCENTILE_CONT(0.5) WITHIN GROUP (ORDER BY contracts_traded * price / 100.0) AS median_trade_usd FROM kalshi.trade_report WHERE CAST(date AS DATE) >= CURRENT_DATE - INTERVAL '30' DAY`,
+  // Polymarket category taxonomy — console only until field names confirmed
+  polyCatInspect:    `SELECT category, COUNT(*) AS cnt FROM polymarket_polygon.market_details GROUP BY 1 ORDER BY 2 DESC LIMIT 20`,
 };
 
 // ─── STATE ────────────────────────────────────────────────────────────────────
@@ -370,6 +376,8 @@ let _kalshiCatsData = [];
 
 let _selectedCategory  = "All";
 let _geminiVol24h      = 0;
+let _geminiSpread      = null;   // avg bid-ask spread (decimal) from live Gemini contract prices
+let _kalshiMedianTrade = null;   // median trade size USD from PERCENTILE_CONT query
 let _refDataLoaded     = false;
 let _polyTabRendered   = false;
 let _lastSyncedAt      = null;
@@ -519,6 +527,79 @@ async function loadGeminiData() {
     geminiCatChart = renderCatChart("gemini-cat-wrap", Object.entries(catMap).map(([category,count])=>({category,count})), "count", "#FF6600", geminiCatChart, fmtNum);
   } else {
     el("gemini-cat-wrap").innerHTML = errHtml(0, evR.reason?.message || "No event data");
+  }
+
+  // ── Bid-ask spread from contract.prices.bestBid / bestAsk ───────────────────
+  // Skip contracts where either side is missing or non-numeric.
+  // Prices are direct string fields on the prices object — NOT nested further.
+  if (ev?.data) {
+    const spreads = [];
+    let withBoth = 0, withOne = 0, withNeither = 0;
+    ev.data.forEach(e => {
+      (e.contracts || []).forEach(c => {
+        const bid = c.prices?.bestBid;
+        const ask = c.prices?.bestAsk;
+        if (bid != null && ask != null) {
+          const bidF = parseFloat(String(bid));
+          const askF = parseFloat(String(ask));
+          if (!isNaN(bidF) && !isNaN(askF)) {
+            spreads.push(askF - bidF);
+            withBoth++;
+          }
+        } else if (bid != null || ask != null) {
+          withOne++;
+        } else {
+          withNeither++;
+        }
+      });
+    });
+    console.group("[Gemini Spread] contract.prices.bestBid / bestAsk");
+    console.log(`Contracts with BOTH sides: ${withBoth} | one side only (skipped): ${withOne} | no prices: ${withNeither}`);
+    if (spreads.length > 0) {
+      const avg = spreads.reduce((a, b) => a + b, 0) / spreads.length;
+      console.log(`Average spread: ${avg.toFixed(6)} (${(avg * 100).toFixed(3)}pp)`);
+      console.log("Sample spreads (first 10):", spreads.slice(0, 10));
+      _geminiSpread = avg;
+    } else {
+      console.log("No valid bid+ask pairs found — check if prices field exists on contract objects");
+      console.log("Sample contract object:", ev.data[0]?.contracts?.[0] ?? "(no contracts)");
+      _geminiSpread = null;
+    }
+    console.groupEnd();
+    // Re-render liquidity now that spread is computed (if Kalshi data already loaded)
+    if (_kalshiVolData.length > 0 || _kalshiMktsData.length > 0) {
+      renderLiquidity(_kalshiVolData, _kalshiMktsData);
+    }
+  }
+}
+
+// ─── KALSHI MARKETS API — field name inspection ──────────────────────────────
+// Fire-and-forget: logs the first market object so we can identify bid/ask field names.
+// Kalshi API may require auth; catches CORS/401 gracefully.
+async function loadKalshiMarketsAPI() {
+  try {
+    const r = await fetch("https://api.kalshi.com/trade-api/v2/markets?status=open&limit=5");
+    const body = await r.json().catch(() => null);
+    console.group("[Kalshi Markets API] GET /trade-api/v2/markets?status=open&limit=5");
+    console.log("HTTP status:", r.status, r.statusText);
+    if (!r.ok) {
+      console.warn("Request failed — Kalshi REST API likely requires auth token. Response body:", body);
+      console.groupEnd();
+      return null;
+    }
+    const markets = body?.markets || body?.data || (Array.isArray(body) ? body : []);
+    const first = markets[0] ?? null;
+    console.log("First market object:", first);
+    if (first) {
+      console.log("All keys:", Object.keys(first));
+      const bidAskKeys = Object.keys(first).filter(k => /bid|ask|yes|no|price/i.test(k));
+      console.log("Bid/ask/price field candidates:", Object.fromEntries(bidAskKeys.map(k => [k, first[k]])));
+    }
+    console.groupEnd();
+    return first;
+  } catch (e) {
+    console.warn("[Kalshi Markets API] Fetch error (likely CORS or network):", e.message);
+    return null;
   }
 }
 
@@ -771,9 +852,12 @@ function renderLiquidity(kalshiVol, kalshiMkts) {
 
   const mk = (dot, label, val) => `<div class="liq-metric"><span class="liq-metric-label"><span class="liq-dot" style="background:${dot}"></span>${label}</span><span class="liq-metric-value">${val}</span></div>`;
 
-  el("liq-spread").innerHTML  = mk("var(--kalshi)","Kalshi (avg daily range)",kalshiSpread) + mk("var(--polymarket)","Polymarket","N/A (no book data)") + mk("var(--gemini)","Gemini","N/A");
+  const geminiSpreadStr   = _geminiSpread != null ? (_geminiSpread * 100).toFixed(3) + "pp" : "—";
+  const kalshiMedianStr  = _kalshiMedianTrade != null && !isNaN(_kalshiMedianTrade) ? fmtUSD(_kalshiMedianTrade) : "—";
+
+  el("liq-spread").innerHTML  = mk("var(--kalshi)","Kalshi (avg daily range)",kalshiSpread) + mk("var(--polymarket)","Polymarket","N/A (no book data)") + mk("var(--gemini)","Gemini (avg bid-ask)",geminiSpreadStr);
   el("liq-avg").innerHTML     = mk("var(--kalshi)","Kalshi",kalshiAvg) + mk("var(--polymarket)",`Polymarket (Q7589009 · ${latestBet?.month?.substring(0,7)||"—"})`,polyAvg) + mk("var(--gemini)","Gemini","—");
-  el("liq-median").innerHTML  = mk("var(--kalshi)","Kalshi","—") + mk("var(--polymarket)",`Poly avg shares (Q7589009)`,polyShares) + mk("var(--gemini)","Gemini","—");
+  el("liq-median").innerHTML  = mk("var(--kalshi)","Kalshi (PERCENTILE_CONT 30d)",kalshiMedianStr) + mk("var(--polymarket)",`Poly avg shares (Q7589009)`,polyShares) + mk("var(--gemini)","Gemini","—");
 }
 
 // ─── CI PANEL ─────────────────────────────────────────────────────────────────
@@ -1052,17 +1136,53 @@ async function loadAllData() {
     console.error("Reference data load failed:", e);
     el("ref-status-wrap").innerHTML = errHtml(0, `Reference load failed: ${e.message}`);
   });
+  loadKalshiMarketsAPI(); // fire-and-forget: logs field names to console
 
   const statusEl = el("trend-status");
 
-  // Kalshi only — 3 queries, 2 batches
-  const [r1,r2] = await Promise.allSettled([
-    runDuneQuery(SQL.kalshiVolume,  statusEl),
-    runDuneQuery(SQL.kalshiMarkets, statusEl),
+  // ── Batch 1 (3 concurrent = Dune free tier max) ─────────────────────────────
+  // polyCatInspect is console-only taxonomy discovery for polymarket_polygon.market_details
+  const [r1,r2,rPI] = await Promise.allSettled([
+    runDuneQuery(SQL.kalshiVolume,   statusEl),
+    runDuneQuery(SQL.kalshiMarkets,  statusEl),
+    runDuneQuery(SQL.polyCatInspect, null),
   ]);
-  const [r3] = await Promise.allSettled([
-    runDuneQuery(SQL.kalshiCats, statusEl),
+  if (rPI.status === "fulfilled") {
+    console.group("[Polymarket Category Taxonomy] polymarket_polygon.market_details — SELECT DISTINCT category");
+    console.log("columns:", rPI.value.length > 0 ? Object.keys(rPI.value[0]) : "(no rows)");
+    console.table(rPI.value);
+    console.groupEnd();
+  } else {
+    console.error("[Polymarket Category Taxonomy] Query failed:", rPI.reason?.message);
+  }
+
+  // ── Batch 2: Kalshi categories + trade_report schema ────────────────────────
+  const [r3,rTS] = await Promise.allSettled([
+    runDuneQuery(SQL.kalshiCats,        statusEl),
+    runDuneQuery(SQL.kalshiTradeSchema, null),
   ]);
+  if (rTS.status === "fulfilled") {
+    console.group("[Kalshi trade_report] Schema inspection — SELECT * LIMIT 1");
+    console.log("columns:", rTS.value.length > 0 ? Object.keys(rTS.value[0]) : "(no rows)");
+    console.log("row[0]:", rTS.value[0] ?? "(empty)");
+    console.groupEnd();
+  } else {
+    console.error("[Kalshi trade_report] Schema query failed:", rTS.reason?.message);
+  }
+
+  // ── Batch 3: Kalshi median trade size ───────────────────────────────────────
+  const [rMed] = await Promise.allSettled([
+    runDuneQuery(SQL.kalshiMedian, null),
+  ]);
+  if (rMed.status === "fulfilled") {
+    console.group("[Kalshi Median Trade Size] PERCENTILE_CONT(0.5) on contracts_traded * price / 100.0");
+    console.log("raw result rows:", rMed.value);
+    console.groupEnd();
+    _kalshiMedianTrade = rMed.value[0] != null ? Number(rMed.value[0].median_trade_usd) : null;
+  } else {
+    console.error("[Kalshi Median Trade] Query failed:", rMed.reason?.message);
+    _kalshiMedianTrade = null;
+  }
 
   const kv = r1.status==="fulfilled"?r1.value:null;
   const km = r2.status==="fulfilled"?r2.value:null;
