@@ -340,7 +340,7 @@ const SQL = {
   polyCatInspect:    `SELECT category, COUNT(*) AS cnt FROM polymarket_polygon.market_details GROUP BY 1 ORDER BY 2 DESC LIMIT 20`,
   // 24h category charts (shared x-axis scale)
   kalshiCats24h: `SELECT category, SUM(daily_volume) AS volume_usd FROM kalshi.market_report WHERE CAST(date AS DATE) = (SELECT MAX(CAST(date AS DATE)) FROM kalshi.market_report) AND category IS NOT NULL GROUP BY 1 ORDER BY 2 DESC LIMIT 8`,
-  polyCats24h:   `SELECT md.category, SUM(mt.amount) AS volume_usd FROM polymarket_polygon.market_trades mt JOIN polymarket_polygon.market_details md ON CAST(mt.condition_id AS VARCHAR) = md.condition_id WHERE mt.block_month >= DATE_TRUNC('month', CURRENT_TIMESTAMP - INTERVAL '1' DAY) AND mt.block_time >= CURRENT_TIMESTAMP - INTERVAL '1' DAY AND md.category IS NOT NULL GROUP BY 1 ORDER BY 2 DESC LIMIT 8`,
+  polyCats24h:   `SELECT md.category, SUM(mt.amount) AS volume_usd FROM polymarket_polygon.market_trades mt JOIN polymarket_polygon.market_details md ON LOWER(TO_HEX(mt.condition_id)) = LOWER(md.condition_id) WHERE mt.block_month >= DATE_TRUNC('month', CURRENT_TIMESTAMP - INTERVAL '1' DAY) AND mt.block_time >= CURRENT_TIMESTAMP - INTERVAL '1' DAY AND md.category IS NOT NULL GROUP BY 1 ORDER BY 2 DESC LIMIT 8`,
 };
 
 // ─── STATE ────────────────────────────────────────────────────────────────────
@@ -499,19 +499,22 @@ async function loadGeminiData() {
   ]);
   const ev = evR.status === "fulfilled" ? evR.value : null;
   const se = seR.status === "fulfilled" ? seR.value : null;
-  const total    = ev?.pagination?.total ?? ev?.data?.length ?? null;
-  const contracts = ev?.data?.reduce((s, e) => s + (e.contracts?.length || 0), 0) ?? null;
-  const vol24h   = ev?.data?.reduce((s, e) => s + (Number(e.volume24h) || Number(e.totalVolume) || 0), 0) ?? null;
+  // API may return { data: [...] }, { events: [...] }, or a bare array
+  const evData = ev ? (Array.isArray(ev) ? ev : (ev.data || ev.events || ev.results || null)) : null;
+  console.log("[Gemini API] status:", evR.status, "| ev keys:", ev ? Object.keys(ev) : "null", "| evData length:", evData?.length ?? "null", evR.status === "rejected" ? "| error: " + evR.reason?.message : "");
+  const total    = ev?.pagination?.total ?? evData?.length ?? null;
+  const contracts = evData?.reduce((s, e) => s + (e.contracts?.length || 0), 0) ?? null;
+  const vol24h   = evData?.reduce((s, e) => s + (Number(e.volume24h) || Number(e.totalVolume) || 0), 0) ?? null;
   const settled  = Array.isArray(se?.data) ? se.data.length : Array.isArray(se) ? se.length : null;
   _geminiVol24h  = vol24h ?? 0;
   renderKPIs("gemini-kpis", [
-    ev ? { label:"Daily Volume",    value:vol24h ? fmtUSD(vol24h) : "—" }         : { label:"Daily Volume",    value:"Unavailable", error:true },
-    {    label:"Trade Count",       value:"Internal data required" },
-    ev ? { label:"Active Markets",  value:fmtNum(total ?? 0) }                     : { label:"Active Markets",  value:"Unavailable", error:true },
+    evData ? { label:"Daily Volume",    value:vol24h ? fmtUSD(vol24h) : "—" }     : { label:"Daily Volume",    value:"Unavailable", error:true },
+    {         label:"Trade Count",       value:"Internal data required" },
+    evData ? { label:"Active Markets",  value:fmtNum(total ?? 0) }                : { label:"Active Markets",  value:"Unavailable", error:true },
   ]);
-  if (ev?.data) {
+  if (evData) {
     const catVolMap = {};
-    ev.data.forEach(e => { const c = e.category || "Other"; catVolMap[c] = (catVolMap[c]||0) + (Number(e.volume24h) || 0); });
+    evData.forEach(e => { const c = e.category || "Other"; catVolMap[c] = (catVolMap[c]||0) + (Number(e.volume24h) || 0); });
     _geminiCatsData = Object.entries(catVolMap)
       .map(([category, volume_usd]) => ({category, volume_usd}))
       .sort((a, b) => b.volume_usd - a.volume_usd)
