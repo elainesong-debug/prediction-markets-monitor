@@ -14,92 +14,30 @@
     --border: #2a2a2a;
     --text: #e5e5e5;
     --muted: #888;
-    --kalshi: #00d4aa;
-    --polymarket: #8b5cf6;
-    --gemini: #3b82f6;
+    --kalshi: #00C805;
+    --polymarket: #0070F3;
+    --gemini: #FF6600;
     --error: #ef4444;
     --radius: 8px;
   }
 
-  body {
-    background: var(--bg);
-    color: var(--text);
-    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-    font-size: 14px;
-    line-height: 1.5;
-    min-height: 100vh;
-  }
+  body { background: var(--bg); color: var(--text); font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; font-size: 14px; line-height: 1.5; min-height: 100vh; }
 
-  .header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 16px 24px;
-    border-bottom: 1px solid var(--border);
-    position: sticky;
-    top: 0;
-    background: var(--bg);
-    z-index: 10;
-  }
+  .header { display: flex; align-items: center; justify-content: space-between; padding: 16px 24px; border-bottom: 1px solid var(--border); position: sticky; top: 0; background: var(--bg); z-index: 10; }
   .header h1 { font-size: 18px; font-weight: 600; letter-spacing: -0.3px; }
   .header-right { display: flex; align-items: center; gap: 16px; }
   #last-updated { color: var(--muted); font-size: 12px; }
-  .refresh-btn {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    color: var(--text);
-    padding: 6px 14px;
-    border-radius: var(--radius);
-    cursor: pointer;
-    font-size: 13px;
-    transition: border-color 0.15s;
-  }
+  .refresh-btn { background: var(--surface); border: 1px solid var(--border); color: var(--text); padding: 6px 14px; border-radius: var(--radius); cursor: pointer; font-size: 13px; transition: border-color 0.15s; }
   .refresh-btn:hover { border-color: #555; }
   .refresh-btn:disabled { opacity: 0.5; cursor: not-allowed; }
 
   .main { padding: 20px 24px; display: flex; flex-direction: column; gap: 20px; }
 
-  #api-key-banner {
-    display: none;
-    background: #2a1a00;
-    border: 1px solid #f59e0b;
-    color: #fcd34d;
-    padding: 12px 16px;
-    border-radius: var(--radius);
-    font-size: 13px;
-  }
-  #api-key-banner.visible { display: flex; align-items: center; gap: 10px; }
+  .platform-row { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; }
+  .platform-panel { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 16px; }
 
-  .platform-row {
-    display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
-    gap: 16px;
-  }
-
-  .platform-panel {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    padding: 16px;
-  }
-
-  .platform-label {
-    font-size: 11px;
-    font-weight: 600;
-    letter-spacing: 0.8px;
-    text-transform: uppercase;
-    margin-bottom: 12px;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-  }
-  .platform-label::before {
-    content: '';
-    display: inline-block;
-    width: 8px;
-    height: 8px;
-    border-radius: 50%;
-  }
+  .platform-label { font-size: 11px; font-weight: 600; letter-spacing: 0.8px; text-transform: uppercase; margin-bottom: 12px; display: flex; align-items: center; gap: 8px; }
+  .platform-label::before { content: ''; display: inline-block; width: 8px; height: 8px; border-radius: 50%; }
   .platform-label.kalshi { color: var(--kalshi); }
   .platform-label.kalshi::before { background: var(--kalshi); }
   .platform-label.polymarket { color: var(--polymarket); }
@@ -108,118 +46,62 @@
   .platform-label.gemini::before { background: var(--gemini); }
 
   .kpi-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-
-  .kpi-card {
-    background: var(--bg);
-    border: 1px solid var(--border);
-    border-radius: 6px;
-    padding: 10px 12px;
-  }
+  .kpi-card { background: var(--bg); border: 1px solid var(--border); border-radius: 6px; padding: 10px 12px; }
   .kpi-label { color: var(--muted); font-size: 11px; margin-bottom: 4px; }
   .kpi-value { font-size: 20px; font-weight: 600; letter-spacing: -0.5px; }
   .kpi-trend { font-size: 11px; margin-top: 2px; }
   .kpi-trend.up { color: #22c55e; }
   .kpi-trend.down { color: var(--error); }
   .kpi-trend.neutral { color: var(--muted); }
+  .kpi-error-card { background: #1a0a0a !important; border-color: #3f1515 !important; }
+  .kpi-error-val { color: var(--error); font-size: 11px; }
 
-  .skeleton {
-    background: linear-gradient(90deg, var(--border) 25%, #333 50%, var(--border) 75%);
-    background-size: 200% 100%;
-    animation: shimmer 1.5s infinite;
-    border-radius: 4px;
-    height: 20px;
-    width: 80%;
-    margin-top: 4px;
-  }
-  @keyframes shimmer {
-    0% { background-position: 200% 0; }
-    100% { background-position: -200% 0; }
-  }
+  .skeleton { background: linear-gradient(90deg, var(--border) 25%, #333 50%, var(--border) 75%); background-size: 200% 100%; animation: shimmer 1.5s infinite; border-radius: 4px; height: 20px; width: 80%; margin-top: 4px; }
+  @keyframes shimmer { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
 
-  .error-card {
-    background: #1a0a0a;
-    border: 1px solid #3f1515;
-    color: #f87171;
-    border-radius: var(--radius);
-    padding: 12px;
-    font-size: 12px;
-    display: flex;
-    gap: 8px;
-    align-items: flex-start;
-  }
-
-  .spinner-wrap {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    color: var(--muted);
-    font-size: 12px;
-    padding: 4px 0;
-  }
-  .spinner {
-    width: 14px;
-    height: 14px;
-    border: 2px solid var(--border);
-    border-top-color: var(--kalshi);
-    border-radius: 50%;
-    animation: spin 0.8s linear infinite;
-    flex-shrink: 0;
-  }
+  .error-card { background: #1a0a0a; border: 1px solid #3f1515; color: #f87171; border-radius: var(--radius); padding: 12px; font-size: 12px; display: flex; gap: 8px; align-items: flex-start; }
+  .spinner-wrap { display: flex; align-items: center; gap: 8px; color: var(--muted); font-size: 12px; padding: 4px 0; }
+  .spinner { width: 14px; height: 14px; border: 2px solid var(--border); border-top-color: var(--kalshi); border-radius: 50%; animation: spin 0.8s linear infinite; flex-shrink: 0; }
   @keyframes spin { to { transform: rotate(360deg); } }
 
-  .gemini-placeholder {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 10px;
-    padding: 20px 12px;
-    color: var(--muted);
-    font-size: 13px;
-    text-align: center;
-  }
-  .gemini-placeholder .icon {
-    width: 36px;
-    height: 36px;
-    border: 2px dashed #3b82f6;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: #3b82f6;
-    font-size: 18px;
-  }
-  .gemini-placeholder strong { color: var(--text); font-size: 14px; }
-
-  .chart-card {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    padding: 16px;
-  }
+  .chart-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 16px; }
   .chart-title { font-size: 13px; font-weight: 600; color: var(--text); margin-bottom: 14px; }
   .chart-container { position: relative; width: 100%; }
   .chart-container canvas { max-width: 100%; }
-
   .chart-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px; }
-  .kpi-error-card { background: #1a0a0a !important; border-color: #3f1515 !important; }
-  .kpi-error-val  { color: var(--error); font-size: 11px; }
 
+  /* Category filter */
+  .filter-bar { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+  .filter-label { font-size: 11px; font-weight: 600; color: var(--muted); text-transform: uppercase; letter-spacing: 0.5px; }
+  .pill { padding: 5px 14px; border-radius: 20px; border: 1px solid var(--border); background: var(--surface); color: var(--muted); cursor: pointer; font-size: 12px; font-weight: 500; transition: all 0.15s; }
+  .pill:hover { border-color: #555; color: var(--text); }
+  .pill.active { background: var(--polymarket); border-color: var(--polymarket); color: #fff; }
+
+  /* Liquidity quality */
+  .section-title { font-size: 13px; font-weight: 600; color: var(--text); margin-bottom: 12px; }
+  .liq-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+  .liq-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 16px; }
+  .liq-card-title { font-size: 11px; font-weight: 600; letter-spacing: 0.5px; text-transform: uppercase; color: var(--muted); margin-bottom: 14px; }
+  .liq-metric { display: flex; justify-content: space-between; align-items: center; padding: 6px 0; border-bottom: 1px solid var(--border); }
+  .liq-metric:last-child { border-bottom: none; }
+  .liq-metric-label { font-size: 12px; color: var(--muted); display: flex; align-items: center; gap: 6px; }
+  .liq-dot { width: 6px; height: 6px; border-radius: 50%; display: inline-block; flex-shrink: 0; }
+  .liq-metric-value { font-size: 14px; font-weight: 600; }
+
+  /* CI panel */
+  .ci-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .ci-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 16px; }
+  .ci-title { font-size: 13px; font-weight: 600; color: var(--text); margin-bottom: 14px; }
+  .conc-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 4px; }
+  .conc-stat { background: var(--bg); border-radius: 6px; padding: 12px; border: 1px solid var(--border); }
+  .conc-stat-val { font-size: 26px; font-weight: 700; letter-spacing: -1px; }
+  .conc-stat-label { font-size: 11px; color: var(--muted); margin-top: 2px; }
+  .conc-stat-sub { font-size: 11px; color: var(--muted); margin-top: 2px; }
+
+  /* Table */
   .table-wrap { overflow-x: auto; }
   table { width: 100%; border-collapse: collapse; font-size: 13px; }
-  thead th {
-    text-align: left;
-    padding: 8px 12px;
-    border-bottom: 1px solid var(--border);
-    color: var(--muted);
-    font-size: 11px;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    cursor: pointer;
-    user-select: none;
-    white-space: nowrap;
-  }
+  thead th { text-align: left; padding: 8px 12px; border-bottom: 1px solid var(--border); color: var(--muted); font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; cursor: pointer; user-select: none; white-space: nowrap; }
   thead th:hover { color: var(--text); }
   thead th.sort-asc::after { content: ' ↑'; color: var(--kalshi); }
   thead th.sort-desc::after { content: ' ↓'; color: var(--kalshi); }
@@ -229,71 +111,26 @@
   tbody td.num { font-variant-numeric: tabular-nums; text-align: right; }
   tbody td.date { color: var(--muted); font-size: 12px; }
 
-  @media (max-width: 900px) {
-    .platform-row { grid-template-columns: 1fr; }
-    .chart-row { grid-template-columns: 1fr; }
-  }
-  @media (max-width: 600px) {
-    .main { padding: 12px; }
-    .header { padding: 12px; }
-  }
-
-  /* API KEY GATE */
-  #key-gate {
-    display: none;
-    position: fixed;
-    inset: 0;
-    background: var(--bg);
-    z-index: 100;
-    align-items: center;
-    justify-content: center;
-  }
+  /* Key gate */
+  #key-gate { display: none; position: fixed; inset: 0; background: var(--bg); z-index: 100; align-items: center; justify-content: center; }
   #key-gate.visible { display: flex; }
-  .key-gate-box {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 12px;
-    padding: 32px;
-    width: 100%;
-    max-width: 420px;
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
-  }
+  .key-gate-box { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 32px; width: 100%; max-width: 420px; display: flex; flex-direction: column; gap: 16px; }
   .key-gate-box h2 { font-size: 16px; font-weight: 600; }
   .key-gate-box p { color: var(--muted); font-size: 13px; line-height: 1.6; }
   .key-gate-box a { color: var(--kalshi); text-decoration: none; }
   .key-gate-box a:hover { text-decoration: underline; }
   .key-input-row { display: flex; gap: 8px; }
-  .key-input {
-    flex: 1;
-    background: var(--bg);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    color: var(--text);
-    font-size: 13px;
-    padding: 8px 12px;
-    font-family: monospace;
-    outline: none;
-    transition: border-color 0.15s;
-  }
+  .key-input { flex: 1; background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius); color: var(--text); font-size: 13px; padding: 8px 12px; font-family: monospace; outline: none; transition: border-color 0.15s; }
   .key-input:focus { border-color: var(--kalshi); }
   .key-input.error { border-color: var(--error); }
-  .key-submit {
-    background: var(--kalshi);
-    border: none;
-    border-radius: var(--radius);
-    color: #000;
-    font-size: 13px;
-    font-weight: 600;
-    padding: 8px 16px;
-    cursor: pointer;
-    white-space: nowrap;
-    transition: opacity 0.15s;
-  }
+  .key-submit { background: var(--kalshi); border: none; border-radius: var(--radius); color: #000; font-size: 13px; font-weight: 600; padding: 8px 16px; cursor: pointer; white-space: nowrap; transition: opacity 0.15s; }
   .key-submit:hover { opacity: 0.85; }
   .key-error { color: var(--error); font-size: 12px; display: none; }
   .key-error.visible { display: block; }
+
+  @media (max-width: 1000px) { .ci-grid { grid-template-columns: 1fr; } }
+  @media (max-width: 900px) { .platform-row { grid-template-columns: 1fr; } .chart-row { grid-template-columns: 1fr; } .liq-grid { grid-template-columns: 1fr; } }
+  @media (max-width: 600px) { .main { padding: 12px; } .header { padding: 12px; } }
 </style>
 </head>
 <body>
@@ -319,11 +156,8 @@
 </header>
 
 <main class="main">
-  <div id="api-key-banner">
-    <span>&#9888;</span>
-    <span>Add your Dune API key to <code style="background:#111;padding:1px 4px;border-radius:3px;">const DUNE_API_KEY</code> at the top of the script to load data.</span>
-  </div>
 
+  <!-- KPI row -->
   <div class="platform-row">
     <div class="platform-panel">
       <div class="platform-label kalshi">Kalshi</div>
@@ -339,64 +173,133 @@
       <div id="polymarket-kpis" class="kpi-grid">
         <div class="kpi-card"><div class="kpi-label">Daily Volume</div><div class="skeleton"></div></div>
         <div class="kpi-card"><div class="kpi-label">Trade Count</div><div class="skeleton"></div></div>
-        <div class="kpi-card"><div class="kpi-label">Active Markets</div><div class="skeleton"></div></div>
+        <div class="kpi-card"><div class="kpi-label">Unique Traders</div><div class="skeleton"></div></div>
         <div class="kpi-card"><div class="kpi-label">7d Trend</div><div class="skeleton"></div></div>
       </div>
     </div>
     <div class="platform-panel">
       <div class="platform-label gemini">Gemini</div>
       <div id="gemini-kpis" class="kpi-grid">
-        <div class="kpi-card"><div class="kpi-label">Active Events</div><div class="skeleton"></div></div>
+        <div class="kpi-card"><div class="kpi-label">Total Active Events</div><div class="skeleton"></div></div>
+        <div class="kpi-card"><div class="kpi-label">24h Volume</div><div class="skeleton"></div></div>
         <div class="kpi-card"><div class="kpi-label">Active Contracts</div><div class="skeleton"></div></div>
-        <div class="kpi-card"><div class="kpi-label">Active Combos</div><div class="skeleton"></div></div>
-        <div class="kpi-card"><div class="kpi-label">Avg Legs/Combo</div><div class="skeleton"></div></div>
         <div class="kpi-card"><div class="kpi-label">Recently Settled</div><div class="skeleton"></div></div>
-        <div class="kpi-card"><div class="kpi-label">Categories</div><div class="skeleton"></div></div>
       </div>
     </div>
   </div>
 
+  <!-- Category filter + Volume trend -->
   <div class="chart-card">
-    <div class="chart-title">30-Day Volume Trend</div>
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;flex-wrap:wrap;gap:10px;">
+      <div class="chart-title" style="margin-bottom:0">30-Day Volume Trend</div>
+      <div class="filter-bar">
+        <span class="filter-label">Filter:</span>
+        <button class="pill active" data-cat="All" onclick="selectCategory('All')">All</button>
+        <button class="pill" data-cat="Crypto" onclick="selectCategory('Crypto')">Crypto</button>
+        <button class="pill" data-cat="Sports" onclick="selectCategory('Sports')">Sports</button>
+        <button class="pill" data-cat="Politics" onclick="selectCategory('Politics')">Politics</button>
+        <button class="pill" data-cat="Finance" onclick="selectCategory('Finance')">Finance</button>
+      </div>
+    </div>
     <div id="trend-wrap">
       <div class="spinner-wrap"><div class="spinner"></div><span id="trend-status">Fetching data...</span></div>
     </div>
   </div>
 
+  <!-- Category charts -->
   <div class="chart-row">
     <div class="chart-card">
       <div class="chart-title">Kalshi &#8212; Category Mix (30d)</div>
-      <div id="kalshi-cat-wrap">
-        <div class="spinner-wrap"><div class="spinner"></div><span>Fetching data...</span></div>
-      </div>
+      <div id="kalshi-cat-wrap"><div class="spinner-wrap"><div class="spinner"></div><span>Fetching data...</span></div></div>
     </div>
     <div class="chart-card">
       <div class="chart-title">Polymarket &#8212; Category Mix (30d)</div>
-      <div id="poly-cat-wrap">
-        <div class="spinner-wrap"><div class="spinner"></div><span>Fetching data...</span></div>
-      </div>
+      <div id="poly-cat-wrap"><div class="spinner-wrap"><div class="spinner"></div><span>Fetching data...</span></div></div>
     </div>
     <div class="chart-card">
       <div class="chart-title">Gemini &#8212; Category Mix</div>
-      <div id="gemini-cat-wrap">
-        <div class="spinner-wrap"><div class="spinner"></div><span>Fetching data...</span></div>
+      <div id="gemini-cat-wrap"><div class="spinner-wrap"><div class="spinner"></div><span>Fetching data...</span></div></div>
+    </div>
+  </div>
+
+  <!-- Liquidity Quality -->
+  <div>
+    <div class="section-title">Liquidity Quality</div>
+    <div class="liq-grid">
+      <div class="liq-card">
+        <div class="liq-card-title">&#9670; Bid-Ask Spread Proxy</div>
+        <div id="liq-spread">
+          <div class="spinner-wrap"><div class="spinner"></div><span>Loading...</span></div>
+        </div>
+      </div>
+      <div class="liq-card">
+        <div class="liq-card-title">&#9670; Avg Trade Size</div>
+        <div id="liq-avg">
+          <div class="spinner-wrap"><div class="spinner"></div><span>Loading...</span></div>
+        </div>
+      </div>
+      <div class="liq-card">
+        <div class="liq-card-title">&#9670; Median Trade Size</div>
+        <div id="liq-median">
+          <div class="spinner-wrap"><div class="spinner"></div><span>Loading...</span></div>
+        </div>
       </div>
     </div>
   </div>
 
+  <!-- Competitive Intelligence -->
+  <div>
+    <div class="section-title">Competitive Intelligence</div>
+    <div class="ci-grid">
+      <div class="ci-card">
+        <div class="ci-title">Open Interest by Category (Kalshi)</div>
+        <div id="ci-oi-wrap">
+          <div class="spinner-wrap"><div class="spinner"></div><span>Fetching data...</span></div>
+        </div>
+      </div>
+      <div class="ci-card">
+        <div class="ci-title">Volume Concentration</div>
+        <div id="ci-conc">
+          <div class="spinner-wrap"><div class="spinner"></div><span>Fetching data...</span></div>
+        </div>
+      </div>
+      <div class="ci-card">
+        <div class="ci-title">Trader Activity (Polymarket, 30d)</div>
+        <div id="ci-traders-wrap">
+          <div class="spinner-wrap"><div class="spinner"></div><span>Fetching data...</span></div>
+        </div>
+      </div>
+      <div class="ci-card">
+        <div class="ci-title">Trade Count by Category</div>
+        <div id="ci-tradect-wrap">
+          <div class="spinner-wrap"><div class="spinner"></div><span>Fetching data...</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Daily summary table -->
   <div class="chart-card">
     <div class="chart-title">Daily Summary &#8212; Last 30 Days</div>
     <div id="table-wrap">
       <div class="spinner-wrap"><div class="spinner"></div><span>Fetching data...</span></div>
     </div>
   </div>
+
 </main>
 
 <script>
 let DUNE_API_KEY = "";
 const DUNE_BASE = "https://api.dune.com/api/v1";
+const GEMINI_BASE = "https://api.gemini.com/v1/prediction-markets";
 const POLL_INTERVAL_MS = 3000;
 const MAX_POLL_SECONDS = 240;
+
+// Confirmed schemas via introspection 2026-05-26:
+// kalshi.trade_report: date, contracts_traded, price, report_ticker, ticker_name
+// kalshi.market_report: date, category, daily_volume, high, low, open_interest, report_ticker, status
+// polymarket_polygon.market_trades: block_time, block_month, amount, is_taker_side(bool), condition_id, maker, taker, price, question
+// polymarket_polygon.market_details: condition_id(varchar), tags(csv string), question
 
 const SQL = {
   kalshiVolume: `
@@ -407,45 +310,50 @@ SELECT
   SUM(contracts_traded * price) / 100.0 AS notional_volume_usd
 FROM kalshi.trade_report
 WHERE CAST(date AS DATE) >= CURRENT_DATE - INTERVAL '30' DAY
-GROUP BY 1
-ORDER BY 1 DESC`,
+GROUP BY 1 ORDER BY 1 DESC`,
 
   kalshiMarkets: `
 SELECT
   CAST(date AS DATE) AS day,
   COUNT(DISTINCT report_ticker) AS active_markets,
   SUM(daily_volume) AS daily_volume,
-  AVG(open_interest) AS avg_open_interest
+  AVG(open_interest) AS avg_open_interest,
+  AVG(high - low) AS avg_spread
 FROM kalshi.market_report
 WHERE CAST(date AS DATE) >= CURRENT_DATE - INTERVAL '30' DAY
-GROUP BY 1
-ORDER BY 1 DESC`,
+GROUP BY 1 ORDER BY 1 DESC`,
 
   polyVolume: `
 SELECT
   date_trunc('day', block_time) AS day,
   COUNT(*) AS trade_count,
   COUNT(DISTINCT maker) + COUNT(DISTINCT taker) AS unique_traders,
-  SUM(amount) AS notional_volume_usd
+  SUM(amount) AS notional_volume_usd,
+  SUM(CASE WHEN is_taker_side = true THEN amount ELSE 0 END) AS taker_volume,
+  SUM(CASE WHEN is_taker_side = false THEN amount ELSE 0 END) AS maker_volume,
+  AVG(amount) AS avg_trade_size,
+  approx_percentile(amount, 0.5) AS median_trade_size
 FROM polymarket_polygon.market_trades
 WHERE block_time >= NOW() - INTERVAL '30' DAY
   AND block_month >= DATE_TRUNC('month', CURRENT_DATE - INTERVAL '30' DAY)
-GROUP BY 1
-ORDER BY 1 DESC`,
+GROUP BY 1 ORDER BY 1 DESC`,
 
   polyCats: `
 SELECT
-  event_market_name AS category,
+  CASE
+    WHEN LOWER(question) LIKE '%bitcoin%' OR LOWER(question) LIKE '%ethereum%' OR LOWER(question) LIKE '%crypto%' OR LOWER(question) LIKE '%btc%' OR LOWER(question) LIKE '% eth %' OR LOWER(question) LIKE '%defi%' OR LOWER(question) LIKE '%solana%' OR LOWER(question) LIKE '%blockchain%' OR LOWER(question) LIKE '%token%' THEN 'Crypto'
+    WHEN LOWER(question) LIKE '%nba%' OR LOWER(question) LIKE '%nfl%' OR LOWER(question) LIKE '%soccer%' OR LOWER(question) LIKE '%tennis%' OR LOWER(question) LIKE '%football%' OR LOWER(question) LIKE '%basketball%' OR LOWER(question) LIKE '%baseball%' OR LOWER(question) LIKE '%mls%' OR LOWER(question) LIKE '%ufc%' OR LOWER(question) LIKE '%sports%' OR LOWER(question) LIKE '%champions league%' OR LOWER(question) LIKE '%world cup%' OR LOWER(question) LIKE '%stanley cup%' THEN 'Sports'
+    WHEN LOWER(question) LIKE '%election%' OR LOWER(question) LIKE '%president%' OR LOWER(question) LIKE '%congress%' OR LOWER(question) LIKE '%senate%' OR LOWER(question) LIKE '%trump%' OR LOWER(question) LIKE '%biden%' OR LOWER(question) LIKE '%harris%' OR LOWER(question) LIKE '%vote%' OR LOWER(question) LIKE '%democrat%' OR LOWER(question) LIKE '%republican%' OR LOWER(question) LIKE '%political%' THEN 'Politics'
+    WHEN LOWER(question) LIKE '%stock%' OR LOWER(question) LIKE '% fed %' OR LOWER(question) LIKE '%interest rate%' OR LOWER(question) LIKE '%gdp%' OR LOWER(question) LIKE '%inflation%' OR LOWER(question) LIKE '%s&p%' OR LOWER(question) LIKE '%nasdaq%' OR LOWER(question) LIKE '%recession%' OR LOWER(question) LIKE '%earnings%' OR LOWER(question) LIKE '%ipo%' THEN 'Finance'
+    ELSE 'Other'
+  END AS category,
   COUNT(DISTINCT condition_id) AS markets,
   SUM(amount) AS volume_usd,
   COUNT(*) AS trade_count
 FROM polymarket_polygon.market_trades
 WHERE block_time >= NOW() - INTERVAL '30' DAY
   AND block_month >= DATE_TRUNC('month', CURRENT_DATE - INTERVAL '30' DAY)
-  AND event_market_name IS NOT NULL
-GROUP BY 1
-ORDER BY 3 DESC
-LIMIT 10`,
+GROUP BY 1 ORDER BY 3 DESC`,
 
   kalshiCats: `
 SELECT
@@ -456,26 +364,20 @@ SELECT
 FROM kalshi.market_report mr
 WHERE CAST(mr.date AS DATE) >= CURRENT_DATE - INTERVAL '30' DAY
   AND mr.category IS NOT NULL
-GROUP BY 1
-ORDER BY 2 DESC
+GROUP BY 1 ORDER BY 2 DESC
 LIMIT 10`,
 };
 
-const INTROSPECT = {
-  kalshiTrade:  "SELECT * FROM kalshi.trade_report LIMIT 1",
-  kalshiMarket: "SELECT * FROM kalshi.market_report LIMIT 1",
-  polyTrades:   "SELECT * FROM polymarket_polygon.market_trades LIMIT 1",
-  polyDetails:  "SELECT * FROM polymarket_polygon.market_details LIMIT 1",
-};
+// Chart references
+let trendChart = null, kalshiCatChart = null, polyCatChart = null, geminiCatChart = null;
+let oiCatChart = null, traderActivityChart = null, tradeCountCatChart = null;
 
-let trendChart = null;
-let kalshiCatChart = null;
-let polyCatChart = null;
-let geminiCatChart = null;
+// Data state (for client-side filtering)
+let _polyCatsData = [], _kalshiCatsData = [], _kalshiVolData = [], _polyVolData = [], _kalshiMktsData = [];
+let _selectedCategory = "All";
+let _geminiVol24h = 0;
 
-// ─── GEMINI API ───────────────────────────────────────────────────────────────
-const GEMINI_BASE = "https://api.gemini.com/v1/prediction-markets";
-
+// ─── GEMINI ───────────────────────────────────────────────────────────────────
 async function fetchGemini(path) {
   const r = await fetch(`${GEMINI_BASE}${path}`);
   if (!r.ok) throw new Error(`Gemini ${path} ${r.status}: ${r.statusText}`);
@@ -483,48 +385,32 @@ async function fetchGemini(path) {
 }
 
 async function loadGeminiData() {
-  const [eventsRes, settledRes, combosRes] = await Promise.allSettled([
+  const [eventsRes, settledRes] = await Promise.allSettled([
     fetchGemini("/events?status=active&limit=50"),
     fetchGemini("/events/recently-settled"),
-    fetchGemini("/combos?status=Active&limit=500"),
   ]);
 
   const eventsData  = eventsRes.status  === "fulfilled" ? eventsRes.value  : null;
   const settledData = settledRes.status === "fulfilled" ? settledRes.value : null;
-  const combosData  = combosRes.status  === "fulfilled" ? combosRes.value  : null;
 
-  [eventsRes, settledRes, combosRes].forEach((r, i) => {
-    if (r.status === "rejected") console.warn(`Gemini fetch ${i + 1} failed:`, r.reason);
-  });
+  const totalEvents   = eventsData?.pagination?.total ?? eventsData?.data?.length ?? null;
+  const contractCount = eventsData?.data?.reduce((s, e) => s + (e.contracts?.length || 0), 0) ?? null;
+  const vol24h        = eventsData?.data?.reduce((s, e) => s + (Number(e.volume24h) || Number(e.totalVolume) || 0), 0) ?? null;
+  const settledCount  = Array.isArray(settledData?.data) ? settledData.data.length : Array.isArray(settledData) ? settledData.length : null;
 
-  // ── KPIs — per-card error if its source fetch failed ──
-  const contractCount = eventsData?.data?.reduce((s, e) => s + (e.contracts?.length || 0), 0) ?? 0;
-  const comboTotal    = combosData?.pagination?.total ?? combosData?.combos?.length ?? 0;
-  const avgLegs       = combosData?.combos?.length
-    ? (combosData.combos.reduce((s, c) => s + (c.legs?.length || 0), 0) / combosData.combos.length).toFixed(1)
-    : null;
-  const settledCount  = Array.isArray(settledData?.data) ? settledData.data.length
-                      : Array.isArray(settledData) ? settledData.length : null;
-  const uniqueCats    = eventsData?.data
-    ? new Set(eventsData.data.map(e => e.category).filter(Boolean)).size
-    : null;
+  _geminiVol24h = vol24h ?? 0;
 
   renderKPIs("gemini-kpis", [
-    eventsData  ? { label: "Active Events",    value: fmtNum(eventsData.data?.length ?? 0) }
-                : { label: "Active Events",    value: "Unavailable", error: true },
-    eventsData  ? { label: "Active Contracts", value: fmtNum(contractCount) }
-                : { label: "Active Contracts", value: "Unavailable", error: true },
-    combosData  ? { label: "Active Combos",    value: fmtNum(comboTotal) }
-                : { label: "Active Combos",    value: "Unavailable", error: true },
-    combosData  ? { label: "Avg Legs/Combo",   value: avgLegs ?? "—" }
-                : { label: "Avg Legs/Combo",   value: "Unavailable", error: true },
-    settledData ? { label: "Recently Settled", value: settledCount !== null ? fmtNum(settledCount) : "—" }
-                : { label: "Recently Settled", value: "Unavailable", error: true },
-    eventsData  ? { label: "Categories",       value: uniqueCats !== null ? fmtNum(uniqueCats) : "—" }
-                : { label: "Categories",       value: "Unavailable", error: true },
+    eventsData  ? { label: "Total Active Events", value: fmtNum(totalEvents ?? 0) }
+                : { label: "Total Active Events", value: "Unavailable", error: true },
+    eventsData  ? { label: "24h Volume",          value: vol24h ? fmtUSD(vol24h) : "—" }
+                : { label: "24h Volume",           value: "Unavailable", error: true },
+    eventsData  ? { label: "Active Contracts",    value: fmtNum(contractCount ?? 0) }
+                : { label: "Active Contracts",     value: "Unavailable", error: true },
+    settledData ? { label: "Recently Settled",    value: settledCount !== null ? fmtNum(settledCount) : "—" }
+                : { label: "Recently Settled",     value: "Unavailable", error: true },
   ]);
 
-  // ── Category chart — contracts per category ──
   if (eventsData?.data) {
     const catMap = {};
     for (const ev of eventsData.data) {
@@ -532,13 +418,14 @@ async function loadGeminiData() {
       catMap[cat] = (catMap[cat] || 0) + (ev.contracts?.length || 0);
     }
     const rows = Object.entries(catMap).map(([category, count]) => ({ category, count }));
-    geminiCatChart = renderCatChart("gemini-cat-wrap", rows, "count", "#3b82f6", geminiCatChart, fmtNum);
+    geminiCatChart = renderCatChart("gemini-cat-wrap", rows, "count", "#FF6600", geminiCatChart, fmtNum);
   } else {
     document.getElementById("gemini-cat-wrap").innerHTML =
       `<div class="error-card">&#9888; ${eventsRes.reason?.message || "No event data"}</div>`;
   }
 }
 
+// ─── DUNE ─────────────────────────────────────────────────────────────────────
 async function dunePost(path, body) {
   const r = await fetch(`${DUNE_BASE}${path}`, {
     method: "POST",
@@ -564,17 +451,15 @@ async function duneGet(path) {
 }
 
 async function runDuneQuery(sql, statusEl) {
-  const exec = await dunePost("/sql/execute", { sql: sql, performance: "free" });
+  const exec = await dunePost("/sql/execute", { sql, performance: "free" });
   const execId = exec.execution_id;
   if (!execId) throw new Error("No execution_id returned");
-
   const start = Date.now();
   while (true) {
     await sleep(POLL_INTERVAL_MS);
     const elapsed = Math.round((Date.now() - start) / 1000);
     if (statusEl) statusEl.textContent = `Fetching data... ${elapsed}s`;
     if (elapsed > MAX_POLL_SECONDS) throw new Error(`Query timed out after ${elapsed}s`);
-
     const status = await duneGet(`/execution/${execId}/status`);
     if (status.state === "QUERY_STATE_COMPLETED") break;
     if (status.state === "QUERY_STATE_FAILED") {
@@ -582,26 +467,13 @@ async function runDuneQuery(sql, statusEl) {
       throw new Error(`Query failed: ${msg}`);
     }
   }
-
   const res = await duneGet(`/execution/${execId}/results`);
   return res.result?.rows ?? [];
 }
 
 function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
 
-async function introspectSchemas() {
-  console.group("Dune schema introspection");
-  for (const [name, sql] of Object.entries(INTROSPECT)) {
-    try {
-      const rows = await runDuneQuery(sql, null);
-      console.log(`${name} columns:`, rows.length > 0 ? Object.keys(rows[0]) : "(no rows)");
-    } catch (e) {
-      console.warn(`${name} failed:`, e.message);
-    }
-  }
-  console.groupEnd();
-}
-
+// ─── FORMATTERS ──────────────────────────────────────────────────────────────
 function fmtUSD(n) {
   if (n == null || isNaN(n)) return "—";
   n = Number(n);
@@ -610,7 +482,6 @@ function fmtUSD(n) {
   if (n >= 1e3) return "$" + (n / 1e3).toFixed(1) + "K";
   return "$" + n.toFixed(2);
 }
-
 function fmtNum(n) {
   if (n == null || isNaN(n)) return "—";
   n = Number(n);
@@ -618,31 +489,22 @@ function fmtNum(n) {
   if (n >= 1e3) return (n / 1e3).toFixed(1) + "K";
   return n.toLocaleString();
 }
+function fmtDate(d)     { if (!d) return "—"; return new Date(d).toLocaleDateString("en-US", { month: "short", day: "numeric" }); }
+function fmtDateFull(d) { if (!d) return "—"; return new Date(d).toLocaleDateString("en-US", { year: "numeric", month: "short", day: "numeric" }); }
+function fmtPct(n)      { if (n == null || isNaN(n)) return "—"; return Number(n).toFixed(1) + "%"; }
 
-function fmtDate(d) {
-  if (!d) return "—";
-  return new Date(d).toLocaleDateString("en-US", { month: "short", day: "numeric" });
-}
-
-function fmtDateFull(d) {
-  if (!d) return "—";
-  return new Date(d).toLocaleDateString("en-US", { year: "numeric", month: "short", day: "numeric" });
-}
-
-function renderKPIs(containerId, kpis) {
-  document.getElementById(containerId).innerHTML = kpis.map(k => `
+// ─── KPI HELPERS ──────────────────────────────────────────────────────────────
+function renderKPIs(id, kpis) {
+  document.getElementById(id).innerHTML = kpis.map(k => `
     <div class="kpi-card${k.error ? " kpi-error-card" : ""}">
       <div class="kpi-label">${k.label}</div>
       <div class="kpi-value${k.error ? " kpi-error-val" : ""}">${k.value}</div>
       ${k.trend != null ? `<div class="kpi-trend ${k.trendClass}">${k.trend}</div>` : ""}
     </div>`).join("");
 }
-
-function renderKPIError(containerId, msg) {
-  document.getElementById(containerId).innerHTML =
-    `<div class="error-card" style="grid-column:1/-1">&#9888; ${msg}</div>`;
+function renderKPIError(id, msg) {
+  document.getElementById(id).innerHTML = `<div class="error-card" style="grid-column:1/-1">&#9888; ${msg}</div>`;
 }
-
 function calcTrend(rows, field, latestDays = 7, priorDays = 7) {
   if (!rows || rows.length < 2) return null;
   const sorted = [...rows].sort((a, b) => new Date(b.day) - new Date(a.day));
@@ -652,19 +514,14 @@ function calcTrend(rows, field, latestDays = 7, priorDays = 7) {
   return ((recentSum - priorSum) / priorSum) * 100;
 }
 
+// ─── CHART HELPERS ────────────────────────────────────────────────────────────
 function chartDefaults() {
   return {
     responsive: true,
     maintainAspectRatio: false,
     plugins: {
       legend: { labels: { color: "#aaa", font: { size: 12 } } },
-      tooltip: {
-        backgroundColor: "#1a1a1a",
-        borderColor: "#2a2a2a",
-        borderWidth: 1,
-        titleColor: "#e5e5e5",
-        bodyColor: "#aaa",
-      },
+      tooltip: { backgroundColor: "#1a1a1a", borderColor: "#2a2a2a", borderWidth: 1, titleColor: "#e5e5e5", bodyColor: "#aaa" },
     },
     scales: {
       x: { grid: { color: "#222" }, ticks: { color: "#888", font: { size: 11 } } },
@@ -672,48 +529,59 @@ function chartDefaults() {
     },
   };
 }
+function destroyChart(ref) { if (ref) ref.destroy(); return null; }
 
-function destroyChart(ref) {
-  if (ref) ref.destroy();
-  return null;
-}
-
+// ─── VOLUME TREND (stacked bar + gemini line) ─────────────────────────────────
 function renderTrendChart(kalshiRows, polyRows) {
   const wrap = document.getElementById("trend-wrap");
-  wrap.innerHTML = `<div class="chart-container" style="height:260px"><canvas id="trend-canvas"></canvas></div>`;
+  wrap.innerHTML = `<div class="chart-container" style="height:280px"><canvas id="trend-canvas"></canvas></div>`;
   trendChart = destroyChart(trendChart);
 
   const days = new Set();
   (kalshiRows || []).forEach(r => r.day && days.add(r.day.substring(0, 10)));
-  (polyRows || []).forEach(r => r.day && days.add(r.day.substring(0, 10)));
+  (polyRows   || []).forEach(r => r.day && days.add(r.day.substring(0, 10)));
   const sortedDays = [...days].sort().slice(-30);
 
   const kalshiMap = Object.fromEntries((kalshiRows || []).map(r => [r.day?.substring(0, 10), r]));
-  const polyMap   = Object.fromEntries((polyRows || []).map(r => [r.day?.substring(0, 10), r]));
+  const polyMap   = Object.fromEntries((polyRows   || []).map(r => [r.day?.substring(0, 10), r]));
 
-  const labels = sortedDays.map(d => fmtDate(d));
-  const kalshiVols = sortedDays.map(d => Number(kalshiMap[d]?.notional_volume_usd || 0));
-  const polyVols   = sortedDays.map(d => Number(polyMap[d]?.notional_volume_usd || 0));
+  const labels        = sortedDays.map(fmtDate);
+  const kalshiVols    = sortedDays.map(d => Number(kalshiMap[d]?.notional_volume_usd || 0));
+  const polyMakerVols = sortedDays.map(d => Number(polyMap[d]?.maker_volume || 0));
+  const polyTakerVols = sortedDays.map(d => Number(polyMap[d]?.taker_volume || 0));
+
+  // Gemini: single data point on last day only (24h vol from API)
+  const geminiVols = sortedDays.map((d, i) => i === sortedDays.length - 1 && _geminiVol24h > 0 ? _geminiVol24h : null);
 
   const ctx = document.getElementById("trend-canvas").getContext("2d");
   const defs = chartDefaults();
   trendChart = new Chart(ctx, {
-    type: "line",
+    type: "bar",
     data: {
       labels,
       datasets: [
-        { label: "Kalshi", data: kalshiVols, borderColor: "#00d4aa", backgroundColor: "rgba(0,212,170,0.08)", fill: true, tension: 0.3, pointRadius: 2 },
-        { label: "Polymarket", data: polyVols, borderColor: "#8b5cf6", backgroundColor: "rgba(139,92,246,0.08)", fill: true, tension: 0.3, pointRadius: 2 },
+        { label: "Kalshi",        data: kalshiVols,    backgroundColor: "#00C805bb", borderColor: "#00C805", borderWidth: 0, stack: "kalshi", order: 2 },
+        { label: "Poly Maker",    data: polyMakerVols, backgroundColor: "#0070F388", stack: "poly", order: 2 },
+        { label: "Poly Taker",    data: polyTakerVols, backgroundColor: "#0070F3cc", stack: "poly", order: 2 },
+        { label: "Gemini (est.)", data: geminiVols, type: "line", borderColor: "#FF6600", backgroundColor: "rgba(255,102,0,0.12)", fill: true, tension: 0.3, pointRadius: 5, pointBackgroundColor: "#FF6600", spanGaps: false, yAxisID: "y1", order: 1 },
       ],
     },
     options: {
       ...defs,
-      plugins: { ...defs.plugins, tooltip: { ...defs.plugins.tooltip, callbacks: { label: ctx => ` ${ctx.dataset.label}: ${fmtUSD(ctx.parsed.y)}` } } },
-      scales: { ...defs.scales, y: { ...defs.scales.y, ticks: { ...defs.scales.y.ticks, callback: v => fmtUSD(v) } } },
+      plugins: {
+        ...defs.plugins,
+        tooltip: { ...defs.plugins.tooltip, callbacks: { label: c => ` ${c.dataset.label}: ${fmtUSD(c.parsed.y)}` } },
+      },
+      scales: {
+        x: { ...defs.scales.x, stacked: true },
+        y: { ...defs.scales.y, stacked: true, ticks: { ...defs.scales.y.ticks, callback: v => fmtUSD(v) } },
+        y1: { position: "right", grid: { display: false }, ticks: { color: "#FF6600", font: { size: 10 }, callback: v => fmtUSD(v) }, title: { display: true, text: "Gemini", color: "#FF6600", font: { size: 10 } } },
+      },
     },
   });
 }
 
+// ─── CATEGORY CHART ───────────────────────────────────────────────────────────
 function renderCatChart(wrapId, rows, volumeField, color, chartRef, fmtFn) {
   fmtFn = fmtFn || fmtUSD;
   const wrap = document.getElementById(wrapId);
@@ -721,47 +589,178 @@ function renderCatChart(wrapId, rows, volumeField, color, chartRef, fmtFn) {
     wrap.innerHTML = `<div class="error-card">No category data available.</div>`;
     return null;
   }
-
-  const top8 = [...rows].sort((a, b) => Number(b[volumeField] || 0) - Number(a[volumeField] || 0)).slice(0, 8);
+  const top8  = [...rows].sort((a, b) => Number(b[volumeField] || 0) - Number(a[volumeField] || 0)).slice(0, 8);
   const total = top8.reduce((s, r) => s + Number(r[volumeField] || 0), 0);
   const labels = top8.map(r => r.category || "Unknown");
   const values = top8.map(r => Number(r[volumeField] || 0));
   const pcts   = values.map(v => total > 0 ? ((v / total) * 100).toFixed(1) : 0);
-
   wrap.innerHTML = `<div class="chart-container" style="height:${Math.max(180, top8.length * 34)}px"><canvas id="${wrapId}-canvas"></canvas></div>`;
   chartRef = destroyChart(chartRef);
-
   const ctx = document.getElementById(`${wrapId}-canvas`).getContext("2d");
   const defs = chartDefaults();
   chartRef = new Chart(ctx, {
     type: "bar",
-    data: {
-      labels,
-      datasets: [{ label: "Volume (USD)", data: values, backgroundColor: color + "cc", borderColor: color, borderWidth: 1, borderRadius: 4 }],
-    },
+    data: { labels, datasets: [{ data: values, backgroundColor: color + "cc", borderColor: color, borderWidth: 1, borderRadius: 4 }] },
     options: {
       ...defs,
       indexAxis: "y",
-      plugins: { ...defs.plugins, legend: { display: false }, tooltip: { ...defs.plugins.tooltip, callbacks: { label: ctx => ` ${fmtFn(ctx.parsed.x)}  (${pcts[ctx.dataIndex]}%)` } } },
+      plugins: { ...defs.plugins, legend: { display: false }, tooltip: { ...defs.plugins.tooltip, callbacks: { label: c => ` ${fmtFn(c.parsed.x)}  (${pcts[c.dataIndex]}%)` } } },
       scales: { x: { ...defs.scales.x, ticks: { ...defs.scales.x.ticks, callback: v => fmtFn(v) } }, y: defs.scales.y },
     },
   });
   return chartRef;
 }
 
-let tableData = [];
-let sortCol = 0;
-let sortDir = "desc";
+// ─── LIQUIDITY QUALITY ────────────────────────────────────────────────────────
+function renderLiquidity(kalshiVol, kalshiMkts, polyVol) {
+  // Spread proxy: Kalshi AVG(high-low)/100 → percentage
+  const latestMkt    = (kalshiMkts || []).find(r => r.avg_spread != null);
+  const kalshiSpread = latestMkt ? (Number(latestMkt.avg_spread) / 100).toFixed(2) + "%" : "—";
 
-function buildTableData(kalshiVol, kalshiMkts, polyVol) {
+  // Avg trade size
+  const latestKV  = (kalshiVol || []).find(r => r.notional_volume_usd != null && r.trade_count > 0);
+  const kalshiAvg = latestKV ? fmtUSD(Number(latestKV.notional_volume_usd) / Number(latestKV.trade_count)) : "—";
+  const latestPV  = (polyVol  || []).find(r => r.avg_trade_size != null);
+  const polyAvg   = latestPV ? fmtUSD(Number(latestPV.avg_trade_size)) : "—";
+
+  // Median
+  const polyMedian = latestPV ? fmtUSD(Number(latestPV.median_trade_size)) : "—";
+
+  const mkRow = (dot, label, val) => `
+    <div class="liq-metric">
+      <span class="liq-metric-label"><span class="liq-dot" style="background:${dot}"></span>${label}</span>
+      <span class="liq-metric-value">${val}</span>
+    </div>`;
+
+  document.getElementById("liq-spread").innerHTML = `
+    ${mkRow("var(--kalshi)", "Kalshi (avg daily range)", kalshiSpread)}
+    ${mkRow("var(--polymarket)", "Polymarket", "N/A (no book data)")}
+    ${mkRow("var(--gemini)", "Gemini", "N/A (no book data)")}`;
+
+  document.getElementById("liq-avg").innerHTML = `
+    ${mkRow("var(--kalshi)", "Kalshi", kalshiAvg)}
+    ${mkRow("var(--polymarket)", "Polymarket", polyAvg)}
+    ${mkRow("var(--gemini)", "Gemini", "—")}`;
+
+  document.getElementById("liq-median").innerHTML = `
+    ${mkRow("var(--kalshi)", "Kalshi", "—")}
+    ${mkRow("var(--polymarket)", "Polymarket", polyMedian)}
+    ${mkRow("var(--gemini)", "Gemini", "—")}`;
+}
+
+// ─── CI PANEL ────────────────────────────────────────────────────────────────
+function renderCIPanel() {
+  const polyCats   = _selectedCategory === "All" ? _polyCatsData : _polyCatsData.filter(r => r.category === _selectedCategory);
+  const kalshiCats = _kalshiCatsData;
+
+  // Card 1: OI by category (Kalshi)
+  const oiWrap = document.getElementById("ci-oi-wrap");
+  if (kalshiCats.length > 0) {
+    oiWrap.innerHTML = `<div class="chart-container" style="height:200px"><canvas id="ci-oi-canvas"></canvas></div>`;
+    oiCatChart = destroyChart(oiCatChart);
+    const cats   = kalshiCats.slice(0, 8);
+    const labels = cats.map(r => r.category || "Unknown");
+    const values = cats.map(r => Number(r.avg_open_interest || 0));
+    const defs = chartDefaults();
+    oiCatChart = new Chart(document.getElementById("ci-oi-canvas").getContext("2d"), {
+      type: "bar",
+      data: { labels, datasets: [{ label: "Avg Open Interest", data: values, backgroundColor: "#00C805bb", borderColor: "#00C805", borderWidth: 1, borderRadius: 3 }] },
+      options: { ...defs, indexAxis: "y", plugins: { ...defs.plugins, legend: { display: false }, tooltip: { ...defs.plugins.tooltip, callbacks: { label: c => ` ${fmtUSD(c.parsed.x)}` } } }, scales: { x: { ...defs.scales.x, ticks: { ...defs.scales.x.ticks, callback: v => fmtUSD(v) } }, y: { ...defs.scales.y, ticks: { color: "#aaa", font: { size: 10 } } } } },
+    });
+  } else {
+    oiWrap.innerHTML = `<div class="error-card">&#9888; No data</div>`;
+  }
+
+  // Card 2: Volume concentration
+  const concEl = document.getElementById("ci-conc");
+  const polyTotal  = polyCats.reduce((s, r)   => s + Number(r.volume_usd  || 0), 0);
+  const kalshTotal = kalshiCats.reduce((s, r) => s + Number(r.volume || 0), 0);
+  const topPoly  = polyCats[0];
+  const topKalsh = [...kalshiCats].sort((a, b) => Number(b.volume || 0) - Number(a.volume || 0))[0];
+  const polyShare  = polyTotal  > 0 && topPoly  ? ((Number(topPoly.volume_usd) / polyTotal) * 100).toFixed(1) : null;
+  const kalshShare = kalshTotal > 0 && topKalsh ? ((Number(topKalsh.volume) / kalshTotal) * 100).toFixed(1) : null;
+  concEl.innerHTML = `
+    <div class="conc-stats">
+      <div class="conc-stat">
+        <div class="conc-stat-val" style="color:var(--polymarket)">${polyShare ? polyShare + "%" : "—"}</div>
+        <div class="conc-stat-label">Polymarket top-cat share</div>
+        <div class="conc-stat-sub">${topPoly?.category || "—"}</div>
+      </div>
+      <div class="conc-stat">
+        <div class="conc-stat-val" style="color:var(--kalshi)">${kalshShare ? kalshShare + "%" : "—"}</div>
+        <div class="conc-stat-label">Kalshi top-cat share</div>
+        <div class="conc-stat-sub">${topKalsh?.category || "—"}</div>
+      </div>
+    </div>`;
+
+  // Card 3: Trader activity (unique traders per day)
+  const tradersWrap = document.getElementById("ci-traders-wrap");
+  if (_polyVolData.length > 0) {
+    tradersWrap.innerHTML = `<div class="chart-container" style="height:200px"><canvas id="ci-traders-canvas"></canvas></div>`;
+    traderActivityChart = destroyChart(traderActivityChart);
+    const sorted = [..._polyVolData].sort((a, b) => new Date(a.day) - new Date(b.day)).slice(-30);
+    const defs = chartDefaults();
+    traderActivityChart = new Chart(document.getElementById("ci-traders-canvas").getContext("2d"), {
+      type: "line",
+      data: {
+        labels: sorted.map(r => fmtDate(r.day)),
+        datasets: [{ label: "Unique Traders", data: sorted.map(r => Number(r.unique_traders || 0)), borderColor: "#0070F3", backgroundColor: "rgba(0,112,243,0.08)", fill: true, tension: 0.3, pointRadius: 2 }],
+      },
+      options: { ...defs, plugins: { ...defs.plugins, legend: { display: false }, tooltip: { ...defs.plugins.tooltip, callbacks: { label: c => ` ${fmtNum(c.parsed.y)} traders` } } }, scales: { x: { ...defs.scales.x, ticks: { color: "#666", font: { size: 10 }, maxTicksLimit: 8 } }, y: { ...defs.scales.y, ticks: { ...defs.scales.y.ticks, callback: v => fmtNum(v) } } } },
+    });
+  } else {
+    tradersWrap.innerHTML = `<div class="error-card">&#9888; No trader data</div>`;
+  }
+
+  // Card 4: Trade count by category (grouped bar)
+  const tradeCtWrap = document.getElementById("ci-tradect-wrap");
+  const pCats = polyCats.filter(r => r.category !== "Other" || _selectedCategory !== "All").slice(0, 6);
+  const kCats = _selectedCategory === "All" ? kalshiCats.slice(0, 6) : kalshiCats.filter(r => r.category === _selectedCategory).slice(0, 6);
+
+  if (pCats.length > 0 || kCats.length > 0) {
+    const allCats = [...new Set([...pCats.map(r => r.category), ...kCats.map(r => r.category)])].slice(0, 7);
+    const pMap = Object.fromEntries(pCats.map(r => [r.category, Number(r.trade_count || 0)]));
+    const kMap = Object.fromEntries(kCats.map(r => [r.category, Number(r.markets || 0)]));
+    tradeCtWrap.innerHTML = `<div class="chart-container" style="height:200px"><canvas id="ci-tradect-canvas"></canvas></div>`;
+    tradeCountCatChart = destroyChart(tradeCountCatChart);
+    const defs = chartDefaults();
+    tradeCountCatChart = new Chart(document.getElementById("ci-tradect-canvas").getContext("2d"), {
+      type: "bar",
+      data: {
+        labels: allCats,
+        datasets: [
+          { label: "Poly Trades",   data: allCats.map(c => pMap[c] || 0), backgroundColor: "#0070F3bb", borderRadius: 3 },
+          { label: "Kalshi Markets",data: allCats.map(c => kMap[c] || 0), backgroundColor: "#00C805bb", borderRadius: 3 },
+        ],
+      },
+      options: { ...defs, plugins: { ...defs.plugins, tooltip: { ...defs.plugins.tooltip, callbacks: { label: c => ` ${c.dataset.label}: ${fmtNum(c.parsed.y)}` } } }, scales: { x: { ...defs.scales.x, ticks: { color: "#888", font: { size: 10 } } }, y: { ...defs.scales.y, ticks: { ...defs.scales.y.ticks, callback: v => fmtNum(v) } } } },
+    });
+  } else {
+    tradeCtWrap.innerHTML = `<div class="error-card">&#9888; No data</div>`;
+  }
+}
+
+// ─── CATEGORY FILTER PILLS ────────────────────────────────────────────────────
+function selectCategory(cat) {
+  _selectedCategory = cat;
+  document.querySelectorAll(".pill").forEach(p => p.classList.toggle("active", p.dataset.cat === cat));
+  // Re-render Polymarket category chart filtered
+  const filtered = cat === "All" ? _polyCatsData : _polyCatsData.filter(r => r.category === cat);
+  polyCatChart = renderCatChart("poly-cat-wrap", filtered, "volume_usd", "#0070F3", polyCatChart);
+  // Re-render CI panel (also respects filter)
+  if (_polyCatsData.length || _kalshiCatsData.length) renderCIPanel();
+}
+
+// ─── TABLE ────────────────────────────────────────────────────────────────────
+let tableData = [], sortCol = 0, sortDir = "desc";
+
+function buildTableData(kv, km, pv) {
   const days = new Set();
-  (kalshiVol || []).forEach(r => r.day && days.add(r.day.substring(0, 10)));
-  (polyVol || []).forEach(r => r.day && days.add(r.day.substring(0, 10)));
-
-  const kvMap = Object.fromEntries((kalshiVol || []).map(r => [r.day?.substring(0, 10), r]));
-  const kmMap = Object.fromEntries((kalshiMkts || []).map(r => [r.day?.substring(0, 10), r]));
-  const pvMap = Object.fromEntries((polyVol || []).map(r => [r.day?.substring(0, 10), r]));
-
+  (kv || []).forEach(r => r.day && days.add(r.day.substring(0, 10)));
+  (pv || []).forEach(r => r.day && days.add(r.day.substring(0, 10)));
+  const kvMap = Object.fromEntries((kv || []).map(r => [r.day?.substring(0, 10), r]));
+  const kmMap = Object.fromEntries((km || []).map(r => [r.day?.substring(0, 10), r]));
+  const pvMap = Object.fromEntries((pv || []).map(r => [r.day?.substring(0, 10), r]));
   return [...days].sort().reverse().slice(0, 30).map(d => ({
     date: d,
     kalshiVol:    Number(kvMap[d]?.notional_volume_usd || 0),
@@ -769,57 +768,44 @@ function buildTableData(kalshiVol, kalshiMkts, polyVol) {
     kalshiMkts:   Number(kmMap[d]?.active_markets || 0),
     polyVol:      Number(pvMap[d]?.notional_volume_usd || 0),
     polyTrades:   Number(pvMap[d]?.trade_count || 0),
+    polyTraders:  Number(pvMap[d]?.unique_traders || 0),
   }));
 }
 
 function renderTable(data) {
   tableData = data;
   const wrap = document.getElementById("table-wrap");
-  if (!data || data.length === 0) {
-    wrap.innerHTML = `<div class="error-card">No data available.</div>`;
-    return;
-  }
-
+  if (!data || data.length === 0) { wrap.innerHTML = `<div class="error-card">No data available.</div>`; return; }
   const cols = [
     { key: "date",        label: "Date",              fmt: d => `<td class="date">${fmtDateFull(d.date)}</td>` },
     { key: "kalshiVol",   label: "Kalshi Volume",     fmt: d => `<td class="num" style="color:var(--kalshi)">${fmtUSD(d.kalshiVol)}</td>` },
     { key: "kalshiTrades",label: "Kalshi Trades",     fmt: d => `<td class="num">${fmtNum(d.kalshiTrades)}</td>` },
     { key: "kalshiMkts",  label: "Kalshi Markets",    fmt: d => `<td class="num">${fmtNum(d.kalshiMkts)}</td>` },
-    { key: "polyVol",     label: "Polymarket Volume", fmt: d => `<td class="num" style="color:var(--polymarket)">${fmtUSD(d.polyVol)}</td>` },
-    { key: "polyTrades",  label: "Polymarket Trades", fmt: d => `<td class="num">${fmtNum(d.polyTrades)}</td>` },
+    { key: "polyVol",     label: "Poly Volume",       fmt: d => `<td class="num" style="color:var(--polymarket)">${fmtUSD(d.polyVol)}</td>` },
+    { key: "polyTrades",  label: "Poly Trades",       fmt: d => `<td class="num">${fmtNum(d.polyTrades)}</td>` },
+    { key: "polyTraders", label: "Poly Traders",      fmt: d => `<td class="num">${fmtNum(d.polyTraders)}</td>` },
   ];
-
   const sorted = [...data].sort((a, b) => {
     const va = a[cols[sortCol].key], vb = b[cols[sortCol].key];
     const cmp = typeof va === "string" ? va.localeCompare(vb) : va - vb;
     return sortDir === "asc" ? cmp : -cmp;
   });
-
-  wrap.innerHTML = `
-    <div class="table-wrap">
-      <table>
-        <thead><tr>${cols.map((c, i) => `<th class="${sortCol === i ? (sortDir === 'asc' ? 'sort-asc' : 'sort-desc') : ''}" onclick="sortTable(${i})">${c.label}</th>`).join("")}</tr></thead>
-        <tbody>${sorted.map(row => `<tr>${cols.map(c => c.fmt(row)).join("")}</tr>`).join("")}</tbody>
-      </table>
-    </div>`;
+  wrap.innerHTML = `<div class="table-wrap"><table>
+    <thead><tr>${cols.map((c, i) => `<th class="${sortCol === i ? (sortDir === "asc" ? "sort-asc" : "sort-desc") : ""}" onclick="sortTable(${i})">${c.label}</th>`).join("")}</tr></thead>
+    <tbody>${sorted.map(row => `<tr>${cols.map(c => c.fmt(row)).join("")}</tr>`).join("")}</tbody>
+  </table></div>`;
 }
 
 function sortTable(colIdx) {
-  if (sortCol === colIdx) {
-    sortDir = sortDir === "asc" ? "desc" : "asc";
-  } else {
-    sortCol = colIdx;
-    sortDir = "desc";
-  }
+  if (sortCol === colIdx) sortDir = sortDir === "asc" ? "desc" : "asc";
+  else { sortCol = colIdx; sortDir = "desc"; }
   renderTable(tableData);
 }
 
+// ─── MAIN LOAD ────────────────────────────────────────────────────────────────
 function submitKey() {
   const val = document.getElementById("key-input").value.trim();
-  if (!val) {
-    document.getElementById("key-input").classList.add("error");
-    return;
-  }
+  if (!val) { document.getElementById("key-input").classList.add("error"); return; }
   DUNE_API_KEY = val;
   document.getElementById("key-gate").classList.remove("visible");
   loadAllData();
@@ -833,27 +819,22 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 async function loadAllData() {
-  if (!DUNE_API_KEY) {
-    document.getElementById("key-gate").classList.add("visible");
-    return;
-  }
-
+  if (!DUNE_API_KEY) { document.getElementById("key-gate").classList.add("visible"); return; }
   document.getElementById("refresh-btn").disabled = true;
   setStatusAll("Fetching data...");
 
-  introspectSchemas().catch(() => {});
-
-  // Gemini is public — fire in parallel, doesn't count against Dune limit
+  // Gemini is public — fire concurrently, doesn't count against Dune limit
   loadGeminiData().catch(e => console.error("Gemini load failed:", e));
 
   const statusEl = document.getElementById("trend-status");
 
-  // Dune free tier allows max 3 parallel executions — run in two batches
+  // Batch 1: max 3 parallel on free tier
   const [r1, r2, r3] = await Promise.allSettled([
     runDuneQuery(SQL.kalshiVolume,  statusEl),
     runDuneQuery(SQL.kalshiMarkets, statusEl),
     runDuneQuery(SQL.polyVolume,    statusEl),
   ]);
+  // Batch 2
   const [r4, r5] = await Promise.allSettled([
     runDuneQuery(SQL.polyCats,   statusEl),
     runDuneQuery(SQL.kalshiCats, statusEl),
@@ -865,60 +846,77 @@ async function loadAllData() {
   const polyCats   = r4.status === "fulfilled" ? r4.value : null;
   const kalshiCats = r5.status === "fulfilled" ? r5.value : null;
 
+  // Store for filter re-renders
+  _kalshiVolData  = kalshiVol  || [];
+  _kalshiMktsData = kalshiMkts || [];
+  _polyVolData    = polyVol    || [];
+  _polyCatsData   = polyCats   || [];
+  _kalshiCatsData = kalshiCats || [];
+
   [r1, r2, r3, r4, r5].forEach((r, i) => {
-    if (r.status === "rejected") console.error(`Query ${i + 1} failed:`, r.reason);
+    if (r.status === "rejected") console.error(`Query ${i + 1} failed:`, r.reason?.message);
   });
 
+  // ── Kalshi KPIs ──
   if (kalshiVol && kalshiMkts) {
     const latest = kalshiVol[0] || {};
     const latestMkt = kalshiMkts[0] || {};
     const trend = calcTrend(kalshiVol, "notional_volume_usd");
-    const trendClass = trend == null ? "neutral" : trend >= 0 ? "up" : "down";
-    const trendStr = trend == null ? "—" : (trend >= 0 ? "+" : "") + trend.toFixed(1) + "% vs prior 7d";
+    const tc = trend == null ? "neutral" : trend >= 0 ? "up" : "down";
+    const ts = trend == null ? "—" : (trend >= 0 ? "+" : "") + trend.toFixed(1) + "% vs prior 7d";
     renderKPIs("kalshi-kpis", [
       { label: "Daily Volume",    value: fmtUSD(latest.notional_volume_usd) },
       { label: "Trade Count",     value: fmtNum(latest.trade_count) },
       { label: "Active Markets",  value: fmtNum(latestMkt.active_markets) },
-      { label: "7d Volume Trend", value: trendStr, trend: trendStr, trendClass },
+      { label: "7d Volume Trend", value: ts, trend: ts, trendClass: tc },
     ]);
   } else {
     renderKPIError("kalshi-kpis", r1.reason?.message || r2.reason?.message || "Failed to load Kalshi data");
   }
 
+  // ── Polymarket KPIs ──
   if (polyVol) {
     const latest = polyVol[0] || {};
     const trend = calcTrend(polyVol, "notional_volume_usd");
-    const trendClass = trend == null ? "neutral" : trend >= 0 ? "up" : "down";
-    const trendStr = trend == null ? "—" : (trend >= 0 ? "+" : "") + trend.toFixed(1) + "% vs prior 7d";
+    const tc = trend == null ? "neutral" : trend >= 0 ? "up" : "down";
+    const ts = trend == null ? "—" : (trend >= 0 ? "+" : "") + trend.toFixed(1) + "% vs prior 7d";
     renderKPIs("polymarket-kpis", [
       { label: "Daily Volume",    value: fmtUSD(latest.notional_volume_usd) },
       { label: "Trade Count",     value: fmtNum(latest.trade_count) },
-      { label: "Active Markets",  value: "—" },
-      { label: "7d Volume Trend", value: trendStr, trend: trendStr, trendClass },
+      { label: "Unique Traders",  value: fmtNum(latest.unique_traders) },
+      { label: "7d Volume Trend", value: ts, trend: ts, trendClass: tc },
     ]);
   } else {
     renderKPIError("polymarket-kpis", r3.reason?.message || "Failed to load Polymarket data");
   }
 
+  // ── Volume trend ──
   if (kalshiVol || polyVol) {
     renderTrendChart(kalshiVol, polyVol);
   } else {
     document.getElementById("trend-wrap").innerHTML =
-      `<div class="error-card">&#9888; Could not load volume data: ${r1.reason?.message || r3.reason?.message}</div>`;
+      `<div class="error-card">&#9888; Could not load volume data: ${r1.reason?.message || r3.reason?.message || "unknown error"}</div>`;
   }
 
+  // ── Category charts ──
   if (kalshiCats) {
-    kalshiCatChart = renderCatChart("kalshi-cat-wrap", kalshiCats, "volume", "#00d4aa", kalshiCatChart);
+    kalshiCatChart = renderCatChart("kalshi-cat-wrap", kalshiCats, "volume", "#00C805", kalshiCatChart);
   } else {
     document.getElementById("kalshi-cat-wrap").innerHTML = `<div class="error-card">&#9888; ${r5.reason?.message || "No data"}</div>`;
   }
-
   if (polyCats) {
-    polyCatChart = renderCatChart("poly-cat-wrap", polyCats, "volume_usd", "#8b5cf6", polyCatChart);
+    polyCatChart = renderCatChart("poly-cat-wrap", polyCats, "volume_usd", "#0070F3", polyCatChart);
   } else {
     document.getElementById("poly-cat-wrap").innerHTML = `<div class="error-card">&#9888; ${r4.reason?.message || "No data"}</div>`;
   }
 
+  // ── Liquidity Quality ──
+  renderLiquidity(kalshiVol, kalshiMkts, polyVol);
+
+  // ── CI Panel ──
+  renderCIPanel();
+
+  // ── Table ──
   if (kalshiVol || polyVol) {
     renderTable(buildTableData(kalshiVol, kalshiMkts, polyVol));
   } else {
@@ -929,34 +927,27 @@ async function loadAllData() {
   document.getElementById("refresh-btn").disabled = false;
 }
 
-function clearSkeletons() {
-  ["kalshi-kpis", "polymarket-kpis"].forEach(id => {
-    document.getElementById(id).innerHTML =
-      `<div class="error-card" style="grid-column:1/-1">Add API key to load data.</div>`;
-  });
-  ["trend-wrap", "kalshi-cat-wrap", "poly-cat-wrap", "table-wrap"].forEach(id => {
-    document.getElementById(id).innerHTML =
-      `<div style="color:var(--muted);font-size:13px;padding:8px 0;">Waiting for API key...</div>`;
-  });
-}
-
 function setStatusAll(msg) {
   ["trend-wrap", "kalshi-cat-wrap", "poly-cat-wrap", "table-wrap"].forEach(id => {
     const el = document.getElementById(id);
-    if (!el.querySelector("canvas")) {
-      el.innerHTML = `<div class="spinner-wrap"><div class="spinner"></div><span>${msg}</span></div>`;
-    }
+    if (!el.querySelector("canvas")) el.innerHTML = `<div class="spinner-wrap"><div class="spinner"></div><span>${msg}</span></div>`;
+  });
+  ["liq-spread", "liq-avg", "liq-median"].forEach(id => {
+    document.getElementById(id).innerHTML = `<div class="spinner-wrap"><div class="spinner"></div><span>${msg}</span></div>`;
+  });
+  ["ci-oi-wrap", "ci-conc", "ci-traders-wrap", "ci-tradect-wrap"].forEach(id => {
+    document.getElementById(id).innerHTML = `<div class="spinner-wrap"><div class="spinner"></div><span>${msg}</span></div>`;
   });
 }
 
 function refresh() {
-  trendChart = destroyChart(trendChart);
-  kalshiCatChart = destroyChart(kalshiCatChart);
-  polyCatChart = destroyChart(polyCatChart);
-  geminiCatChart = destroyChart(geminiCatChart);
+  [trendChart, kalshiCatChart, polyCatChart, geminiCatChart, oiCatChart, traderActivityChart, tradeCountCatChart]
+    .forEach(c => { if (c) c.destroy(); });
+  trendChart = kalshiCatChart = polyCatChart = geminiCatChart = oiCatChart = traderActivityChart = tradeCountCatChart = null;
+  _selectedCategory = "All";
+  document.querySelectorAll(".pill").forEach(p => p.classList.toggle("active", p.dataset.cat === "All"));
   loadAllData();
 }
-
 </script>
 </body>
 </html>
