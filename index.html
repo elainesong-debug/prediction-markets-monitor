@@ -225,14 +225,18 @@
     <div id="trend-wrap"><div class="spinner-wrap"><div class="spinner"></div><span id="trend-status">Fetching data…</span></div></div>
   </div>
 
-  <!-- Category charts -->
+  <!-- Category charts — all 24h, shared x-axis scale -->
   <div class="chart-row">
     <div class="chart-card">
-      <div class="chart-title">Kalshi — Category Mix (30d)</div>
+      <div class="chart-title">Kalshi — Category Volume (24h)</div>
       <div id="kalshi-cat-wrap"><div class="spinner-wrap"><div class="spinner"></div><span>Fetching…</span></div></div>
     </div>
     <div class="chart-card">
-      <div class="chart-title">Gemini — Category Mix</div>
+      <div class="chart-title">Polymarket — Category Volume (24h)</div>
+      <div id="poly-cat-wrap"><div class="spinner-wrap"><div class="spinner"></div><span>Fetching…</span></div></div>
+    </div>
+    <div class="chart-card">
+      <div class="chart-title">Gemini — Category Volume (24h)</div>
       <div id="gemini-cat-wrap"><div class="spinner-wrap"><div class="spinner"></div><span>Fetching…</span></div></div>
     </div>
   </div>
@@ -334,6 +338,9 @@ const SQL = {
   kalshiMedian:      `SELECT PERCENTILE_CONT(0.5) WITHIN GROUP (ORDER BY contracts_traded * price / 100.0) AS median_trade_usd FROM kalshi.trade_report WHERE CAST(date AS DATE) >= CURRENT_DATE - INTERVAL '30' DAY`,
   // Polymarket category taxonomy — console only until field names confirmed
   polyCatInspect:    `SELECT category, COUNT(*) AS cnt FROM polymarket_polygon.market_details GROUP BY 1 ORDER BY 2 DESC LIMIT 20`,
+  // 24h category charts (shared x-axis scale)
+  kalshiCats24h: `SELECT category, SUM(daily_volume) AS volume_usd FROM kalshi.market_report WHERE CAST(date AS DATE) = (SELECT MAX(CAST(date AS DATE)) FROM kalshi.market_report) AND category IS NOT NULL GROUP BY 1 ORDER BY 2 DESC LIMIT 8`,
+  polyCats24h:   `SELECT md.category, SUM(mt.amount) AS volume_usd FROM polymarket_polygon.market_trades mt JOIN polymarket_polygon.market_details md ON CAST(mt.condition_id AS VARCHAR) = md.condition_id WHERE mt.block_time >= NOW() - INTERVAL '1' DAY AND md.category IS NOT NULL GROUP BY 1 ORDER BY 2 DESC LIMIT 8`,
 };
 
 // ─── STATE ────────────────────────────────────────────────────────────────────
@@ -352,7 +359,10 @@ let _refMeta = {};   // { [queryId]: { execAt, total, status:'ok'|'stale'|'error
 // Kalshi data
 let _kalshiVolData  = [];
 let _kalshiMktsData = [];
-let _kalshiCatsData = [];
+let _kalshiCatsData = [];   // 30d — used by CI panel
+let _kalshiCats24hData = []; // null=error, []=loading, [...]= data
+let _polyCatsData      = [];
+let _geminiCatsData    = [];
 
 let _selectedCategory  = "All";
 let _geminiVol24h      = 0;
@@ -500,9 +510,13 @@ async function loadGeminiData() {
     ev ? { label:"Active Markets",  value:fmtNum(total ?? 0) }                     : { label:"Active Markets",  value:"Unavailable", error:true },
   ]);
   if (ev?.data) {
-    const catMap = {};
-    ev.data.forEach(e => { const c = e.category || "Other"; catMap[c] = (catMap[c]||0) + (e.contracts?.length||0); });
-    geminiCatChart = renderCatChart("gemini-cat-wrap", Object.entries(catMap).map(([category,count])=>({category,count})), "count", "#FF6600", geminiCatChart, fmtNum);
+    const catVolMap = {};
+    ev.data.forEach(e => { const c = e.category || "Other"; catVolMap[c] = (catVolMap[c]||0) + (Number(e.volume24h) || 0); });
+    _geminiCatsData = Object.entries(catVolMap)
+      .map(([category, volume_usd]) => ({category, volume_usd}))
+      .sort((a, b) => b.volume_usd - a.volume_usd)
+      .slice(0, 8);
+    renderAllCategoryCharts();
   } else {
     el("gemini-cat-wrap").innerHTML = errHtml(0, evR.reason?.message || "No event data");
   }
@@ -1028,6 +1042,46 @@ function renderCatChart(wrapId, rows, volField, color, chartRef, fmtFn) {
   return chartRef;
 }
 
+// ─── CATEGORY CHARTS — 24h, shared x-axis scale ──────────────────────────────
+function renderCatChart24h(wrapId, rows, color, chartRef, maxVal) {
+  const wrap = el(wrapId);
+  if (rows === null) {
+    wrap.innerHTML = `<div class="error-card">&#9888; Category data unavailable</div>`;
+    return destroyChart(chartRef);
+  }
+  if (!rows.length) return chartRef; // still loading — leave spinner
+  chartRef = destroyChart(chartRef);
+  wrap.innerHTML = `<div class="chart-container" style="height:${Math.max(180, rows.length * 34)}px"><canvas id="${wrapId}-canvas"></canvas></div>`;
+  const D = chartDefs();
+  chartRef = new Chart(el(`${wrapId}-canvas`).getContext("2d"), {
+    type: "bar",
+    data: {
+      labels: rows.map(r => r.category || "Unknown"),
+      datasets: [{ data: rows.map(r => Number(r.volume_usd || 0)), backgroundColor: color + "cc", borderColor: color, borderWidth: 1, borderRadius: 4 }],
+    },
+    options: { ...D, indexAxis: "y",
+      plugins: { ...D.plugins, legend: { display: false }, tooltip: { ...D.plugins.tooltip, callbacks: { label: c => ` ${fmtUSD(c.parsed.x)}` } } },
+      scales: {
+        x: { ...D.scales.x, max: maxVal || undefined, title: { display: true, text: "Volume (USD)", color: "#888", font: { size: 10 } }, ticks: { ...D.scales.x.ticks, callback: v => fmtUSD(v) } },
+        y: D.scales.y,
+      },
+    },
+  });
+  return chartRef;
+}
+
+function renderAllCategoryCharts() {
+  const all = [
+    ..._kalshiCats24hData?.map(r => Number(r.volume_usd || 0)) ?? [],
+    ..._polyCatsData?.map(r => Number(r.volume_usd || 0)) ?? [],
+    ..._geminiCatsData?.map(r => Number(r.volume_usd || 0)) ?? [],
+  ];
+  const globalMax = all.length > 0 ? Math.max(...all) : undefined;
+  kalshiCatChart = renderCatChart24h("kalshi-cat-wrap", _kalshiCats24hData, "#00C805", kalshiCatChart, globalMax);
+  polyCatChart   = renderCatChart24h("poly-cat-wrap",   _polyCatsData,      "#0070F3", polyCatChart,   globalMax);
+  geminiCatChart = renderCatChart24h("gemini-cat-wrap", _geminiCatsData,    "#FF6600", geminiCatChart, globalMax);
+}
+
 // ─── TABLE ────────────────────────────────────────────────────────────────────
 let tableData=[], sortCol=0, sortDir="desc";
 
@@ -1132,9 +1186,6 @@ async function loadAllData() {
     renderKPIError("kalshi-kpis", r1.reason?.message || r2.reason?.message || "Kalshi data failed");
   }
 
-  if (kc) kalshiCatChart = renderCatChart("kalshi-cat-wrap", kc, "volume", "#00C805", kalshiCatChart);
-  else el("kalshi-cat-wrap").innerHTML = errHtml(0, r3.reason?.message || "No Kalshi category data");
-
   // Render charts that need Kalshi SQL data
   renderLiquidity(kv, km);
   renderCIPanel();
@@ -1144,6 +1195,17 @@ async function loadAllData() {
     renderTrendChart(_kalshiVolData, _refNotionalVol);
     renderTable(buildTableData(_kalshiVolData, _kalshiMktsData, _refNotionalVol, _refUsers));
   }
+
+  // ── Batch 3: 24h category charts ─────────────────────────────────────────────
+  const [rKC24, rPC24] = await Promise.allSettled([
+    runDuneQuery(SQL.kalshiCats24h, null),
+    runDuneQuery(SQL.polyCats24h,   null),
+  ]);
+  _kalshiCats24hData = rKC24.status === "fulfilled" ? (rKC24.value || []) : null;
+  _polyCatsData      = rPC24.status === "fulfilled" ? (rPC24.value || []) : null;
+  if (rKC24.status === "rejected") console.error("[Kalshi 24h cats]", rKC24.reason?.message);
+  if (rPC24.status === "rejected") console.error("[Poly 24h cats]",   rPC24.reason?.message);
+  renderAllCategoryCharts();
 
   el("last-updated").textContent = "Updated " + new Date().toLocaleTimeString();
   el("refresh-btn").disabled = false;
